@@ -1,7 +1,7 @@
 ---
 # the default layout is 'page'
-icon: fas fa-info-circle
-order: 4
+icon: fas fa-address-card
+order: 3
 ---
 
 I got into game development the long way round. The truth is, I only started making games after my undergrad, where I spent half my time studying maths and the other half messing about with theatre. It's these interests, though, that make me the programmer I am today. Whether fine-tuning a shader or generating whole worlds at the touch of a button, I try to approach design problems with a real mathematical rigour - but never lose sight of the bigger artistic picture.
