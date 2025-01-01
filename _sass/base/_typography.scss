@@ -229,6 +229,13 @@ main {
   }
 }
 
+.page-desc {
+  @extend %heading;
+
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
 /* --- Begin of Markdown table style --- */
 
 /* it will be created by Liquid */
