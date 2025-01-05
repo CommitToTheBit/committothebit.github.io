@@ -9,7 +9,7 @@ layout: default
     {% assign tab_key = page.title | downcase %}
     {% assign title = site.data.locales[lang].tabs[tab_key] | default: page.title %}
     <h1 class="dynamic-title">
-      {{ title }}
+      <strong>{{ title }}</strong>
     </h1>
     {% if page.description %}
       <p class="page-desc fw-light mb-4">{{ page.description }}</p>
