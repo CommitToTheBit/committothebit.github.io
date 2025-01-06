@@ -10,7 +10,7 @@ I got into game development the long way round. The truth is, I only started mak
 
 #### **Feral Interactive, London** *Graduate Developer, November 2023 - Present*
 
-Shipped my first title in the industry, seeing our port of [**Grid Legends**](https://committothebit.github.io/grid-legends) through development and up to release. Experienced with Android, wrangling its API for both mobile and VR development. Supplemented forward-facing, game-specific work with side projects improving Feral's internal libraries, like extending our existing deep links to make life easier for QA. 
+Shipped my first title in the industry, seeing our port of [**GRID Legends**](https://committothebit.github.io/grid-legends) through development and up to release. Experienced with Android, wrangling its API for both mobile and VR development. Supplemented forward-facing, game-specific work with side projects improving Feral's internal libraries, like extending our existing deep links to make life easier for QA. 
 
 #### **Tripledot Studios, London** *Junior Level Designer, February 2022 - September 2022*
 
