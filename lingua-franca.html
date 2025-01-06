@@ -22,5 +22,22 @@ description: Solo Project
 
   <p>As I say, I'm making this for my own entertainment - it's an on-going exercise in researching, adapting and optimising procgen techniques, as I try and fit them all in one place. So far, I've got the above world editor toy up and running, but I still don't know the final shape <em>Lingua Franca</em> is going to take.</p>
 
+  <h2>Poisson Disk Sampling and Delauney Triangulation</h2>
+  <p>First, the coordinate system. Setting this up was quite straightforward, a matter of adapting Daniel Anderson's <strong><a href="https://andersource.dev/2020/11/06/organic-grid.html" target="_blank" rel="noreferrer noopener">tutorial on generating organic grids</a></strong> from a 2D plane to a sphere.</p>
+  <p>Poisson disk sampling distributes vertices over the sphere, spacing these out by arc length instead of Euclidean distance. My rule of thumb here is that a Poisson sampling over <em>any</em> surface should surely use that surface's geodesic lengths as its distance metric (though calculating geodesics might be significantly more expensive in the general case...).</p>
+  <p>Triangulation is surprisingly easy. The vertices can be stereographically projected onto a plane, connected using a standard Delauney triangulation, then mapped back onto a sphere. Red Blob Games' <strong><a href="https://www.redblobgames.com/x/1842-delaunay-voronoi-sphere/">tutorial</a></strong> better addresses the subtleties of this procedure, but the long and short of it is we end up with an organic, spherical grid. This can further be subdivided and relaxed, much like John Wigg does with a static mesh in <strong><a href="https://john-wigg.dev/SphereScaper/" target="_blank" rel="noreferrer noopener">SphereScaper</a></strong>.</p>
+
+  <h2>Continent Generation</h2>
+  <p>Each node on the grid carries a landmass value, representing a region of either land or sea. <em>Lingua Franca</em> (and the above world editor demo), assigns landmass with the following algorithm:</p>
+	<ol>
+    <li><em>Icecaps</em> First, all vertices above 75°N (and below 75°S) are filled in with land, giving a North (and South) Pole</li>
+    <li><em>Continents</em> Continents are instanced on sets of three pairwise-adjacent vertices. Once 9 such instances exist, a while loop begins. At each iteration, a mutual neighbour of two land vertices will be randomly selected and assigned its own unit of land, filling out the continents</li>
+    <li><em>Isthmuses</em> If at any point in Step 2, two or more continents connect with one another, new continents will be instanced until we are back to 9. By introducing these midway through the while loop, we end up with a nice variety of continent sizes</li>
+    <li><em>Coastlines</em> Once 35% of the globe is land, the while loop breaks, and all unassigned vertices next to land are immediately set to sea. If more land exists in the Southern Hemisphere, the poles can also be flipped, without loss of generality</li>
+    <li><em>Islands</em> Of the remaining vertices, each has a ~8% chance of being set to land, but otherwise becomes sea</li>
+  </ol>
+  <p>Constants like the latitude of the Arctic circle, the number of continents, <em>etc.</em>, were only arrived at with trial and error, but they successfully create worlds more archipelagic than our own.</p>
+  <p>I'd originally thought wave function collapse could be used to build up landmasses, but it just wasn't well-suited to the global constraints detailed above. The technique is much more appropriate to assigning biomes post-hoc, colouring tiles by local constraints like 'deserts must be landlocked', 'tundras cannot be adjacent to rainforests', <em>etc</em>. A trivial implementation of this can be seen in the demo, but I plan to add much more nuance in the future.
+
   <h2 style="text-align:right"><strong>Next: </strong>Simulating sailboats...</h2>
 </article>
