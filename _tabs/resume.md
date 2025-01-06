@@ -8,30 +8,30 @@ I got into game development the long way round. The truth is, I only started mak
 
 # Employment
 
-**Feral Interactive, London** *Graduate Developer, November 2023 - Present*
+#### **Feral Interactive, London** *Graduate Developer, November 2023 - Present*
 
-Secured my first programming role in the industry, porting games from PC to Android. Watch this space...
+Shipped my first title in the industry, seeing our port of [**Grid Legends**](https://committothebit.github.io/grid-legends) through development and up to release. Experienced with Android, wrangling its API for both mobile and VR development. Supplemented forward-facing, game-specific work with side projects improving Feral's internal libraries, like extending our existing deep links to make life easier for QA. 
 
-**Tripledot Studios, London** *Junior Level Designer, February 2022 - September 2022*
+#### **Tripledot Studios, London** *Junior Level Designer, February 2022 - September 2022*
 
-Offered a full-time role on the merits of my contract work, taking on new challenges whilst fulfilling existing responsibilities. A/B testing live games, justifying key design decisions with real-time data. Experienced in SQL and Looker, using visualisation tools to better understand player behaviour.
+Offered a full-time role on the merits of my contract work, taking on new challenges whilst fulfilling existing responsibilities. A/B tested live games, justifying key design decisions with real-time data. Experienced in SQL and Looker, using visualisation tools to better understand player behaviour.
 
-*Junior Level Designer (Contractor), September 2021 - February 2022*
+#### *Junior Level Designer (Contractor), September 2021 - February 2022*
 
 Created new levels across multiple mobile titles, realising and evaluating ideas in Tripledot's internal level editors. Confident under constraints, balancing imagination with game specifications and maintaining clear documentation of my work.
 
 # Education
 
-**MSc Computer Games Technology, Distinction** *Abertay University, Dundee, September 2022 - October 2023*
+#### **MSc Computer Games Technology, Distinction** *Abertay University, Dundee, September 2022 - October 2023*
 
 Achieved an A+ in the majority of my modules, including: Advanced Procedural Methods, Applied Mathematics and Artificial Intelligence, and Programming for Games. Specialised with a dissertation on procedural narrative.
 
-Winner of the Andrew De Vries Memorial Prize, graduating at the top of my year.
+Winner of the Andrew De Vries Memorial Prize, graduating top of my year.
 
-**BA (Hons) Mathematics, 2.ii** *University of Cambridge, Cambridge, October 2018 - July 2021*
+#### **BA (Hons) Mathematics, 2.ii** *University of Cambridge, Cambridge, October 2018 - July 2021*
 
 Graduated with 59% in Part II of the Tripos. Demonstrably experienced in 3D mathematics, with modules including: Quantum Information and Computation, Principles of Quantum Mechanics, Linear Algebra, Classical Dynamics, Statistics. First learned to code as part of the degree, scoring 85% in my final year computational projects.
 
 Involved in 20+ plays in my time at Cambridge, taking one to the Edinburgh Fringe. Experienced as an actor, writer, and producer. Treasurer of Girton Amateur Dramatics Society (2019-2021).
 
-**References available on request.**
+#### **References available on request.**
