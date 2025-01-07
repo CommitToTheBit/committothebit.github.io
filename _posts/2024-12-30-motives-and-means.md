@@ -20,3 +20,14 @@ A little bit about me first: I am a sucker for murder mysteries.
 At its lowest level, this game is an exercise in generating logic puzzles - specifically, **Einstein puzzles**. Given $n$ forenames, $n$ surnames, *etc.*, ...
 
 ## Generalisation
+
+the 2D coordinates of $[forename, surname]$ square, but our $[forename]$ and $[surname]$ lines.
+While we're at it, we'll also go ahead and assign a bound to the point in the top left corner of Fig. A, which will represent the total number of characters in the puzzle.
+
+Not only does loosening these bounds allow repetitions, but also red herrings. *Bad Bohemians*, for instance, $[title]$.
+
+<!-- FIXME: Write clue in handwriting? -->
+Another scenario, suppose we received the clue *Character #1 is either called Adeline, or is a Byron*.
+A player might read that and decide to come back to it once they've eliminated either Adeline or Byron as an option, but what about the solver? It makes sense to extend to a 3D grid $[character, forename, surname]$
+
+## Limitations
