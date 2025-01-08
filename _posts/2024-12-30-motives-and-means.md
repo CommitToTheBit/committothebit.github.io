@@ -17,7 +17,11 @@ A little bit about me first: I am a sucker for murder mysteries.
 
 ## Representation
 
-At its lowest level, this game is an exercise in generating logic puzzles - specifically, **Einstein puzzles**. Given $n$ forenames, $n$ surnames, *etc.*, ...
+At its lowest level, this game is an exercise in generating logic puzzles - specifically, **Einstein puzzles**. Given $n$ forenames, $n$ surnames, *etc.*, the player is tasked each element from each category to one of $n$ different characters. The player can do this by filling up a grid with ticks and crosses; in code, they'll be replaced with closed intervals $[min,max]$.
+
+<!-- FIXME: Figure here -->
+
+The idea here is, we need a way of representing our puzzles, and their possible solutions, in a way the computer can understand. This is not a natural language processing project; the computer won't get any information out of even a clue like *Character #1 is called Abigail*.
 
 ## Generalisation
 
@@ -28,6 +32,10 @@ Not only does loosening these bounds allow repetitions, but also red herrings. *
 
 <!-- FIXME: Write clue in handwriting? -->
 Another scenario, suppose we received the clue *Character #1 is either called Adeline, or is a Byron*.
-A player might read that and decide to come back to it once they've eliminated either Adeline or Byron as an option, but what about the solver? It makes sense to extend to a 3D grid $[character, forename, surname]$
+A player might read that and decide to come back to it once they've eliminated either Adeline or Byron as an option, but what about the computer? It makes sense to extend to a 3D grid $[character, forename, surname]$
+
+## Deductions
+
+I'll get more into the code side of this in the next post.
 
 ## Limitations
