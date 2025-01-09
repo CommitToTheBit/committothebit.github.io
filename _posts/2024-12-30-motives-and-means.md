@@ -21,14 +21,15 @@ At its lowest level, this game is an exercise in generating logic puzzles - spec
 
 <!-- FIXME: Figure here -->
 
-The idea here is, we need a way of representing our puzzles, and their possible solutions, in a way the computer can understand. This is not a natural language processing project; the computer won't get any information out of even a clue like *Character #1 is called Abigail*.
+The idea here is, we need a way of representing our puzzles and their possible solutions in a form the computer can understand. This is not a natural language processing project; the computer won't get any information out of even a clue like *Character #1 is called Abigail* as written. However, if we tag that clue with a constraint $(#1, Abigail) \in [1,1]$, ...
 
 ## Generalisation
 
-the 2D coordinates of $[forename, surname]$ square, but our $[forename]$ and $[surname]$ lines.
-While we're at it, we'll also go ahead and assign a bound to the point in the top left corner of Fig. A, which will represent the total number of characters in the puzzle.
+Here's what I mean. Right now, we're assuming each element is used exactly once, which eliminates the possibility of mistaken identities, where, *e.g.*, two characters share the same forename. This assumption is restricting narrative possibilities; the above model needs generalised. By assigning bounds to not only 2D coordinates of $[forename, surname]$ square, but also the 1D coordinates along our $[forename]$ and $[surname]$ lines, we can surely enough bake in the possibility of forenames and surnames appearing more than once. While we're at it, we'll also go ahead and assign a bound to the point in the top left corner of Fig. A, which will represent the total number of characters in the puzzle.
 
-Not only does loosening these bounds allow repetitions, but also red herrings. *Bad Bohemians*, for instance, $[title]$.
+<!-- FIXME: Figure with explanation of characters' uniqueness -->
+
+As a collorary to the above, these 1D bounds can also introduce red herrings. *Bad Bohemians*, for instance, $[title]$.
 
 <!-- FIXME: Write clue in handwriting? -->
 Another scenario, suppose we received the clue *Character #1 is either called Adeline, or is a Byron*.
