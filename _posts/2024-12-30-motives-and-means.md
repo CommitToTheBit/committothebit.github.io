@@ -21,7 +21,7 @@ At its lowest level, this game is an exercise in generating logic puzzles - spec
 
 <!-- FIXME: Figure here -->
 
-The idea here is, we need a way of representing our puzzles and their possible solutions in a form the computer can understand. This is not a natural language processing project; the computer won't get any information out of even a clue like *Character #1 is called Abigail* as written. However, if we tag that clue with a constraint $(#1, Abigail) \in [1,1]$, ...
+The idea here is, we need a way of representing our puzzles and their possible solutions in a form the computer can understand. This is not a natural language processing project; the computer won't get any information out of even a clue like *Character #1 is called Abigail* as written. However, if we tag that clue with a constraint $(\#1, Abigail) \in [1,1]$, ...
 
 ## Generalisation
 
