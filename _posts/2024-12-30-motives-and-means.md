@@ -11,9 +11,9 @@ image:
   alt: July 27, 2024. An early set of procedurally generated clues, being used to fill in an Einstein puzzle.
 ---
 
-There's a strong argument to be made that the whodunnit lends itself uniquely well to game design, with no other literary genre seeing itself so explicitly "as a form of game between reader writer" ([**Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/), 2013). There's an equally strong argument that trying to procedurally generate whodunnits is a doomed and deeply stupid venture. With a rich history of failures like *Murder of the Zinderneuf* (Free Fall Associates, 1983) and Sheldon Klein's mystery generator (...), it's reasonable to ask - why am I doing this?
+There's a strong argument to be made that the whodunnit lends itself uniquely well to game design, with no other literary genre seeing itself so explicitly "as a form of game between reader writer" ([**Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/), 2013). There's an equally strong argument that trying to procedurally generate whodunnits is a doomed and deeply stupid venture. For a design problem with such a rich history of misfires and mistakes, from *Murder of the Zinderneuf* (Free Fall Associates, 1983) to Sheldon Klein's mystery generator (...), it's reasonable to ask - why do this?
 
-A little bit about me first: I am a sucker for murder mysteries. 
+I'll be honest, I am a sucker for murder mysteries. 
 
 This is why, to me, the whodunnit represents a holy grail for procedural storytelling: where players (self included)...
 
