@@ -11,9 +11,11 @@ image:
   alt: July 27, 2024. An early set of procedurally generated clues, being used to fill in an Einstein puzzle.
 ---
 
-There's this old blog post by [**Jimmy Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/)...
+There's a strong argument to be made that the whodunnit lends itself uniquely well to game design, with no other literary genre seeing itself so explicitly "as a form of game between reader writer" ([**Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/), 2013). There's an equally strong argument that trying to procedurally generate whodunnits is a doomed and deeply stupid venture. With a rich history of failures like *Murder of the Zinderneuf* (Free Fall Associates, 1983) and Sheldon Klein's mystery generator (...), it's reasonable to ask - why am I doing this?
 
-A little bit about me first: I am a sucker for murder mysteries.
+A little bit about me first: I am a sucker for murder mysteries. 
+
+This is why, to me, the whodunnit represents a holy grail for procedural storytelling: where players (self included)...
 
 ## Representation
 
@@ -21,7 +23,7 @@ At its lowest level, this game is an exercise in generating logic puzzles - spec
 
 <!-- FIXME: Figure here -->
 
-The idea here is, we need a way of representing our puzzles and their possible solutions in a form the computer can understand. This is not a natural language processing project; the computer won't get any information out of even a clue like *Character #1 is called Abigail* as written. However, if we tag that clue with a constraint $(\#1, Abigail) \in [1,1]$, ...
+The idea here is, we need a way of representing our puzzles and their possible solutions in a form the computer can understand. This is not a natural language processing project; the computer won't get any information out of even a clue like *Character #1 is called Abigail* as written. However, if we tag that clue with a constraint $(1, Abigail) \in [1,1]$, ...
 
 ## Generalisation
 
