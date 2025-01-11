@@ -7,9 +7,17 @@ refactor: true
 
 <p></p>
 
-<p>It's probably more accurate to say I want to <i>help</i> tell stories. That I want to help tell them in ways they haven't been told before. That I want to apply my technical knowledge in service of something creative. So I got into game development.</p>
+<p class="page-desc fw-light mb-4">It's probably more accurate to say I want to <i>help</i> tell stories. That I want to help tell them in ways they haven't been told before. That I want to apply my technical knowledge in service of something creative. So I got into game development.</p>
+
+<h2></h2>
 
 <!-- FIXME: Showreel here? -->
+<!-- FIXME: Can I write text over showreel? -->
+<div style="aspect-ratio: 16/9">
+  <iframe width="100%" height="100%" src="https://www.youtube.com/embed/JRGhIB1VPyM"></iframe>
+</div>
+
+<p></p>
 
 <p>With two years in the industry split across programming and design, I've seen how far good code goes to helping my team. Well-rounded, I'm a hands-on developer with a highly mathematical background. Acutely interested in all things procedural. Always up for a challenge.</p>
 
@@ -17,7 +25,46 @@ refactor: true
 
 <h1>Featured<p class="handwritten" style="display:inline"> Projects</p></strong></h1>
 
-<h1>Recent<p class="handwritten" style="display:inline"> Posts</p></strong></h1>
+<div class="columns is-centered is-multiline is-mobile" id="project">
+  <div class="column has-text-centered is-paddingless is-marginless is-one-third-widescreen is-one-third-desktop is-one-fifth-fullhd is-one-third-tablet is-two-fifths-mobile is-three-quarters-touch" id="project-card">
+    <a href="/grid-legends" target="_blank">
+      <div class="has-background-black card">
+        <figure class="image is-3by1"></figure>
+        <div class="card-content">
+          <h1 class="project-title has-text-white is-size-4">Releases</h1>
+          <p class="has-text-white has-text-weight-light content">...like <i>GRID Legends</i>, ...</p>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="column has-text-centered is-paddingless is-marginless is-one-third-widescreen is-one-third-desktop is-one-fifth-fullhd is-one-third-tablet is-two-fifths-mobile is-three-quarters-touch" id="project-card">
+    <a href="/bad-bohemians" target="_blank">
+      <div class="has-background-black card">
+        <figure class="image is-3by1"></figure>
+        <div class="card-content">
+          <h1 class="project-title has-text-white is-size-4">Demos</h1>
+          <p class="project-subtitle has-text-white has-text-weight-light content">...like <i>Bad Bohemians</i>, </p>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="column has-text-centered is-paddingless is-marginless is-one-third-widescreen is-one-third-desktop is-one-fifth-fullhd is-one-third-tablet is-two-fifths-mobile is-three-quarters-touch" id="project-card">
+    <a href="/lingua-franca" target="_blank">
+      <div class="has-background-black card">
+        <figure class="image is-3by1"></figure>
+        <div class="card-content">
+          <h1 class="project-title has-text-white is-size-4">Experiments</h1>
+          <p class="project-subtitle has-text-white has-text-weight-light content">...like <i>Lingua Franca</i>, an excuse to mess about with world generation</p>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+
+<h1>Recent<p class="handwritten" style="display:inline"> Writing</p></strong></h1>
 
 <!-- <div class="get_rich_or_die_trying_embed"><center><iframe frameborder="0" src="https://itch.io/embed-upload/6183446?color=002082" allowfullscreen="" width=100% height=100%"><a href="https://commit-to-the-bit.itch.io/get-rich-or-die-trying">Play Get Rich or Die Trying on itch.io</a></iframe></center></div> -->
 
@@ -138,3 +185,5 @@ refactor: true
 {% if paginator.total_pages > 1 %}
   {% include post-paginator.html %}
 {% endif %}
+
+<!-- FIXME: Add engines/languages as a minimalistic footer -->
