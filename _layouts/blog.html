@@ -14,11 +14,9 @@ layout: default
     <h1 class="dynamic-title">
       <strong>{{ title }}</strong>
     </h1>
-    <div class="content">
-      {{ content }}
-    </div>
-  {% else %}
-    {{ content }}
+    {% if page.description %}
+      <p class="page-desc fw-light mb-4">{{ page.description }}</p>
+    {% endif %}
   {% endif %}
 
   <div id="archives" class="pl-xl-3">

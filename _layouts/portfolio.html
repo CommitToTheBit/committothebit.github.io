@@ -11,16 +11,10 @@ layout: default
     <h1 class="dynamic-title">
       <strong>{{ title }}</strong>
     </h1>
-    <div class="content">
-      {{ content }}
-    </div>
-  {% else %}
-    {{ content }}
+    {% if page.description %}
+      <p class="page-desc fw-light mb-4">{{ page.description }}</p>
+    {% endif %}
   {% endif %}
-
-  <div id="project">
-
-</div>
 
   <div class="columns is-centered is-multiline is-mobile" id="project">
     <div class="column has-text-centered is-paddingless is-marginless is-one-third-widescreen is-one-third-desktop is-one-fifth-fullhd is-one-third-tablet is-two-fifths-mobile is-three-quarters-touch" style="width:100%;max-width:100%;aspect-ratio:3" id="project-card">
