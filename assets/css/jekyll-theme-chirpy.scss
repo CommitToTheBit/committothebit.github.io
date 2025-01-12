@@ -28,10 +28,12 @@
       .column {
           border-radius: 0.5rem;
 
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+
           .image {
-              background-position: center;
-              background-repeat: no-repeat;
-              background-size: cover;
+
           }
       }
   }
@@ -51,6 +53,11 @@
       height: 100%;
       max-height: 100%;
 
+      border-radius: 0.5rem;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+
       &:hover {
           transform: scale(0.975);
       }
@@ -63,7 +70,8 @@
 
       transition: all 0.25s ease;
       &:hover {
-          background-color: rgba($color: #377fcf, $alpha: 0.5)!important;
+          background-color: rgba($color: #ffffff, $alpha: 0.0)!important;
+          opacity: 0.0!important;
       }
   }
 }
