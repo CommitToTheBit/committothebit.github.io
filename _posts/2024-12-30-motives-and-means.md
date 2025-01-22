@@ -13,11 +13,13 @@ image:
 
 There's a strong argument to be made that the whodunnit lends itself uniquely well to game design, with no other literary genre seeing itself so explicitly "as a form of game between reader writer" ([**Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/), 2013). There's an equally strong argument that trying to procedurally generate whodunnits is a doomed and deeply stupid venture. For a design problem with such a rich history of misfires and mistakes, from Sheldon Klein's mystery generator (1973) to *Murder of the Zinderneuf* (Free Fall Associates, 1983), it's reasonable to ask - why do this?
 
-I'll be honest, I am a sucker for murder mysteries. *Five Little Pigs* unfailing makes me misty-eyed, *Knives Out* is a yearly rewatch, and I ardently believe *Return of the Obra Dinn* is one of the best things to ever happen to the genre. Between that and the *Golden Idol* series, the design space for real deductive reasoning..., but I find these lack the simple human drama of gathering a bunch of characters in a room and letting them talk. Alfred Hitchcock famously hated the whodunnit for hinging too strongly on a singular moment of surprise, but to create a game that skips to the good bit
+I'll be honest, I am a sucker for murder mysteries. *Five Little Pigs* unfailing makes me misty-eyed, *Knives Out* is a yearly rewatch, and I ardently believe *Return of the Obra Dinn* is one of the best things to ever happen to the genre. Between that and the *Golden Idol* series, the design space for deductive games has undoubtedly opened up in recent years, but I find both lacking the simple human drama of gathering a bunch of characters in a room and letting them talk. Alfred Hitchcock famously hated the whodunnit for hinging too strongly on a singular moment of surprise, but to create a game that skips to the good bit
 
-The other problem baked into is, well, you can only really experience them once.
+The other problem baked into these stories is, well, you can only really experience them once. Yes, yes, it's all good fun to reread/rewatch/restart a mystery and see all the clues hidden in plain sight, but its not *the same* now is it? Just look at the reviews for *Obra Dinn*: you can hardly move for [review description]. This is why, to me, the whodunnit represents a holy grail for procedural storytelling: where players (self included)...
 
-This is why, to me, the whodunnit represents a holy grail for procedural storytelling: where players (self included)...
+<!-- Sidebar on perceptual collapse?... -->
+
+All of this is to say, [goals for blog series.]
 
 ## Representation
 
