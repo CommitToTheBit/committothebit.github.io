@@ -13,14 +13,17 @@ description: Solo Project
 
   <p></p>
   <p><i>Bad Bohemians</i> [description]</p>
-  <p>In its current state, <i>Bad Bohemians</i> is truly the stereotype of a programmer's game: the art is amateurish and the audio non-existent, but <strong>god</strong> has it been optimised to hell and back. Some of these optimisations, like my use of Streaming SIMD Extensions (SSE) and my abuse of uint64_ts, make Godot particularly angry when trying to export it for web, so we've had to come to a compromise. Like any stereotypical programmer's game, though, it might be more impressive to read about that it is to actually play...</p>
-
-
-  <!-- FIXME: HTML demo -->
+  <p>In its current state, <i>Bad Bohemians</i> is truly the stereotype of a programmer's game: the art is amateurish and the audio non-existent, but <strong>god</strong> has it been optimised to hell and back. Some of these optimisations, like my use of Streaming SIMD Extensions (SSE) and my abuse of uint64_ts, make Godot particularly angry when trying to export it for web, so we've had to come to a compromise. While the full, Windows demo generates puzzles dynamically, this HTML version can only showcase a finite set of pre-generated example. Like any stereotypical programmer's game, though, they might still be more impressive to read about than they are to actually play...</p>
+  <div style="margin-top:2rem;text-align:center">
+  <!-- <div style="margin-top:2rem;aspect-ratio:1280/760;text-align:center"> -->
+    <!-- FIXME: HTML demo -->
+    <p><strong>Controls </strong>LMB to open dropdowns and select elements. RMB to clear selected elements, and grey out elements from dropdowns. Q/E to cycle through characters. Once three characters have the correct forename, surname, nobility <i>and</i> domain selected, these elements will be confirmed (<i>i.e.</i> these elements will change font, and may no longer be changed).<p>
+    <p>W/S to show/hide the pinboard. Drag pins with LMB to move. Drag/click pins with RMB to connect/disconnect. Scroll mouse wheel while holding RMB to change colour of yarn.</p>
+  </div>
 
   <h2>The Prototype</h2>
   <p>This demo's been a long time coming. While I only started on the current iteration of <i>Bad Bohemians</i> in early 2024, I'd originally come up with the game as a way-too-ambitious project for one of my Master's modules. Obviously, this prototype had some superficial differences (it only ran in a console, for a start), but the structure of the generator remains the same: starting with a logic puzzle solver class, we generate a bunch of clues, find a subset that lead the solver to the correct answer, then iterate that subset until the puzzle is challenging enough. First time around, that iteration was done with a genetic algorithm; the solver underpinning it a rule-based system.</p>
-  <p>[Paragraph on the original solver: "if-then statements"]</p>
+  <p>[Paragraph on the original solver: "if-then statements"].</p>
   <p>Even at [Reflection, boiling down to three core issues:] the solver was slow, the text generation rigid, the genetic algorithm unlikely to produce preferable mutations. Still got an A+ though, so make of that what you will.</p>
   <p><img src="assets/img/projects/2025-01-20-bad-bohemians-genetic-algorithm-puzzle.png" alt="An example puzzle, generated with Bad Bohemians' original genetic algorithm." width="90%" style="display:block;margin-left:auto;margin-right:auto;aspect-ratio:1200/530;border-radius:0.5rem;"></p>
 
@@ -36,5 +39,5 @@ description: Solo Project
   <!-- FIXME: End by looking forward to shipping components -->
   <!-- <h2>The Library</h2> -->
 
-  <h2 style="text-align:right">Many, <em>many</em> more details can be found in my <a href="https://committothebit.github.io/categories/procedural-whodunnits/"><strong>Procedural Whodunnits</strong></a> devlogs. All source code is available on <strong><a href="https://github.com/CommitToTheBit/Grey-Cells-Scripting-Tool" target="_blank" rel="noreferrer noopener">GitHub</a></strong>.</h2>
+  <h2 style="text-align:right">Many, <em>many</em> more details can be found in my <a href="https://committothebit.github.io/categories/procedural-whodunnits/"><strong>Procedural Whodunnits</strong></a> devlogs. The full demo is available on <strong><a href="https://commit-to-the-bit.itch.io/bad-bohemians" target="_blank" rel="noreferrer noopener">Itch.io</a></strong></h2>
 </article>
