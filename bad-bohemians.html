@@ -21,11 +21,17 @@ description: Solo Project
     <p>W/S to show/hide the pinboard. Drag pins with LMB to move. Drag/click pins with RMB to connect/disconnect. Scroll mouse wheel while holding RMB to change colour of yarn.</p>
   </div>
 
-  <h2>The Prototype</h2>
+  <h2>First Drafts</h2>
   <p>This demo's been a long time coming. While I only started on the current iteration of <i>Bad Bohemians</i> in early 2024, I'd originally come up with the game as a way-too-ambitious project for one of my Master's modules. Obviously, this prototype had some superficial differences (it only ran in a console, for a start), but the structure of the generator remains the same: starting with a logic puzzle solver class, we generate a bunch of clues, find a subset that lead the solver to the correct answer, then iterate that subset until the puzzle is challenging enough. First time around, that iteration was done with a genetic algorithm; the solver underpinning it a rule-based system.</p>
   <p>[Paragraph on the original solver: "if-then statements"].</p>
   <p>Even at [Reflection, boiling down to three core issues:] the solver was slow, the text generation rigid, the genetic algorithm unlikely to produce preferable mutations. Still got an A+ though, so make of that what you will.</p>
   <p><img src="assets/img/projects/2025-01-20-bad-bohemians-genetic-algorithm-puzzle.png" alt="An example puzzle, generated with Bad Bohemians' original genetic algorithm." width="90%" style="display:block;margin-left:auto;margin-right:auto;aspect-ratio:1200/530;border-radius:0.5rem;"></p>
+
+<h2>Consistency, Ambiguity, Obviousness</h2>
+<p>What makes a puzzle puzzling? How could one describe its difficulty quantitatively, in ways a computer could understand? If we define a puzzle simply as a some set of clues, those clues need to satisfy several demands, individual and in combination. Most obviously, they must be <i>consistent</i>: [...]. Moreover, they must be <i>unambiguous</i>: [trust]. However, they also need to [minimise obviousnness]. This might be thought of minimising the puzzle's <i>obviousness</i>. [We need to formalise].</p>
+<p>One of the first steps in fleshing out my solver into a full demo was refactoring its solver. Conceptually, it now treats the space of possible solutions to a given puzzle as a dictionary of possible character traits, each with an upper and lower bound on how many characters display said trait. In <i>Bad Bohemians</i>' case, these bounds might translate as "No more than two characters are from the Caine family" or "There are no Dukes called Abigail", statements of that nature. The crucial point here is that </p> 
+
+<p>Similarly, consistency can be framed as "not contradicting the bounds".</p>
 
   <h2>Setting Puzzles</h2>
 
