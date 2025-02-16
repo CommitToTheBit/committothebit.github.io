@@ -7,13 +7,13 @@ description: Solo Project
 <article class="px-1">
   <div class="text-panel" style="color:white;">
     <h3 style="margin-top:0rem;color:white"><strong>Taking a stab at the procedural whodunnit...</strong></h3>
-    <p>[...].</p>
+    <p><b>Key Achievements</b> Built a logic puzzle generator completely from scratch, capable of using my words and my code to create puzzles that fool me. Optimised its constraint solver within an inch of its life. [...].</p>
     <strong>Made With </strong></em>Godot, C++.
   </div>
 
   <p></p>
   <p><i>Bad Bohemians</i> [description]</p>
-  <p>In its current state, <i>Bad Bohemians</i> is truly the stereotype of a programmer's game: the art is amateurish and the audio non-existent, but <strong>god</strong> has it been optimised to hell and back. Some of these optimisations, like my use of Streaming SIMD Extensions (SSE) and my abuse of uint64_ts, make Godot particularly angry when trying to export it for web, so we've had to come to a compromise. While the full, Windows demo generates puzzles dynamically, this HTML version can only showcase a finite set of pre-generated example. Like any stereotypical programmer's game, though, they might still be more impressive to read about than they are to actually play...</p>
+  <p>In its current state, <i>Bad Bohemians</i> is truly the stereotype of a programmer's game: the art is amateurish, the audio non-existent, but <strong>god</strong> has it been optimised to hell and back. Some of these optimisations, like my use of Streaming SIMD Extensions (SSE) and my abuse of uint64_ts, make Godot particularly angry when trying to export it for web, so we've had to come to a compromise. While the full, Windows demo generates puzzles dynamically, this HTML version can only showcase a finite set of pre-generated example. Like any stereotypical programmer's game, though, they might still be more impressive to read about than they are to actually play...</p>
   <div style="margin-top:2rem;text-align:center">
   <!-- <div style="margin-top:2rem;aspect-ratio:1280/760;text-align:center"> -->
     <!-- FIXME: HTML demo -->
@@ -22,31 +22,29 @@ description: Solo Project
   </div>
 
   <h2>First Drafts</h2>
-  <p>This demo's been a long time coming. While I only started on the current iteration of <i>Bad Bohemians</i> in early 2024, I'd originally come up with the game as a way-too-ambitious project for one of my Master's modules. Obviously, this prototype had some superficial differences (it only ran in a console, for a start), but the structure of the generator remains the same: starting with a logic puzzle solver class, we generate a bunch of clues, find a subset that lead the solver to the correct answer, then iterate that subset until the puzzle is challenging enough. First time around, that iteration was done with a genetic algorithm; the solver underpinning it a rule-based system.</p>
+  <p>This demo's been a long time coming. While I only started on the current iteration of <i>Bad Bohemians</i> in early 2024, I'd originally come up with the game as a way-too-ambitious project for one of my Master's modules. Obviously, this prototype had some superficial differences (it only ran in a console, for a start), but the structure of the generator remains the same: starting with a constraint solver, we generate a bunch of clues, find a subset that lead the solver to the correct answer, then iterate that subset until the puzzle is challenging enough. First time around, that iteration was done with a genetic algorithm; the solver underpinning it a rule-based system.</p>
   <p>[Paragraph on the original solver: "if-then statements"].</p>
   <p>Even at [Reflection, boiling down to three core issues:] the solver was slow, the text generation rigid, the genetic algorithm unlikely to produce preferable mutations. Still got an A+ though, so make of that what you will.</p>
   <p><img src="assets/img/projects/2025-01-20-bad-bohemians-genetic-algorithm-puzzle.png" alt="An example puzzle, generated with Bad Bohemians' original genetic algorithm." width="90%" style="display:block;margin-left:auto;margin-right:auto;aspect-ratio:1200/530;border-radius:0.5rem;"></p>
 
 <h2>Consistency, Ambiguity, Obviousness</h2>
-<p>What makes a puzzle puzzling? How could one describe its difficulty quantitatively, in ways a computer could understand? If we define a puzzle simply as a some set of clues, those clues need to satisfy several demands, individual and in combination. They must never be over- or underdetermined: if a puzzle does not have a single, consistent solution, then it is simply a waste of time. AUTHOR makes the point that this is really a matter of trust, meaning a single puzzle that fails in this respect would be simply unacceptable. So, the puzzles must be solvable - but they can't be too solvable. The challenge of a game like <i>Obra Dinn</i> comes from having to cross-reference your sources of information, from uncovering its story piece by bloody piece; no single clue may give too much away. In <i>Bad Bohemians</i>, I've formalised all of these design requirements into not-insubstantial code...
+<p>What makes a puzzle puzzling? How could one describe its difficulty quantitatively, in ways a computer could understand? If we define a puzzle simply as a some set of clues, those clues need to satisfy several demands, individual and in combination. They must never be over- or underdetermined: if a puzzle does not have a single, consistent solution, then it is simply a waste of time. AUTHOR makes the point that this is really a matter of trust, meaning a single puzzle that fails in this respect would be simply unacceptable. So, the puzzles must be solvable - but they can't be too solvable. The challenge of a game like <i>Obra Dinn</i> comes from having to cross-reference your sources of information, from uncovering its story piece by bloody piece; no single clue gives too much away. In <i>Bad Bohemians</i>, I've formalised all of these design requirements into not-insubstantial code...
 
-<p>One '; in of the first steps in fleshing out my solver into a full demo was refactoring its solver. Conceptually, it now treats the space of possible solutions to a given puzzle as a dictionary of possible character traits, each with an upper and lower bound on how many characters display said trait. In <i>Bad Bohemians</i>' case, these bounds might translate as "No more than two characters are from the Caine family" or "There are no Dukes called Abigail", statements of that nature. Crucially, this construction allows us an easy check for underdeterminedness. Defining the <i>ambiguity</i> of a puzzle as the sum of all the solver's maxima, minus the sum of all minima, we can then conclude a puzzle has a unique solution if and only if it has zero ambiguity.</p> 
+<p>One of the first steps in fleshing out my prototype into a full demo was refactoring its solver. Conceptually, it now treats the space of possible solutions to a given puzzle as a dictionary of possible character traits, each with an upper and lower bound on how many characters display said trait. In <i>Bad Bohemians</i>' case, these bounds might translate as "No more than two characters are from the Caine family" or "There are no Dukes called Abigail", statements of that nature. Crucially, the construction allows us an easy check for underdeterminedness. Defining the <i>ambiguity</i> of a puzzle as the sum of all the solver's maxima, minus the sum of all minima, we can then clearly see a puzzle has a unique solution if and only if it has zero ambiguity.</p> 
 
 <p>Similarly, consistency can be framed as "not contradicting the bounds". As we propagate information through the solver (more on this later), our bounds will get tighter and tighter. However, if a minimum gets raised to be higher than its maximum, or vice versa, the solver will terminate early, telling the rest of the generator it's been fed contradictory information and is thus overdetermined.</p>
 
-<p>Let's now define another metric. Let x be the Ambiguity of a solver before any clues have been fed in, and x_n it's ambiguity once only our other clue is in. We might then think of x - x_n, the reduction in ambiguity thanks to n alone, as the <i>obviousness</i> of clue n. More generally, we get the obviousness Suppose we have one solver per clue.[...end obviousness paragraph on the idea of being, quite literally, more than the sum of its parts]</p>
+<p>Let's now define another metric. Let x be the ambiguity of a solver before any clues have been fed in, and x_n its ambiguity once only our nth clue has. We might then think of x - x_n, the reduction in ambiguity thanks to n alone, as the <i>obviousness</i> of clue n. Moreover, we define the obviousness of a puzzle as the sum of obviousnesses of its clues. This number represents how much information is given to the user prima facia, that doesn't need deduced by cross-referencing clues; to optimise a puzzle is to minimise its obviousness. Indeed, the gold standard of puzzle is one with obviousness strictly less than its initial ambiguity - satisfying the inequality sum(x_n - x) < x means a puzzle encodes, quite literally, more information than the sum of its parts!</p>
 
-  <h2>Setting Puzzles</h2>
+  <h2>Making Deductions</h2>
+<p>[Interlocking grid structure and propagation]</p>
+<p>[Demo-level text generation and evaluation]</p>
+<p>[Demo-level polish]</p>
 
-  <h2>Solving Puzzles</h2>
-
-  <h2>Making Puzzles Puzzling</h2>
-
-  <h2>The Demo</h2>
-  <!-- Focus - disproportionately? - on UI, shaders, etc., here... -->
-
-  <!-- FIXME: End by looking forward to shipping components -->
-  <!-- <h2>The Library</h2> -->
+  <h2>Loose Ends</h2>
+<p>This is, for all intents and purposes, a successful demo. [...]. But that doesn't mean I'm done with it yet.</p>
+<p>[First, library and tools.] The current set up is minimal: I've watermarked each puzzle with its seed, and my debug builds allow me to print answers, but that's about it. [Internal work]. A truly full release would need a hinting system, to [...]... but I'm still some ways off from that for now.</p>
+<p>The other challenge is one of scale. [Text generation]. <i>Bad Bohemians</i> uses a grammar-based approach for its text generation, which, while not entirely unsuccessful, certainly has room for improvement. Grammars are useful for lightweight text generation, but they struggle at encoding more macro constraints, like [...]. What that means is, right now, adding prose to the generator comes with a lot of markup, which is at best a hassle, and at worst a point where poorly-written constraints can confuse the solver.</p>
 
   <h2 style="text-align:right">Many, <em>many</em> more details can be found in my <a href="https://committothebit.github.io/categories/procedural-whodunnits/"><strong>Procedural Whodunnits</strong></a> devlogs. The full demo is available on <strong><a href="https://commit-to-the-bit.itch.io/bad-bohemians" target="_blank" rel="noreferrer noopener">Itch.io</a></strong></h2>
 </article>
