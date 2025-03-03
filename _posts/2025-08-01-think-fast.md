@@ -5,6 +5,7 @@ date: 2025-01-08 21:47:00 +0000
 categories: [Procedural Whodunnits]
 tags: ["devlog", "procgen"]
 math: true
+published: false
 ---
 
 In the last post, I set out my overarching motivations for making *Bad Bohemians*, and how I mean to do so.

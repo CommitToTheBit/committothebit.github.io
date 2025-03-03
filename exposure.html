@@ -14,31 +14,44 @@ description: Lead Programmer
   <p></p>
 
   <div style="text-align:center">
-    <div style="aspect-ratio: 16/9">
+    <div style="width:100%;display:block;margin-left:auto;margin-right:auto;aspect-ratio:16/9;">
       <iframe width="100%" height="100%" src="https://www.youtube.com/embed/JRGhIB1VPyM"></iframe>
     </div>
-    <p><i>Exposure</i> casts the player as a reporter exploring the lair of infamous Scottish cannibal Sawney Bean. Armed with a faulty torch and Polaroid camera, the core game loop centers around exploration, crawling through a increasingly-claustrophobic cave network and cataloguing its secrets. With the coursework brief only asking for a vertical slice, though, the demo is most focused on continuously building tension over its tight, ~5min run time - with a few scripted scares along the way...</p>
+    <p><i>Exposure</i> casts the player as a reporter exploring the lair of infamous Scottish cannibal Sawney Bean. Armed with a faulty torch and Polaroid camera, the core game loop centers around exploration, crawling through a increasingly-claustrophobic cave network and cataloguing its secrets. With the coursework brief only asking for a vertical slice, though, the demo is most focused on continuously building tension over its tight, 5ish-minute run time - with a few scripted scares along the way...</p>
   </div>
 
   <h2>Movement Mechanics</h2>
 	<p>Conscious that much of the first-person horror genre amounts to "walk around and eventually get jumpscared", our level designer wanted a more varied, more tactile experience from the off. Drawing from my own visceral hatred of caving, I was quick to prototype <i>Exposure</i>'s crawlspaces: invisible splines that the player can hook on to and slowly inch their way along. With our environment artist then building tunnels around these paths, the overall effect is stifling. </p>
-	<!-- FIXME: Crawlspace image here -->
+  <div style="text-align:center;width:90%;display:block;margin-left:auto;margin-right:auto">
+    <img src="assets/img/projects/2023-05-01-exposure-final-crawlspace.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
+    <!-- <p style="font-size:80%;padding:0;color:#6d6c6c;"><b></b>[...]</p> -->
+  </div>
   <p>By submission, there was time to add forking paths, plus a much-needed splash of UI. I also had fun adding damping the player's camera, restricting their field of view and making the crawlspaces that bit more constricted. </p>
 
   <h2>The Journal</h2>
   <p>With our UI designer dropping out of the project early on, I was quick to take responsibility for designing the in-game journal. Narrative wanted a way to log and write lore about their environmental storytelling; I chose to present this diegetically, to best keep the player immersed in <i>Exposure</i>'s atmosphere. It might not be a formal approach to UI - and my artistic skills leave much to be desired - but it certainly reflects the player's role as a reporter.</p>
-	<p>The journal, therefore, is filled in dynamically. Maybe it's just my interest in procgen, but rather than force our narrative designer to manually create each entry as a separate UI widget, I used Blueprints to construct these at runtime. This better allowed for redrafting (all entries being encoded in a single .json file) and better creates the feeling of putting together a scrapbook of handwritten scrawlings and Polaroid pictures.</p>
-  <!-- FIXME: Journal image here -->
+  <div style="text-align:center;width:90%;display:block;margin-left:auto;margin-right:auto">
+    <img src="assets/img/projects/2023-04-13-exposure-prototype-journal-ui.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
+    <p style="font-size:80%;padding:0;color:#6d6c6c;"><b>Rough Notes</b> An early prototype of the journal, that could recognises the most prominent object in a Polaroid and pair it with the appropriate text entry.</p>
+  </div>
+  <p>The journal, therefore, is filled in dynamically. Maybe it's just my interest in procgen, but rather than force our narrative designer to manually create each entry as a separate UI widget, I used Blueprints to construct these at runtime. This better allowed for redrafting (all entries being encoded in a single .json file) and better creates the feeling of putting together a scrapbook of handwritten scrawlings and Polaroid pictures.</p>
 
   <h2>The Camera</h2>
   <p>Of course, to actually log an environmental curio in their journal, the player must first take a picture of it. If the curio is clearly visible, the image is captured in a RenderTarget2D object, then displayed in the journal alongside its pre-written caption.  It might not be mechanically significant, but I like that the player ends up with a unique set of their own, in-game photos.</p>
+  <!-- FIXME: Camera image here? -->
+  <div style="text-align:center;width:90%;display:block;margin-left:auto;margin-right:auto">
+    <img src="assets/img/projects/2023-05-01-exposure-final-journal-ui.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
+    <p style="font-size:80%;padding:0;color:#6d6c6c;"><b>Picture Perfect</b> The journal, as you'll find it in <i>Exposure</i>.</p>
+  </div>
   <p>The real challenge, though, was integrating these photos into my save system. While it wasn't strictly necessary for such a short demo, I (foolishly?) decided saving and loading the player's progress would be a nice touch. In theory, accounting for photos just means making space for some fixed number <i>n</i> of textures (dimensions 1024 x 1024) and storing each of their 4 RGBA values as floats in an array (size 4 x <i>n </i>x 1024 x 1024). In practice, doing so in UE5's C++ syntax without allocating memory incorrectly required a ridiculous amount of Googling.<sup>1</sup></p>
-  <!-- FIXME: Camera image here -->
   <p style="line-height:1.25"><sup><sup>1</sup> As if to illustrate my point, the clearest explainer I could find on saving screenshots and byte data in Unreal Engine has since been deleted. For the benefit of any programmers in the same position as I was, it is luckily still available on <a href="https://web.archive.org/web/20230322035055/https://mikelis.net/saving-screenshots-byte-data-in-unreal-engine/"><strong>The Internet Archive</strong></a>.</sup></p>
 
   <h2>Polish, Polish, Polish...</h2>
   <p>The end result was, of course, a collective effort. For any of my individual contributions, my main responsibility was just doing justice to the rest of the team's fantastic work. That'd mean making a dynamic heartbeat Metasound to our sound designer's specs one day, setting up fully responsive Animation Blueprints the next. I even found the time to add some tech art, porting my old work on a procedural eye-strain shader from DirectX to UE5 - why not cannibalise a <strong><a href="https://committothebit.github.io/concrete-earth/">past project</a></strong>, eh...</p>
-  <!-- FIXME: Circular torchlight image here -->
+  <div style="text-align:center;width:90%;display:block;margin-left:auto;margin-right:auto">
+    <img src="assets/img/projects/2023-05-01-exposure-final-torch.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
+    <!-- <p style="font-size:80%;padding:0;color:#6d6c6c;"><b></b>[...]</p> -->
+  </div>
 
   <h2 style="text-align:right">A downloadable version of <i>Exposure</i> can be found at <strong><a href="https://redforest-games.itch.io/exposure">Itch.io</a></strong>. All source code is available on <strong><a href="https://github.com/CommitToTheBit/DES502-Exposure-MASTER" target="_blank" rel="noreferrer noopener">GitHub</a></strong>.</h2>
 </article>
