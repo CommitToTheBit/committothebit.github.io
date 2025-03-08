@@ -4,6 +4,10 @@ title: Concrete Earth
 description: Solo Project
 ---
 
+<style>
+  @import url('https://fonts.cdnfonts.com/css/latin-modern-roman');
+</style>
+
 <article class="px-1">
   <div class="text-panel" style="color:white;">
     <h3 style="margin-top:0rem;color:white"><strong>Procedurally generating a post-nuclear landscape, a graphics showcase from my Master's...</strong></h3>
@@ -22,20 +26,22 @@ description: Solo Project
   </div>
 
   <h2>Marching Cubes</h2>
-	<p>While they're good enough for generating most terrain, height maps struggle with concavity. Each of their <i>(x, y)</i> coordinates must correspond to exactly one height <i>z</i>, so they can't produce overhangs or other jutting landscape features. <i>Concrete Earth</i> therefore takes a different approach.</p>
-	<p>Imagine splitting a cube into an <i>n</i>-by-<i>n</i>-by-<i>n</i> grid, and using a field <i>f(x, y, z)</i> to assign a scalar value to each grid-point. In each cell, triangular faces are used to partition off the points with values lower than some constant <i>c</i>, such that the overall grid approximates the isosurface <i>f(x, y, z) = c</i>. This is (a gross oversimplification of) the marching cubes algorithm, and it's maybe the single coolest technique I learned about all year.</p>
-  <p>After setting up said algorithm in <i>Concrete Earth </i>- basically just porting Paul Bourke's <a href="https://paulbourke.net/geometry/polygonise/" target="_blank" rel="noreferrer noopener"><strong>tutorial</strong></a> into DirectX - all that remains is designing the field <i>f</i> itself. I've used 3D fractal Brownian motion to create a natural, plateauing landscape, combined with (noiseless) equations for cones, cuboids, etc., to build in uncanny physical structures strangely unaffected by weathering or erosion. A further field is used to bound these models within a hexagonal prism, in line with the prototype's isometric, hex-based mechanics.</p>
+	<p>While they're good enough for generating most terrain, height maps struggle with concavity. Each of their <strong style="font-family:'LMRoman10',sans-serif;"><i>(x, y)</i></strong> coordinates must correspond to exactly one height <strong style="font-family:'LMRoman10',sans-serif;"><i>z</i></strong>, so they can't produce overhangs or other jutting landscape features. <i>Concrete Earth</i> therefore takes a different approach.</p>
+	<p>Imagine splitting a cube into an <strong style="font-family:'LMRoman10',sans-serif;"><i>n</i></strong>-by-<strong style="font-family:'LMRoman10',sans-serif;"><i>n</i></strong>-by-<strong style="font-family:'LMRoman10',sans-serif;"><i>n</i></strong> grid, and using a field <strong style="font-family:'LMRoman10',sans-serif;"><i>f(x, y, z)</i></strong> to assign a scalar value to each grid-point. In each cell, triangular faces are used to partition off the points with values lower than some constant <strong style="font-family:'LMRoman10',sans-serif;"><i>c</i></strong>, such that the overall grid approximates the isosurface <strong style="font-family:'LMRoman10',sans-serif;"><i>f(x, y, z)</i> = <i>c</i></strong>. This is (a gross oversimplification of) the marching cubes algorithm, and it's maybe the single coolest technique I learned about all year.</p>
+  <p>After setting up said algorithm in <i>Concrete Earth </i>- basically just porting Paul Bourke's <a href="https://paulbourke.net/geometry/polygonise/" target="_blank" rel="noreferrer noopener"><strong>tutorial</strong></a> into DirectX - all that remains is designing the field <strong style="font-family:'LMRoman10',sans-serif;"><i>f</i></strong> itself. I've used 3D fractal Brownian motion to create a natural, plateauing landscape, combined with (noiseless) equations for cones, cuboids, <i>etc.</i>, to build in uncanny physical structures strangely unaffected by weathering or erosion. A further field is used to bound these models within a hexagonal prism, in line with the prototype's isometric, hex-based mechanics.</p>
 
   <h2>L-Systems</h2>
-  <p>For all my time as a maths undergrad, I'd never come across formal grammars before this project. Intuitively, a grammar just a set of symbols <i>S</i>, paired with some set of production rules <i>P</i>. Applying those rules recursively, though, can create long sentences with rich, self-similar structures...</p>
-	<p>Consider a grammar with a set of symbols <i>S = { F, G, +, - }</i>, and production rules <i>P = { F ↦&nbsp; F+G</i>,<i> G ↦&nbsp; F-G</i> }. Iterating from the starting sentence <i>"F"</i>, a sequence emerges on applying the rules over and over:</p>
-	<ul style="list-style: none;">
-    <li><i>F+G</i></li>
-    <li><i>F+G+F−G</i></li>
-    <li><i>F+G+F−G+F+G−F−G</i></li>
-    <li><i>F+G+F−G+F+G−F−G+F+G+F−G−F+G−F−G</i>, etc.</li>
-  </ul>
-  <p>How could such abstract mathematics relate to graphics? L-systems visualise grammars as turtle drawings, treating each symbol in <i>S </i>as its own instruction.  In the above example, we might read <i>F, G </i>as <i>draw a line while stepping forward</i>, and ± as <i>turn ±90° on the spot</i>. Our sentences therefore encode a sequence of fractal dragon curves.</p>
+  <p>For all my time as a maths undergrad, I'd never come across formal grammars before this project. Intuitively, a grammar just a set of symbols <strong style="font-family:'LMRoman10',sans-serif;"><i>S</i></strong>, paired with some set of production rules <strong style="font-family:'LMRoman10',sans-serif;"><i>P</i></strong>. Applying those rules recursively, though, can create long sentences with rich, self-similar structures...</p>
+	<p>Consider a grammar with symbols <strong style="font-family:'LMRoman10',sans-serif;"><i>S</i> = <i>{F, G, +, −}</i></strong>, production rules <strong style="font-family:'LMRoman10',sans-serif;"><i>P</i> = <i>{F&nbsp;↦&nbsp;F+G</i>,<i> G&nbsp;↦&nbsp;F−G</i>}</strong>. Iterating from the starting sentence <strong style="font-family:'LMRoman10',sans-serif;"><i>F</i></strong>, a sequence emerges on applying the rules over and over:</p>
+  <div style="text-align:center">
+    <ul style="text-align:left;display:inline-block;list-style:none;font-family:'LMRoman10',sans-serif;">
+      <li><strong><i>F+G</i></strong></li>
+      <li><strong><i>F+G+F−G</i></strong></li>
+      <li><strong><i>F+G+F−G+F+G−F−G</i></strong></li>
+      <li><strong><i>F+G+F−G+F+G−F−G+F+G+F−G−F+G−F−G</i>, ...</strong></li>
+    </ul>
+  </div>
+  <p>How could such abstract mathematics relate to graphics? L-systems visualise grammars as turtle drawings, treating each symbol in <i>S </i>as its own instruction.  In the above example, we might read <strong style="font-family:'LMRoman10',sans-serif;"><i>F, G </i></strong>as <i>draw a line while stepping forward</i>, and <strong style="font-family:'LMRoman10',sans-serif;">±</strong> as <i>turn ±90° on the spot</i>. Our sentences therefore encode a sequence of fractal dragon curves.</p>
   <p><img src="assets/img/projects/2025-01-20-dragon-curves.png" alt="A sequence of dragon curves." width="90%" style="display:block;margin-left:auto;margin-right:auto;aspect-ratio:16/9;border-radius:0.5rem;"></p>
   <p>In <i>Concrete Earth</i>, L-systems were used to generate the veins of my procedural eye-strain overlay. However, this would require some generalisation. First, symbols were parameterised, each storing a set of variables (<i>e.g.</i> line width, length) that would also be transformed under the production rules. This allowed me to replicate Mair Zamir's <a href="https://www.researchgate.net/publication/11822298_Arterial_Branching_within_the_Confines_of_Fractal_L-System_Formalism" target="_blank" rel="noreferrer noopener"><strong>model of blood vessel bifurcation</strong></a> within my DirectX framework. Adding a further stochastic component - with production rules applied according to some random distribution - made the veins look altogether more natural.</p>
   <p><img src="assets/img/projects/2025-01-20-zamirs-model.png" alt="A sequence of fractal blood vessels, generated using Zamir's model." width="90%" style="display:block;margin-left:auto;margin-right:auto;aspect-ratio:16/9;border-radius:0.5rem;"></p>
@@ -47,11 +53,13 @@ description: Solo Project
 
   <h2>Story Grammars</h2>
   <p>Coming back to grammars, the very same formalism can be applied to procedural storytelling. A stochastic, context-free grammar like Kate Compton's <strong><a href="https://tracery.io/" target="_blank" rel="noreferrer noopener"><i>Tracery</i></a></strong> - or <i>Mad Libs, </i>for that matter - can be used to recursively generate text. A character's name, for example, might be iterated as any of</p>
-	<ul style="list-style: none;">
-    <li>[NAME] ↦ [INITIAL]. [FORENAME] [SURNAME] ↦ J. Robert Oppenheimer</li>
-    <li>[NAME] ↦ [FORENAME] [INITIAL]. [SURNAME] ↦ Harry S. Truman</li>
-    <li>[NAME] ↦ [FORENAME] [SURNAME] ↦ Lewis Strauss</li>
-  </ul>
+  <div style="text-align:center">
+    <ul style="text-align:left;display:inline-block;list-style:none;font-family:'LMRoman10',sans-serif;">
+      <li><strong>[NAME] ↦ [INITIAL]. [FORENAME] [SURNAME] ↦ J. Robert Oppenheimer</strong></li>
+      <li><strong>[NAME] ↦ [FORENAME] [INITIAL]. [SURNAME] ↦ Harry S. Truman</strong></li>
+      <li><strong>[NAME] ↦ [FORENAME] [SURNAME] ↦ Lewis Strauss</strong></li>
+    </ul>
+  </div>
   <p>(where a set of production rules is assigned to each bracketed, "non-terminal" symbol).</p>
   <p>I've included such a story grammar in <i>Concrete Earth</i>, along with some extra, context-sensitive components. My implementation weights production rules by recency, prioritising phrases and sentence structures the player hasn't seen lately; it also remembers descriptions of any NPCs, for consistency. By passing in the player's position, the grammar can generate text descriptions of their nearby landforms. There is even an attempt to encode constraints on production rules, although I can't see it scaling well (it's hard to encode a high-level understanding of all the connotations of different words).</p>
 

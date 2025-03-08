@@ -4,6 +4,10 @@ title: Exposure
 description: Lead Programmer
 ---
 
+<style>
+  @import url('https://fonts.cdnfonts.com/css/latin-modern-roman');
+</style>
+
 <article class="px-1">
   <div class="text-panel" style="color:white;">
     <h3 style="margin-top:0rem;color:white"><strong>A first-person horror made for my Master's, steeped in Scottish folklore and dripping with dread...</strong></h3>
@@ -32,7 +36,7 @@ description: Lead Programmer
   <p>With our UI designer dropping out of the project early on, I was quick to take responsibility for designing the in-game journal. Narrative wanted a way to log and write lore about their environmental storytelling; I chose to present this diegetically, to best keep the player immersed in <i>Exposure</i>'s atmosphere. It might not be a formal approach to UI - and my artistic skills leave much to be desired - but it certainly reflects the player's role as a reporter.</p>
   <div style="text-align:center;width:90%;display:block;margin-left:auto;margin-right:auto">
     <img src="assets/img/projects/2023-04-13-exposure-prototype-journal-ui.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
-    <p style="font-size:80%;padding:0;color:#6d6c6c;"><b>Rough Notes</b> An early prototype of the journal, that could recognises the most prominent object in a Polaroid and pair it with the appropriate text entry.</p>
+    <p style="font-size:80%;padding:0;color:#6d6c6c;"><b>Rough Notes</b> An early prototype of the journal, that could recognise the most prominent object in a Polaroid and pair it with the appropriate text entry.</p>
   </div>
   <p>The journal, therefore, is filled in dynamically. Maybe it's just my interest in procgen, but rather than force our narrative designer to manually create each entry as a separate UI widget, I used Blueprints to construct these at runtime. This better allowed for redrafting (all entries being encoded in a single .json file) and better creates the feeling of putting together a scrapbook of handwritten scrawlings and Polaroid pictures.</p>
 
@@ -43,7 +47,7 @@ description: Lead Programmer
     <img src="assets/img/projects/2023-05-01-exposure-final-journal-ui.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
     <p style="font-size:80%;padding:0;color:#6d6c6c;"><b>Picture Perfect</b> The journal, as you'll find it in <i>Exposure</i>.</p>
   </div>
-  <p>The real challenge, though, was integrating these photos into my save system. While it wasn't strictly necessary for such a short demo, I (foolishly?) decided saving and loading the player's progress would be a nice touch. In theory, accounting for photos just means making space for some fixed number <i>n</i> of textures (dimensions 1024 x 1024) and storing each of their 4 RGBA values as floats in an array (size 4 x <i>n </i>x 1024 x 1024). In practice, doing so in UE5's C++ syntax without allocating memory incorrectly required a ridiculous amount of Googling.<sup>1</sup></p>
+  <p>The real challenge, though, was integrating these photos into my save system. While it wasn't strictly necessary for such a short demo, I (foolishly?) decided saving and loading the player's progress would be a nice touch. In theory, accounting for photos just means making space for some fixed number <strong style="font-family:'LMRoman10',sans-serif;"><i>n</i></strong> of textures (dimensions 1024 x 1024) and storing each of their 4 RGBA values as floats in an array (size 4 x <strong style="font-family:'LMRoman10',sans-serif;"><i>n</i></strong> x 1024 x 1024). In practice, doing so in UE5's C++ syntax without allocating memory incorrectly required a ridiculous amount of Googling.<sup>1</sup></p>
   <p style="line-height:1.25"><sup><sup>1</sup> As if to illustrate my point, the clearest explainer I could find on saving screenshots and byte data in Unreal Engine has since been deleted. For the benefit of any programmers in the same position as I was, it is luckily still available on <a href="https://web.archive.org/web/20230322035055/https://mikelis.net/saving-screenshots-byte-data-in-unreal-engine/"><strong>The Internet Archive</strong></a>.</sup></p>
 
   <h2>Polish, Polish, Polish...</h2>
