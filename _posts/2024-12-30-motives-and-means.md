@@ -11,7 +11,7 @@ image:
   alt: July 27, 2024. An early set of procedurally generated clues, being used to fill in an Einstein puzzle.
 ---
 
-There's a strong argument from ([**Jimmy Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/) that the whodunnit lends itself uniquely well to game design, in that no other literary genre sees itself so explicitly "as a form of game between reader writer". There's an equally strong argument that trying to procedurally generate whodunnits is a doomed and deeply stupid venture. For a design problem with such a rich history of misfires and mistakes, from Sheldon Klein's mystery generator (1973) to *Murder of the Zinderneuf* (Free Fall Associates, 1983), you've got to ask - why do this?
+There's a strong argument from [**Jimmy Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/) that the whodunnit lends itself uniquely well to game design, in that no other literary genre sees itself so explicitly "as a form of game between reader writer". There's an equally strong argument that trying to procedurally generate whodunnits is a doomed and deeply stupid venture. For a design problem with such a rich history of misfires and mistakes, from Sheldon Klein's mystery generator (1973) to *Murder of the Zinderneuf* (Free Fall Associates, 1983), you've got to ask - why do this?
 
 I am a sucker for murder mysteries. *Five Little Pigs* unfailing makes me misty-eyed, *Knives Out* is a yearly rewatch, and I ardently believe *Return of the Obra Dinn* is one of the best things to ever happen to the genre. Between that and the *Golden Idol* series, the design space for deductive games has undoubtedly opened up in recent years, but I find both lack the simple human drama of gathering a bunch of characters in a room and letting them talk. I wanted to make a more dialogue-driven puzzle centred around that moment of the whodunnit... and not just because it's easier to write a bunch of text than it is other assets.
 
@@ -37,11 +37,11 @@ Here's what I mean. Right now, we're assuming each element is used exactly once,
 
 <!-- FIXME: Figure with explanation of characters' uniqueness -->
 
-As a collorary to the above, these 1D bounds can also introduce red herrings. *Bad Bohemians*, for instance, $[title]$.
+As a collorary to the above, these 1D bounds can also introduce red herrings. *Bad Bohemians*' characters, for instance, are members of the landed gentry, and so each has an associated $[nobility]$. The British aristocracy has five ranks of peerage, from Dukes and Duchesses down to Barons and Baronesses, for a total of 10 possible titles. We can now comfortably include a category with more elements than our puzzle has characters, as our model now allows for elements that aren't used even once!
 
 <!-- FIXME: Write clue in handwriting? -->
 Another scenario, suppose we received the clue *Character #1 is either called Adeline, or is a Byron*.
-A player might read that and decide to come back to it once they've eliminated either Adeline or Byron as an option, but what about the computer? It makes sense to extend to a 3D grid $[character, forename, surname]$
+A player might read that and decide to come back to it once they've eliminated either Adeline or Byron as an option, but what about the computer? Just as we've added 1D bounds to our model, we can just as well extend it in the other direction with a 3D grid $[character, forename, surname]$. Rather than waiting to use the clue, our solver can immediately bound all elements in the set $ $ to 0.
 
 ## Deductions
 
