@@ -11,7 +11,7 @@ image:
   alt: July 27, 2024. An early set of procedurally generated clues, being used to fill in an Einstein puzzle.
 ---
 
-There's a strong argument from [**Jimmy Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/) that the whodunnit lends itself uniquely well to game design, in that no other literary genre sees itself so explicitly "as a form of game between reader writer". There's an equally strong argument that trying to procedurally generate whodunnits is a doomed and deeply stupid venture. For a design problem with such a rich history of misfires and mistakes, from Sheldon Klein's mystery generator (1973) to *Murder of the Zinderneuf* (Free Fall Associates, 1983), you've got to ask - why do this?
+There's a strong argument from [**Jimmy Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/) that the whodunnit lends itself uniquely well to game design, in that no other literary genre sees itself so explicitly "as a form of game between reader writer". There's an equally strong argument that trying to procedurally generate whodunnits is a doomed and deeply stupid venture. For a design problem with such a rich history of misfires and mistakes, from Sheldon Klein's mystery generator (1973) to *Murder of the Zinderneuf*, you've got to ask - why do this?
 
 I am a sucker for murder mysteries. *Five Little Pigs* unfailing makes me misty-eyed, *Knives Out* is a yearly rewatch, and I ardently believe *Return of the Obra Dinn* is one of the best things to ever happen to the genre. Between that and the *Golden Idol* series, the design space for deductive games has undoubtedly opened up in recent years, but I find both lack the simple human drama of gathering a bunch of characters in a room and letting them talk. I wanted to make a more dialogue-driven puzzle centred around that moment of the whodunnit... and not just because it's easier to write a bunch of text than it is other assets.
 
@@ -37,14 +37,16 @@ Here's what I mean. Right now, we're assuming each element is used exactly once,
 
 <!-- FIXME: Figure with explanation of characters' uniqueness -->
 
-As a collorary to the above, these 1D bounds can also introduce red herrings. *Bad Bohemians*' characters, for instance, are members of the landed gentry, and so each has an associated $[nobility]$. The British aristocracy has five ranks of peerage, from Dukes and Duchesses down to Barons and Baronesses, for a total of 10 possible titles. We can now comfortably include a category with more elements than our puzzle has characters, as our model now allows for elements that aren't used even once!
+As a collorary to the above, these 1D bounds can also introduce red herrings. *Bad Bohemians*' characters, for instance, are members of the landed gentry, and so each has an associated $[nobility]$. The British aristocracy has five ranks of peerage, from Dukes and Duchesses down to Barons and Baronesses, so a total of 10 possible titles. We can comfortably include a category like this, with more elements than our puzzle has characters, because our model now allows for elements that aren't used even once!
 
 <!-- FIXME: Write clue in handwriting? -->
 Another scenario, suppose we received the clue *Character #1 is either called Adeline, or is a Byron*.
-A player might read that and decide to come back to it once they've eliminated either Adeline or Byron as an option, but what about the computer? Just as we've added 1D bounds to our model, we can just as well extend it in the other direction with a 3D grid $[character, forename, surname]$. Rather than waiting to use the clue, our solver can immediately bound all elements in the set $ $ to 0.
+A player might read that and decide to come back to it once they've eliminated either Adeline or Byron as an option, but what about the computer? Just as we've added 1D bounds to our model, we can as well extend it in the other direction with a 3D $[character, forename, surname]$ grid. Rather than waiting to use the clue, the solver immediately bounds all elements in the set to $ $ to 0. Indeed, we can generally create any $n$-dimensional grid to contain the information about $n$ related categories!
 
 ## Deductions
 
-I'll get more into the code side of this in the next post.
+Here, it becomes helpful to organise these different dimensions of grid into a single hierarchy. For a puzzle with $n$ categories total, at the top of this hierarchy is that single bound for the total number of characters we mentioned earlier, which can be thought of as a 0-dimensional point. Below that are all $n$ of the puzzle's 1-dimensional rows, below *those* all $\frac{1}{2}n(n-1)$ of its 2-dimensional squares, and so on. Combinatorics enjoyers will note this hierarchy has exactly $n$ choose $k$ grids of dimension $k$, all the way down to a single, $n$-dimensional entry over all possible categories. Seeing as this lowest grid will encode every last , we'll call it our *primary* grid, and our puzzle will be solved if and only if all of 
+
+I'll get more into the code side of this in the next post, but mathematically, this is all we need.
 
 ## Limitations
