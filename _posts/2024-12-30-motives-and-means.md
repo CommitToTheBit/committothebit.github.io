@@ -41,12 +41,16 @@ As a collorary to the above, these 1D bounds can also introduce red herrings. *B
 
 <!-- FIXME: Write clue in handwriting? -->
 Another scenario, suppose we received the clue *Character #1 is either called Adeline, or is a Byron*.
-A player might read that and decide to come back to it once they've eliminated either Adeline or Byron as an option, but what about the computer? Just as we've added 1D bounds to our model, we can as well extend it in the other direction with a 3D $[character, forename, surname]$ grid. Rather than waiting to use the clue, the solver immediately bounds coordinate $(#1,\textrm{Abigail}, \textrm{Byron})$ and all of set $$\{(#1,\textrm{forename}, \textrm{surname}):\textrm{forename}\neq\textrm{Abigail},\textrm{surname}\neq\textrm{Byron}\}$$ to 0. Indeed, we can generally create any $n$-dimensional grid to contain the information about $n$ related categories!
+A player might read that and decide to come back to it once they've eliminated either Adeline or Byron as an option, but what about the computer? Just as we've added 1D bounds to our model, we can as well extend it in the other direction with a 3D $[character, forename, surname]$ grid. Rather than waiting to use the clue, the solver immediately bounds coordinate $(#1,\textrm{Abigail}, \textrm{Byron})$ and all of set $\{(#1,\textrm{forename}, \textrm{surname}):\textrm{forename}\neq\textrm{Abigail},\textrm{surname}\neq\textrm{Byron}\}$ to 0. Indeed, we can generally create any $n$-dimensional grid to contain the information about $n$ related categories!
 
 ## Deductions
 
 Here, it becomes helpful to organise these different dimensions of grid into a single hierarchy. For a puzzle with $n$ categories total, at the top of this hierarchy is that single bound for the total number of characters we mentioned earlier, which can be thought of as a 0-dimensional point. Below that are all $n$ of the puzzle's 1-dimensional rows, below *those* all $\frac{1}{2}n(n-1)$ of its 2-dimensional squares, and so on. Combinatorics enjoyers will note this hierarchy has exactly $n$ choose $k$ grids of dimension $k$, all the way down to a single, $n$-dimensional entry over all possible categories. It encodes every possible detail of every possible character, meaning a puzzle will be solved if and only if each of this grid's bounds is tightened to a single value. We will therefore call it our *primary* grid.
 
-I'll get more into the code side of this in the next post, but mathematically, this is all we need.
+Next, the $2^n$ grids are connected up: for each layer $0 \leq k \leq n$, we go through and bind each grid to the $k$ grids in the layer above containing some subset of its categories. We could describe these connections as forming "the $n$-dimensional cube graph," but it's really much more intuitive to just use the following diagram:
+
+It took a bit of setup, but this is the data structure our solver relies on to make it's deductions. As discussed, the solver will register information by tightening the bounds of the relevant grid - but what I've conspicuously missed out until now is it also propagates that information up and down to the grids adjacent! percolate down to the primary grid, at which point
+
+The model will be refined once we start bringing in code considerations side (more on that in the next post), but for now we only need to think about it in a purely mathematical sense.
 
 ## Limitations
