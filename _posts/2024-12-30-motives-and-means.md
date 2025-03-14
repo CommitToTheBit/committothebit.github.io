@@ -49,7 +49,9 @@ Here, it becomes helpful to organise these different dimensions of grid into a s
 
 Next, the $2^n$ grids are connected up: for each layer $0 \leq k \leq n$, we go through and bind each grid to the $k$ grids in the layer above containing some subset of its categories. We could describe these connections as forming "the $n$-dimensional cube graph," but it's really much more intuitive to just use the following diagram:
 
-It took a bit of setup, but this is the data structure our solver relies on to make it's deductions. As discussed, the solver will register information by tightening the bounds of the relevant grid - but what I've conspicuously missed out until now is it also propagates that information up and down to the grids adjacent! percolate down to the primary grid, at which point
+It took a bit of setup, but this is the data structure our solver relies on to make its deductions. As discussed, the solver will register information by tightening the bounds of the relevant grid - but what I've conspicuously missed out until now is it also propagation that information upwards and downwards to the grids adjacent! This is how the solver, and indeed the player, make deductions: taking elementary facts about the higher levels of the hierarchy (say, that *Character #1 is called Abigail*) and putting them together to resolve the primary grid.
+
+Where humans follow their own thought processes and make deductions at their own leisure - if they couldn't, there wouldn't be much to play here would there? - the computer will need a much more rigid algorithm. Trivially, for some coordinate $(a_1, ... , a_i) \in [x_{\min},x_{\max}]$, every coordinate $(a_1, ... , a_i, a_{i+1})$ in a grid immediately below it must fall within the bounds $[0,x_{\max}]$... which isn't all that much to go on. It will be far more useful to consider the 'rows' of a grid, where
 
 The model will be refined once we start bringing in code considerations side (more on that in the next post), but for now we only need to think about it in a purely mathematical sense.
 
