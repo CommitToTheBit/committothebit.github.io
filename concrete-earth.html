@@ -15,11 +15,16 @@ description: Solo Project
     <strong>Made With </strong>DirectX 11, C++, HLSL. <strong>Grade </strong> A+
   </div>
 
-  <!-- FIXME: Showcase of images -->
-  <!-- Gameplay / Landmarks -->
-  <!-- Blood Vessels / Gameplay -->
-  <!-- Gameplay / Voronoi -->
   <p></p>
+  
+  <!-- FIXME: Showcase of images -->
+  <div style="text-align:center;width:90%;display:block;margin-left:auto;margin-right:auto">
+    <img src="assets/img/projects/2023-06-25-your-carriage-rumbles-in.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
+    <img src="assets/img/projects/2025-01-20-landmarks.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
+    <img src="assets/img/projects/2025-01-20-blood-vessels.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
+    <img src="assets/img/projects/2023-06-25-a-salted-plain.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
+    <!-- FIXME: Add a third row for gameplay/Voronoi? -->
+  </div>
 
   <div style="text-align:center">
     <p><i>Concrete Earth</i> was created for one of my graphics modules, focused on procedurally generating models and post-processing effects within the Direct3D 11 render pipeline. The project draws greatly from <a href="https://en.wikipedia.org/wiki/Long-term_nuclear_waste_warning_messages" target="_blank" rel="noreferrer noopener"><strong>nuclear semiotics</strong></a>, the open problem of how scientists might ward future civilisations off of radioactive waste repositories. My goal was to generate a shunned land, and with it the pervasive feeling that "This is not a place of honour".</p>
@@ -55,9 +60,9 @@ description: Solo Project
   <p>Coming back to grammars, the very same formalism can be applied to procedural storytelling. A stochastic, context-free grammar like Kate Compton's <strong><a href="https://tracery.io/" target="_blank" rel="noreferrer noopener"><i>Tracery</i></a></strong> - or <i>Mad Libs, </i>for that matter - can be used to recursively generate text. A character's name, for example, might be iterated as any of</p>
   <div style="text-align:center">
     <ul style="text-align:left;display:inline-block;list-style:none;font-family:'LMRoman10',sans-serif;">
-      <li><strong>[NAME] ↦ [INITIAL]. [FORENAME] [SURNAME] ↦ J. Robert Oppenheimer</strong></li>
-      <li><strong>[NAME] ↦ [FORENAME] [INITIAL]. [SURNAME] ↦ Harry S. Truman</strong></li>
-      <li><strong>[NAME] ↦ [FORENAME] [SURNAME] ↦ Lewis Strauss</strong></li>
+      <li><strong>{Name} ↦ {Initial}. {Forename} {Surname} ↦ J. Robert Oppenheimer</strong></li>
+      <li><strong>{Name} ↦ {Forename} {Initial}. {Surname} ↦ Harry S. Truman</strong></li>
+      <li><strong>{Name} ↦ {Forename} {Surname} ↦ Lewis Strauss</strong></li>
     </ul>
   </div>
   <p>(where a set of production rules is assigned to each bracketed, "non-terminal" symbol).</p>
