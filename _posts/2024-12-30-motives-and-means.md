@@ -34,7 +34,7 @@ We won't concern ourselves with where those constraints are being written just y
 
 ## Generalisation
 
-Here's what I mean. Right now, we're assuming each element is used exactly once, which eliminates the possibility of mistaken identities, where, *e.g.*, two characters share the same forename. This assumption is restricting narrative possibilities; the above model needs generalised. By assigning bounds to not only 2D coordinates of $\\{\textrm{forename}, \textrm{surname}\\}$ square, but also the 1D coordinates along our $\\{\textrm{forename}\}$ and $\{\textrm{surname}\\}$ lines, we can surely enough bake in the possibility of forenames and surnames appearing more than once. While we're at it, we'll also go ahead and assign a bound to the point in the top left corner of Fig. A, which will represent the total number of characters in the puzzle.
+Here's what I mean. Right now, we're assuming each element is used exactly once, which eliminates the possibility of mistaken identities, where, *e.g.*, two characters share the same forename. This assumption is restricting narrative possibilities; the above model needs generalised. By assigning bounds to not only 2D coordinates of $\\{\textrm{forename}, \textrm{surname}\\}$ square, but also the 1D coordinates along our $\\{\textrm{forename}\\}$ and $\\{\textrm{surname}\\}$ lines, we can surely enough bake in the possibility of forenames and surnames appearing more than once. While we're at it, we'll also go ahead and assign a bound to the point in the top left corner of Fig. A, which will represent the total number of characters in the puzzle.
 
 ![Desktop View](/assets/img/posts/2024-07-27-toggling-clues.png){: width="100%" height="100%" style="border-radius:0.5rem" }
 _<b>FIXME</b> Figure of Einstein puzzle pre-/post-generalisation. Each grid can be uniquely identified with the set of categories it spans._
@@ -42,7 +42,11 @@ _<b>FIXME</b> Figure of Einstein puzzle pre-/post-generalisation. Each grid can 
 As a collorary to the above, these 1D bounds can also introduce red herrings. *Bad Bohemians*' characters, for instance, are members of the landed gentry, and so each has an associated $\{\textrm{nobility}\}$. The British aristocracy has five ranks of peerage, from Dukes and Duchesses down to Barons and Baronesses, so a total of 10 possible titles. We can comfortably include a category like this, with more elements than our puzzle has characters, because our model now allows for elements that aren't used even once!
 
 <!-- FIXME: Write clue in handwriting? -->
-Another scenario, suppose we received the clue *Character #1 is either called Adeline, or is a Byron*. A player might read that and decide to come back to it once they've eliminated either Adeline or Byron as an option, but what about the computer? Just as we've added 1D bounds to our model, we can as well extend it in the other direction with a 3D $\\{\textrm{character}, \textrm{forename}, \textrm{surname}\\}$ grid. Rather than waiting to use the clue, the solver immediately bounds coordinate $(1,\textrm{Abigail}, \textrm{Byron})$ and all of set $\{(1,\textrm{forename}, \textrm{surname}):\textrm{forename}\neq\textrm{Abigail},\textrm{surname}\neq\textrm{Byron}\}$ to 0. Indeed, we can generally create any $D$-dimensional grid to contain the information about $D$ related categories!
+Another scenario, suppose we received the clue *Character #1 is either called Adeline, or is a Byron*. A player might read that and decide to come back to it once they've eliminated either Adeline or Byron as an option, but what about the computer? Just as we've added 1D bounds to our model, we can as well extend it in the other direction with a 3D $\\{\textrm{character}, \textrm{forename}, \textrm{surname}\\}$ grid. Rather than waiting to use the clue, the solver immediately bounds coordinate $(1,\textrm{Abigail}, \textrm{Byron})$ and all of set
+$$
+\\{(1,\textrm{forename}, \textrm{surname}):\textrm{forename}\neq\textrm{Abigail},\textrm{surname}\neq\textrm{Byron}\\}
+$$
+to zero. Indeed, we can generally create any $D$-dimensional grid to contain the information about $D$ related categories!
 
 ## Deductions
 
@@ -57,7 +61,15 @@ It took a bit of setup, but this is the data structure our solver relies on to m
 
 *How* does this information trickle down, though? Whatever algorithm we use, it'll need to work over any number of $d$ dimensions, for any grid $\mathbf{G} = \\{G_1, ..., G_d\\}$ made up of categories $G_i$. We'll start with that general case, but don't worry - I'll include some much more tangible examples further on.
 
-Let's start with the obvious. If $G$ has a coordinate $(g_1, ..., g_d) \in [g_{\min}, g_{\max}]$, then in any grid $\mathbf{H} = \\{G_1, ..., G_d, H\\}$ directly below it, all coordinates $(g_1, ..., g_d, h)$ must be bounded by $[0, g_{\max}]$... which isn't actually all that much to go on. It'll be much more instructive to consider the *row* of coordinates $\\{(g_1, ..., g_d, h): h \in H\\}$ all at once. 
+Let's start with the obvious. If $G$ has a coordinate $(g_1, ..., g_d) \in [g_{\min}, g_{\max}]$, then in any grid $\mathbf{H} = \\{G_1, ..., G_d, H\\}$ directly below it, all coordinates $(g_1, ..., g_d, h)$ must be bounded by $[0, g_{\max}]$... which isn't actually all that much to go on. It'll be much more instructive to consider the *row* of coordinates $\\{(g_1, ..., g_d, h): h \in H\\}$ all at once. Denoting the bounds of each $(g_1, ..., g_d, h)$ as $[h_{\min}, h_{\max}]$, they must clearly satisfy the bound
+$$
+g_{\min} \leq \sigma_{h \in H} h_{\max}.
+$$
+Rearranging this, any given element $h'$ will be bounded by
+$$
+h_{\max}' \geq g_{\min} - \sigma_{h \neq h'} h_{\max}
+$$
+...which if read aloud is just saying that our maximum bound will never decrease below a certain minimum bound.
 
 The model will be refined once we start bringing in code considerations side (more on that in the next post), but for now we only need to think about it in a purely mathematical sense.
 
