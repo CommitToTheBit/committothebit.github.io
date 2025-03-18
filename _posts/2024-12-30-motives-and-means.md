@@ -11,7 +11,7 @@ image:
   alt: July 27, 2024. An early set of procedurally generated clues, being used to fill in an Einstein puzzle.
 ---
 
-There's a strong argument from [**Jimmy Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/) that the whodunnit lends itself uniquely well to game design, in that no other literary genre sees itself so explicitly "as a form of game between reader writer". There's an equally strong argument that trying to procedurally generate whodunnits is a doomed and deeply stupid venture. For a design problem with such a rich history of misfires and mistakes, from Sheldon Klein's mystery generator (1973) to *Murder of the Zinderneuf*, you've got to ask - why do this?
+There's a strong argument from [**Jimmy Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/) that the whodunnit lends itself uniquely well to game design, in that no other literary genre sees itself so explicitly "as a form of game between reader and writer". There's an equally strong argument that trying to procedurally generate whodunnits is a doomed and deeply stupid venture. For a design problem with such a rich history of misfires and mistakes, from Sheldon Klein's mystery generator (1973) to *Murder of the Zinderneuf*, you've got to ask - why do this?
 
 I am a sucker for murder mysteries. *Five Little Pigs* unfailing makes me misty-eyed, *Knives Out* is a yearly rewatch, and I ardently believe *Return of the Obra Dinn* is one of the best things to ever happen to the genre. Between that and the *Golden Idol* series, the design space for deductive games has undoubtedly opened up in recent years, but I find both lack the simple human drama of gathering a bunch of characters in a room and letting them talk. I wanted to make a more dialogue-driven puzzle centred around that moment of the whodunnit... and not just because it's easier to write a bunch of text than it is other assets.
 
@@ -28,7 +28,7 @@ At its lowest level, *Bad Bohemians* is an exercise in generating logic puzzles 
 <!-- ![Desktop View](/assets/img/posts/2024-07-27-toggling-clues.png){: width="100%" height="100%" style="border-radius:0.5rem" } -->
 <!-- _<b>FIXME</b> Figure of human/computer views of the grid._ -->
 
-The idea here is, we need a way of representing our puzzles and their possible solutions in a form the computer can understand. This is not a natural language processing project; the computer won't get any information out of even a clue like *Character #1 is called Abigail* as written. However, if we tag that clue with a constraint $$(1, \textrm{Abigail}) \in [1,1],$$ the code has a solver that will read this and tighten the bounds at its $$(1, \textrm{Abigail})$$ coordinate to a minimum of $1$, and a maximum of... well, in this case, also $$1.$$
+The idea here is, we need a way of representing our puzzles and their possible solutions in a form the computer can understand. This is not a natural language processing project; the computer won't get any information out of even a clue like *Character #1 is called Abigail* as written. However, if we tag that clue with constraint $$(1, \textrm{Abigail}) \in [1,1],$$ the code has a solver that will read this and tighten the bounds at its $$(1, \textrm{Abigail})$$ coordinate to a minimum of $1$, and a maximum of... well, in this case, also $$1.$$
 
 We won't concern ourselves with where those constraints are being written just yet, that's a problem for our text generator. What matters here and now is we've got a tried-and-tested data structure that our solver can read information into to then make deductions from. That said, this grid, while perfectly suitable for pen-and-paper Einstein puzzles, actually encodes several assumptions about which solutions may or may not be valid. In order to generate a broader and more narratively interesting range of whodunnits, we're going to need to extend our model to remove some of those limitations.
 
@@ -69,16 +69,30 @@ then any grid $$\mathbf{F} = \{\mathbf{E}, F\} = \{E_1, ..., E_d, F\}$$ directly
 
 $$\mathbf{f} = (\mathbf{e}, f) = (e_1, ..., e_d, f) \in [0, e_{\max}]$$
 
-...which isn't actually all that much to go on. It'll be much more instructive to consider the *row* of coordinates $$\mathbf{F}_{\mathbf{e}} = \{(e_1, ..., e_d, f): f \in F\}$$ all at once. Denoting the bounds of each $$\mathbf{f}$$ as $$[f_{\min}, f_{\max}]$$, they must clearly satisfy the bound
+...which isn't actually all that much to go on. It'll be much more instructive to consider the *row* of coordinates $$\mathbf{F}_{\mathbf{e}} = \{(e_1, ..., e_d, f): f \in F\}$$ all at once. Denoting the bounds of each $$\mathbf{f}$$ as $$[f_{\min}, f_{\max}]$$, they must satisfy
 
-$$e_{\min} \leq \sum_{f \in F} f_{\max}.$$
+$$e_{\min} \leq \sum_{f \in F} f_{\max}, \;\; e_{\max} \geq \sum_{f \in F} f_{\min}.$$
 
-Rearranging this, any given element $$f'$$ will be bounded by
+As such, when any bound of any $$\mathbf{f}$$ is tightened, our solver algorithm will propagate that information upwards to all grids $$\mathbf{E}$$ by mapping
 
-$$f_{\max}' \geq e_{\min} - \sum_{f \neq f'} f_{\max}.$$
+$$e_{\min} \mapsto \max\left(e_{\min}, \, \sum_{f \in F} f_{\max}\right), \;\; e_{\max} \mapsto \min\left(e_{\max}, \, \sum_{f \in F} f_{\min}\right)$$
 
-...which if read aloud is just saying that our maximum bound will never decrease below a certain minimum bound.
+as appropriate.
 
-The model will be refined once we start bringing in code considerations side (more on that in the next post), but for now we only need to think about it in a purely mathematical sense.
+Bounding $$\mathbf{f}$$ can just as well fire information across $$\mathbf{F}$$. For any other $$\mathbf{f}'$$ in the same row $$\mathbf{F}_{\mathbf{e}}$$, we can rearrange the above inequalities as
+
+$$f_{\max}' \geq e_{\min} - \sum_{f \neq f'} f_{\max}, \;\; f_{\min}' \leq e_{\max} - \sum_{f \neq f'} f_{\min}.$$
+
+This does not seem terribly useful in itself (we need an *lower* bound on $$f_{\min}'$$ after all), but take a step back. We're tightening the minimum and maximum of $$f'$$ until they converge on a single value, so if we know $$f_{\min}'$$ is bounded above we can safely lower $$f_{\max}'$$ to that upper bound, and vice versa! Therefore, the algorithm will also map
+
+$$f_{\min}' \mapsto \max\left(f_{\min}', \, e_{\min} - \sum_{f \neq f'} f_{\max}\right), \;\; f_{\max}' \mapsto \min\left(f_{\max}', \, e_{\max} - \sum_{f \neq f'} f_{\min}\right)$$
+
+(a mapping that propagates information not only across, but also downwards from $$\mathbf{E}$$ to $$\mathbf{F}$$ as $$\mathbf{e}$$ tightens).
 
 ## Limitations
+
+Right then, that seems like as good a place to pause as any. We've seen how *Bad Bohemians* will model its puzzles using an underlying grid structure, how these grids have been generalised to allow a wider variety of clues, and how they connect up, so that regardless of where new information is injected into the solver, it can propagate out in all directions. I've kept the explainer abstract and mathematical so far because, well, the model is still an abstraction. This post sets out how the solver will *ideally* work, but those ideals are about to crash up against the harsh realities of code: as the CPU goes about manipulating this massive data structure, we'll have to work around some of these with clever/not-so-clever optimisations, others by adapting our design. **See you then.** 
+
+<!-- FIXME: Write about inclusion/exclusion! -->
+<!-- There is one limitation it's worth addressing here, though, while the underkying maths of the solver is still fresh. -->
+<!-- FIXME: Use an example of inclusion/exclusion, and argue it's not worth the hassle; if the solver is dumber that the player, so be it! -->
