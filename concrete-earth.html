@@ -3,61 +3,217 @@ layout: page
 title: Concrete Earth
 description: Solo Project
 ---
-
 <style>
   @import url('https://fonts.cdnfonts.com/css/latin-modern-roman');
+
+  .image-wrapper {
+    box-sizing: border-box;
+    float: left;
+    width: 50%;
+  }
+
+  .image-wrapper:nth-child(even) {
+    padding-left: 0.25rem;
+  }
+
+  .image-wrapper:nth-child(odd) {
+    padding-right: 0.25rem;
+  }
+
+  .image-wrapper > img {
+    width: 100%;
+  }
 </style>
 
 <article class="px-1">
   <div class="text-panel" style="color:white;">
-    <h3 style="margin-top:0rem;color:white"><strong>Procedurally generating a post-nuclear landscape, a graphics showcase from my Master's...</strong></h3>
-    <p><strong>Key Achievements </strong>Carved jutting, uncanny landforms out of marching cubes. Designed and implemented an animated eye strain shader with parametric L-systems. Later introduced custom, grammar-based text generation to produce procedural narratives.</p>
+    <h3 style="margin-top:0rem;color:white">
+      <strong>Procedurally generating a post-nuclear landscape, a graphics showcase from my Master's...</strong>
+    </h3>
+    <p>
+      <strong>Key Achievements </strong>Carved jutting, uncanny landforms out of marching cubes. Designed and
+      implemented an animated eye strain shader with parametric L-systems. Later introduced custom, grammar-based text
+      generation to produce procedural narratives.
+    </p>
     <strong>Made With </strong>DirectX 11, C++, HLSL. <strong>Grade </strong> A+
   </div>
 
   <p></p>
-  
-  <!-- FIXME: Showcase of images -->
-  <div style="text-align:center;width:90%;display:block;margin-left:auto;margin-right:auto">
-    <img src="assets/img/projects/2023-06-25-your-carriage-rumbles-in.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
-    <img src="assets/img/projects/2025-01-20-landmarks.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
-    <img src="assets/img/projects/2025-01-20-blood-vessels.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
-    <img src="assets/img/projects/2023-06-25-a-salted-plain.png" alt="Alt. text." style="aspect-ratio:16/9;border-radius:0.5rem;">
-    <!-- FIXME: Add a third row for gameplay/Voronoi? -->
+
+  <!-- FIXME: Make these 90% width! -->
+  <div>
+    <div style="width:100%;display:block;margin-left:auto;margin-right:auto;">
+      <img
+        src="assets/img/projects/2023-06-25-your-carriage-rumbles-in.png"
+        alt="Alt. text."
+        style="aspect-ratio:16/9;border-radius:0.5rem;margin-bottom:0.5rem"
+      >
+      <div>
+        <div class="image-wrapper">
+          <img
+            src="assets/img/projects/2025-03-18-landmarks.png"
+            alt="Alt. text."
+            style="aspect-ratio:16/9;border-radius:0.5rem;margin-bottom:0.5rem"
+          >
+        </div>
+        <div class="image-wrapper">
+          <img
+            src="assets/img/projects/2025-03-18-blood-vessels.png"
+            alt="Alt. text."
+            style="aspect-ratio:16/9;border-radius:0.5rem;margin-bottom:0.5rem"
+          >
+        </div>
+      </div>
+      <img
+        src="assets/img/projects/2023-06-25-a-salted-plain.png"
+        alt="Alt. text."
+        style="aspect-ratio:16/9;border-radius:0.5rem;"
+      >
+    </div>
   </div>
 
+  <p></p>
+
   <div style="text-align:center">
-    <p><i>Concrete Earth</i> was created for one of my graphics modules, focused on procedurally generating models and post-processing effects within the Direct3D 11 render pipeline. The project draws greatly from <a href="https://en.wikipedia.org/wiki/Long-term_nuclear_waste_warning_messages" target="_blank" rel="noreferrer noopener"><strong>nuclear semiotics</strong></a>, the open problem of how scientists might ward future civilisations off of radioactive waste repositories. My goal was to generate a shunned land, and with it the pervasive feeling that "This is not a place of honour".</p>
+    <p>
+      <i>Concrete Earth</i> was created for one of my graphics modules, focused on procedurally generating models and
+      post-processing effects within the Direct3D 11 render pipeline. The project draws greatly from
+      <a
+        href="https://en.wikipedia.org/wiki/Long-term_nuclear_waste_warning_messages"
+        target="_blank"
+        rel="noreferrer noopener"
+        ><strong>nuclear semiotics</strong></a
+      >, the open problem of how scientists might ward future civilisations off of radioactive waste repositories. My
+      goal was to generate a shunned land, and with it the pervasive feeling that "This is not a place of honour".
+    </p>
   </div>
 
   <h2>Marching Cubes</h2>
-	<p>While they're good enough for generating most terrain, height maps struggle with concavity. Each of their <strong style="font-family:'LMRoman10',sans-serif;"><i>(x, y)</i></strong> coordinates must correspond to exactly one height <strong style="font-family:'LMRoman10',sans-serif;"><i>z</i></strong>, so they can't produce overhangs or other jutting landscape features. <i>Concrete Earth</i> therefore takes a different approach.</p>
-	<p>Imagine splitting a cube into an <strong style="font-family:'LMRoman10',sans-serif;"><i>n</i></strong>-by-<strong style="font-family:'LMRoman10',sans-serif;"><i>n</i></strong>-by-<strong style="font-family:'LMRoman10',sans-serif;"><i>n</i></strong> grid, and using a field <strong style="font-family:'LMRoman10',sans-serif;"><i>f(x, y, z)</i></strong> to assign a scalar value to each grid-point. In each cell, triangular faces are used to partition off the points with values lower than some constant <strong style="font-family:'LMRoman10',sans-serif;"><i>c</i></strong>, such that the overall grid approximates the isosurface <strong style="font-family:'LMRoman10',sans-serif;"><i>f(x, y, z)</i> = <i>c</i></strong>. This is (a gross oversimplification of) the marching cubes algorithm, and it's maybe the single coolest technique I learned about all year.</p>
-  <p>After setting up said algorithm in <i>Concrete Earth </i>- basically just porting Paul Bourke's <a href="https://paulbourke.net/geometry/polygonise/" target="_blank" rel="noreferrer noopener"><strong>tutorial</strong></a> into DirectX - all that remains is designing the field <strong style="font-family:'LMRoman10',sans-serif;"><i>f</i></strong> itself. I've used 3D fractal Brownian motion to create a natural, plateauing landscape, combined with (noiseless) equations for cones, cuboids, <i>etc.</i>, to build in uncanny physical structures strangely unaffected by weathering or erosion. A further field is used to bound these models within a hexagonal prism, in line with the prototype's isometric, hex-based mechanics.</p>
+  <p>
+    While they're good enough for generating most terrain, height maps struggle with concavity. Each of their
+    <strong style="font-family:'LMRoman10',sans-serif;"><i>(x, y)</i></strong> coordinates must correspond to exactly
+    one height <strong style="font-family:'LMRoman10',sans-serif;"><i>z</i></strong
+    >, so they can't produce overhangs or other jutting landscape features. <i>Concrete Earth</i> therefore takes a
+    different approach.
+  </p>
+  <p>
+    Imagine splitting a cube into an <strong style="font-family:'LMRoman10',sans-serif;"><i>n</i></strong
+    >-by-<strong style="font-family:'LMRoman10',sans-serif;"><i>n</i></strong
+    >-by-<strong style="font-family:'LMRoman10',sans-serif;"><i>n</i></strong> grid, and using a field
+    <strong style="font-family:'LMRoman10',sans-serif;"><i>f(x, y, z)</i></strong> to assign a scalar value to each
+    grid-point. In each cell, triangular faces are used to partition off the points with values lower than some constant
+    <strong style="font-family:'LMRoman10',sans-serif;"><i>c</i></strong
+    >, such that the overall grid approximates the isosurface
+    <strong style="font-family:'LMRoman10',sans-serif;"><i>f(x, y, z)</i> = <i>c</i></strong
+    >. This is (a gross oversimplification of) the marching cubes algorithm, and it's maybe the single coolest technique
+    I learned about all year.
+  </p>
+  <p>
+    After setting up said algorithm in <i>Concrete Earth </i>- basically just porting Paul Bourke's
+    <a href="https://paulbourke.net/geometry/polygonise/" target="_blank" rel="noreferrer noopener"
+      ><strong>tutorial</strong></a
+    >
+    into DirectX - all that remains is designing the field
+    <strong style="font-family:'LMRoman10',sans-serif;"><i>f</i></strong> itself. I've used 3D fractal Brownian motion
+    to create a natural, plateauing landscape, combined with (noiseless) equations for cones, cuboids, <i>etc.</i>, to
+    build in uncanny physical structures strangely unaffected by weathering or erosion. A further field is used to bound
+    these models within a hexagonal prism, in line with the prototype's isometric, hex-based mechanics.
+  </p>
 
   <h2>L-Systems</h2>
-  <p>For all my time as a maths undergrad, I'd never come across formal grammars before this project. Intuitively, a grammar just a set of symbols <strong style="font-family:'LMRoman10',sans-serif;"><i>S</i></strong>, paired with some set of production rules <strong style="font-family:'LMRoman10',sans-serif;"><i>P</i></strong>. Applying those rules recursively, though, can create long sentences with rich, self-similar structures...</p>
-	<p>Consider a grammar with symbols <strong style="font-family:'LMRoman10',sans-serif;"><i>S</i> = <i>{F, G, +, −}</i></strong>, production rules <strong style="font-family:'LMRoman10',sans-serif;"><i>P</i> = <i>{F&nbsp;↦&nbsp;F+G</i>,<i> G&nbsp;↦&nbsp;F−G</i>}</strong>. Iterating from the starting sentence <strong style="font-family:'LMRoman10',sans-serif;"><i>F</i></strong>, a sequence emerges on applying the rules over and over:</p>
+  <p>
+    For all my time as a maths undergrad, I'd never come across formal grammars before this project. Intuitively, a
+    grammar just a set of symbols <strong style="font-family:'LMRoman10',sans-serif;"><i>S</i></strong
+    >, paired with some set of production rules <strong style="font-family:'LMRoman10',sans-serif;"><i>P</i></strong
+    >. Applying those rules recursively, though, can create long sentences with rich, self-similar structures...
+  </p>
+  <p>
+    Consider a grammar with symbols
+    <strong style="font-family:'LMRoman10',sans-serif;"><i>S</i> = <i>{F, G, +, −}</i></strong
+    >, production rules
+    <strong style="font-family:'LMRoman10',sans-serif;"
+      ><i>P</i> = <i>{F&nbsp;↦&nbsp;F+G</i>,<i> G&nbsp;↦&nbsp;F−G</i>}</strong
+    >. Iterating from the starting sentence <strong style="font-family:'LMRoman10',sans-serif;"><i>F</i></strong
+    >, a sequence emerges on applying the rules over and over:
+  </p>
   <div style="text-align:center">
     <ul style="text-align:left;display:inline-block;list-style:none;font-family:'LMRoman10',sans-serif;">
-      <li><strong><i>F+G</i></strong></li>
-      <li><strong><i>F+G+F−G</i></strong></li>
-      <li><strong><i>F+G+F−G+F+G−F−G</i></strong></li>
-      <li><strong><i>F+G+F−G+F+G−F−G+F+G+F−G−F+G−F−G</i>, ...</strong></li>
+      <li>
+        <strong><i>F+G</i></strong>
+      </li>
+      <li>
+        <strong><i>F+G+F−G</i></strong>
+      </li>
+      <li>
+        <strong><i>F+G+F−G+F+G−F−G</i></strong>
+      </li>
+      <li>
+        <strong><i>F+G+F−G+F+G−F−G+F+G+F−G−F+G−F−G</i>, ...</strong>
+      </li>
     </ul>
   </div>
-  <p>How could such abstract mathematics relate to graphics? L-systems visualise grammars as turtle drawings, treating each symbol in <i>S </i>as its own instruction.  In the above example, we might read <strong style="font-family:'LMRoman10',sans-serif;"><i>F, G </i></strong>as <i>draw a line while stepping forward</i>, and <strong style="font-family:'LMRoman10',sans-serif;">±</strong> as <i>turn ±90° on the spot</i>. Our sentences therefore encode a sequence of fractal dragon curves.</p>
-  <p><img src="assets/img/projects/2025-01-20-dragon-curves.png" alt="A sequence of dragon curves." width="90%" style="display:block;margin-left:auto;margin-right:auto;aspect-ratio:16/9;border-radius:0.5rem;"></p>
-  <p>In <i>Concrete Earth</i>, L-systems were used to generate the veins of my procedural eye-strain overlay. However, this would require some generalisation. First, symbols were parameterised, each storing a set of variables (<i>e.g.</i> line width, length) that would also be transformed under the production rules. This allowed me to replicate Mair Zamir's <a href="https://www.researchgate.net/publication/11822298_Arterial_Branching_within_the_Confines_of_Fractal_L-System_Formalism" target="_blank" rel="noreferrer noopener"><strong>model of blood vessel bifurcation</strong></a> within my DirectX framework. Adding a further stochastic component - with production rules applied according to some random distribution - made the veins look altogether more natural.</p>
-  <p><img src="assets/img/projects/2025-01-20-zamirs-model.png" alt="A sequence of fractal blood vessels, generated using Zamir's model." width="90%" style="display:block;margin-left:auto;margin-right:auto;aspect-ratio:16/9;border-radius:0.5rem;"></p>
+  <p>
+    How could such abstract mathematics relate to graphics? L-systems visualise grammars as turtle drawings, treating
+    each symbol in <i>S </i>as its own instruction. In the above example, we might read
+    <strong style="font-family:'LMRoman10',sans-serif;"><i>F, G </i></strong>as
+    <i>draw a line while stepping forward</i>, and <strong style="font-family:'LMRoman10',sans-serif;">±</strong> as
+    <i>turn ±90° on the spot</i>. Our sentences therefore encode a sequence of fractal dragon curves.
+  </p>
+  <!-- FIXME: Make these 90% width! -->
+  <div>
+    <div style="width:100%;display:block;margin-left:auto;margin-right:auto;">
+      <div class="image-wrapper">
+        <img
+          src="assets/img/projects/2025-03-18-dragon-curves.png"
+          alt="A sequence of dragon curves."
+          style="aspect-ratio:16/9;border-radius:0.5rem;margin-bottom:0.5rem"
+        >
+      </div>
+      <div class="image-wrapper">
+        <img
+          src="assets/img/projects/2025-03-18-zamirs-model.png"
+          alt="A sequence of fractal blood vessels, generated using Zamir's model."
+          style="aspect-ratio:16/9;border-radius:0.5rem;margin-bottom:0.5rem"
+        >
+      </div>
+    </div>
+  </div>
+  <p>
+    In <i>Concrete Earth</i>, L-systems were used to generate the veins of my procedural eye-strain overlay. However,
+    this would require some generalisation. First, symbols were parameterised, each storing a set of variables (<i
+      >e.g.</i
+    >
+    line width, length) that would also be transformed under the production rules. This allowed me to replicate Mair
+    Zamir's
+    <a
+      href="https://www.researchgate.net/publication/11822298_Arterial_Branching_within_the_Confines_of_Fractal_L-System_Formalism"
+      target="_blank"
+      rel="noreferrer noopener"
+      ><strong>model of blood vessel bifurcation</strong></a
+    >
+    within my DirectX framework. Adding a further stochastic component - with production rules applied according to some
+    random distribution - made the veins look altogether more natural.
+  </p>
 
   <h2>Post-Processing</h2>
-  <p>In the finished post-processing effect, the terrain and the 2D blood vessels are rendered to two separate textures, then blended together by a subsequent pixel shader. This shader also adds a simple vignette effect, pulsing like a heartbeat.</p>
-  <!-- FIXME: Get a blood vessels gif! -->
-  <p>The blood vessel grows according to <i>intensity</i>, a cumulative value tied the player's state in-game. This growth is staggered, with main arteries emerging first and then smaller capillaries sprouting off - a rather visceral piece of procedural animation.</p>
+  <p>
+    In the finished post-processing effect, the terrain and the 2D blood vessels are rendered to two separate textures,
+    then blended together by a subsequent pixel shader. This shader also adds a simple vignette effect, pulsing like a
+    heartbeat. The blood vessel grows according to <i>intensity</i>, a cumulative value tied the player's state in-game.
+    This growth is staggered, with main arteries emerging first and then smaller capillaries sprouting off - a rather
+    visceral piece of procedural animation.
+  </p>
 
   <h2>Story Grammars</h2>
-  <p>Coming back to grammars, the very same formalism can be applied to procedural storytelling. A stochastic, context-free grammar like Kate Compton's <strong><a href="https://tracery.io/" target="_blank" rel="noreferrer noopener"><i>Tracery</i></a></strong> - or <i>Mad Libs, </i>for that matter - can be used to recursively generate text. A character's name, for example, might be iterated as any of</p>
+  <p>
+    Coming back to grammars, the very same formalism can be applied to procedural storytelling. A stochastic,
+    context-free grammar like Kate Compton's
+    <strong
+      ><a href="https://tracery.io/" target="_blank" rel="noreferrer noopener"><i>Tracery</i></a></strong
+    >
+    - or <i>Mad Libs, </i>for that matter - can be used to recursively generate text. A character's name, for example,
+    might be iterated as any of
+  </p>
   <div style="text-align:center">
     <ul style="text-align:left;display:inline-block;list-style:none;font-family:'LMRoman10',sans-serif;">
       <li><strong>{Name} ↦ {Initial}. {Forename} {Surname} ↦ J. Robert Oppenheimer</strong></li>
@@ -66,14 +222,54 @@ description: Solo Project
     </ul>
   </div>
   <p>(where a set of production rules is assigned to each bracketed, "non-terminal" symbol).</p>
-  <p>I've included such a story grammar in <i>Concrete Earth</i>, along with some extra, context-sensitive components. My implementation weights production rules by recency, prioritising phrases and sentence structures the player hasn't seen lately; it also remembers descriptions of any NPCs, for consistency. By passing in the player's position, the grammar can generate text descriptions of their nearby landforms. There is even an attempt to encode constraints on production rules, although I can't see it scaling well (it's hard to encode a high-level understanding of all the connotations of different words).</p>
+  <p>
+    I've included such a story grammar in <i>Concrete Earth</i>, along with some extra, context-sensitive components. My
+    implementation weights production rules by recency, prioritising phrases and sentence structures the player hasn't
+    seen lately; it also remembers descriptions of any NPCs, for consistency. By passing in the player's position, the
+    grammar can generate text descriptions of their nearby landforms. There is even an attempt to encode constraints on
+    production rules, although I can't see it scaling well (it's hard to encode a high-level understanding of all the
+    connotations of different words).
+  </p>
 
   <!-- FIXME: Move this to Lingua Franca (once it exists...) -->
   <h2>...Ants?</h2>
-  <p>The finished product is, at the end of the day, just a technical showcase: I'd argue it's been much more fun to build than it is to actually play. That's why, while I've no intentions of develop <i>Concrete Earth</i> any further, I've continued to play about with the underlying DX11 framework, honing my skills as a graphics programmer.</p>
+  <p>
+    The finished product is, at the end of the day, just a technical showcase: I'd argue it's been much more fun to
+    build than it is to actually play. That's why, while I've no intentions of develop <i>Concrete Earth</i> any
+    further, I've continued to play about with the underlying DX11 framework, honing my skills as a graphics programmer.
+  </p>
   <!-- FIXME: Get an ants gif! -->
-  <p>Being interested in navigational AI, I figured it'd be a good challenge to implement Sebastian Lague's model of <strong><a href="https://www.youtube.com/watch?v=X-iSQQgOd1A" target="_blank" rel="noreferrer noopener">pheromone-based pathfinding</a></strong> for myself. To efficiently simulate a million ants (right), I'd of course need a compute shader - and therefore, I'd need to learn how to actually set one up in DirectX! Initialising the buffers correctly, learning where to use SRVs versus UAVs, even optimising the shader itself, required a lot of reading, and just as much trial and error (for context, Lague's version is made in Unity, so I couldn't port it without fully understanding my own render pipeline). That my <strong><a href="https://github.com/CommitToTheBit/MMMM-June-2023" target="_blank" rel="noreferrer noopener">code</a></strong> is now working as intended speaks not just to perseverance, but a passion for graphics programming, and C++ in general.</p>
+  <p>
+    Being interested in navigational AI, I figured it'd be a good challenge to implement Sebastian Lague's model of
+    <strong
+      ><a href="https://www.youtube.com/watch?v=X-iSQQgOd1A" target="_blank" rel="noreferrer noopener"
+        >pheromone-based pathfinding</a
+      ></strong
+    >
+    for myself. To efficiently simulate a million ants (right), I'd of course need a compute shader - and therefore, I'd
+    need to learn how to actually set one up in DirectX! Initialising the buffers correctly, learning where to use SRVs
+    versus UAVs, even optimising the shader itself, required a lot of reading, and just as much trial and error (for
+    context, Lague's version is made in Unity, so I couldn't port it without fully understanding my own render
+    pipeline). That my
+    <strong
+      ><a href="https://github.com/CommitToTheBit/MMMM-June-2023" target="_blank" rel="noreferrer noopener"
+        >code</a
+      ></strong
+    >
+    is now working as intended speaks not just to perseverance, but a passion for graphics programming, and C++ in
+    general.
+  </p>
 
   <!-- FIXME: Add link to PDF -->
-  <h2 style="text-align:right"><i>Concrete Earth</i> is available on <strong><a href="https://github.com/CommitToTheBit/CMP505-Concrete-Earth-MASTER" target="_blank" rel="noreferrer noopener">GitHub</a></strong>. A full technical breakdown can be found in the accompanying report.</h2>
+  <h2 style="text-align:right">
+    <i>Concrete Earth</i> is available on
+    <strong
+      ><a
+        href="https://github.com/CommitToTheBit/CMP505-Concrete-Earth-MASTER"
+        target="_blank"
+        rel="noreferrer noopener"
+        >GitHub</a
+      ></strong
+    >. A full technical breakdown can be found in the accompanying report.
+  </h2>
 </article>
