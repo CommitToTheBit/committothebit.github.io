@@ -8,6 +8,12 @@ math: true
 published: false
 ---
 
+Where were we? Welcome back to my series on procedurally-generated whodunnits, why I've made them, and how I... well, *'dunnit*. This is the follow-up to my inaugural post, where I gave a sketch of the algorithm my game, *Bad Bohemians*, uses to solve (and eventually, set) logic puzzles. Now it's time for a programmer to implement the damn thing. Don't worry if the maths from last time wasn't completely clear - I'll restate the key points as we go - but I'll be assuming the main terms and ideas are fresh in your mind as we transpose the model from theory to practice.
+
+Before starting, let's set the stakes. 's old adage about code optimisation goes, " ". This blog is about Bad Bohemians' 3%.
+
+Cards on the table: I am a very lazy programmer. I prefer the term pragmatic, sure, . 
+
 In the last post, I set out my overarching motivations for making *Bad Bohemians*, and how I mean to do so.
 In describing how my logic puzzle solver receives and represents information, though, conspicuously absent was an explanation of how it actually, well, *solves*.
 This is, in my opinion, the most important code in the whole damn thing.
