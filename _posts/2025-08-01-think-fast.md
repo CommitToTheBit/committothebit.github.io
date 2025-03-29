@@ -12,7 +12,18 @@ Where were we? Welcome back to my series on procedurally-generated whodunnits, w
 
 Before starting, let's set the stakes. 's old adage about code optimisation goes, " ". This blog is about Bad Bohemians' 3%.
 
-Cards on the table: I am a very lazy programmer. I prefer the term pragmatic, sure, . 
+I'll add that I am, fundamentally, quite a lazy programmer.
+
+Cards on the table: I am a very lazy programmer. I prefer the term pragmatic, sure, .
+
+## The Grid
+
+We're going to 
+Immediately, though, we're going to 
+Huh, that's a very specific number of categories. I'm sure it won't be explained later on...
+
+## The Hierarchy
+Ohh, there it is.
 
 In the last post, I set out my overarching motivations for making *Bad Bohemians*, and how I mean to do so.
 In describing how my logic puzzle solver receives and represents information, though, conspicuously absent was an explanation of how it actually, well, *solves*.
