@@ -27,7 +27,7 @@ Achieved an A+ in the majority of my modules, including: Advanced Procedural Met
 
 Winner of the Andrew De Vries Memorial Prize, graduating top of my year.
 
-#### **BA (Hons) Mathematics, 2.ii** *University of Cambridge, Cambridge, October 2018 - July 2021*
+#### **MA (Cantab) Mathematics, 2.ii** *University of Cambridge, Cambridge, October 2018 - July 2021*
 
 Graduated with 59% in Part II of the Tripos. Demonstrably experienced in 3D mathematics, with modules including: Quantum Information and Computation, Principles of Quantum Mechanics, Linear Algebra, Classical Dynamics, Statistics. First learned to code as part of the degree, scoring 85% in my final year computational projects.
 
