@@ -9,7 +9,7 @@ order: 3
 
 #### **Feral Interactive, London** *Graduate Developer, November 2023 - Present*
 
-Shipped my first title in the industry, seeing our port of [**GRID Legends**](https://committothebit.github.io/grid-legends) through development and up to release. Experienced with Android, wrangling its API for both mobile and VR development. Supplemented forward-facing, game-specific work with side projects improving Feral's internal libraries, like extending our existing deep links functionality to make life easier for QA. 
+Shipped my first title in the industry, seeing our port of [**GRID Legends**](https://committothebit.github.io/grid-legends) through development and up to release. Experienced with Android, wrangling its API for both mobile and VR development. Supplemented forward-facing, game-specific work with larger and more lasting projects improving Feral's internal libraries, most focused on fleshing out our existing framework for UI.
 
 #### **Tripledot Studios, London** *Junior Level Designer, February 2022 - September 2022*
 

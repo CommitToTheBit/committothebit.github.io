@@ -9,6 +9,7 @@ image:
   path: /assets/img/posts/2024-07-27-toggling-clues.png
   lqip: data:image/webp;base64,UklGRpoAAABXRUJQVlA4WAoAAAAQAAAADwAABwAAQUxQSDIAAAARL0AmbZurmr57yyIiqE8oiG0bejIYEQTgqiDA9vqnsUSI6H+oAERp2HZ65qP/VIAWAFZQOCBCAAAA8AEAnQEqEAAIAAVAfCWkAALp8sF8rgRgAP7o9FDvMCkMde9PK7euH5M1m6VWoDXf2FkP3BqV0ZYbO6NA/VFIAAAA
   alt: July 27, 2024. An early set of procedurally generated clues, being used to fill in an Einstein puzzle.
+published: false
 ---
 
 There's a strong argument from [**Jimmy Maher**](https://www.filfre.net/2013/02/free-fall-part-2-murder-on-the-zinderneuf/) that the whodunnit lends itself uniquely well to game design, in that no other literary genre sees itself so explicitly "as a form of game between reader and writer". There's an equally strong argument that trying to procedurally generate whodunnits is a doomed and deeply stupid venture. For a design problem with such a rich history of misfires and mistakes, from Sheldon Klein's mystery generator (1973) to *Murder of the Zinderneuf*, you've got to ask - why do this?
