@@ -5,7 +5,6 @@ tags: ["design", "systems design", "procgen"]
 math: true
 image:
   path: /assets/img/posts/2025-09-24-theoretical-degree-in-physics.png
-published: false
 ---
 
 Here's a question, what's the funniest joke you've seen a game pull off? What about the most impressive - is that the same? I have fond memories playing *Fallout: New Vegas* as a preteen, right in that sweet spot where a single bit of media could rewire my entire sense of humour (*Arrested Development* and the Cornetto trilogy were other such offenders). Half of, say, Fantastic's lines could just as easily have come from a Gob Bluth or a Gary King. "They asked me how well I understood theoretical physics. I said I had a theoretical degree in physics" is a great gag, but it's one told with the same techniques of wordplay and characterisation afforded to film and TV. Are there other, subtler ways of telling jokes exclusive to an interactive medium?
@@ -22,19 +21,38 @@ I know the worst thing one can to a joke is over-explain it, but I do want to ti
 
 *Mess Adventures* is an extremely mean platformer. It is also, with little dialogue or writing at all, extremely funny. Where 
 
-Or, as comedian/streamer/*Great Australian Bake Off* host Tom Walker so eloquently puts it: *i knew it i knew do you see do you see they changed the fucking layout they ththththththey took it away.*
+streamer and mess-adventurer Tom Walker so eloquently puts it: *i knew it i knew do you see do you see they changed the fucking layout they ththththththey took it away.*
 
-# Surprise! It's a Systems Design blog
+## Surprise! It's a Systems Design blog
 
-Okay, big glaring caveat before I go any further: I'm a programmer, not a designer.
+Okay, big glaring caveat before I go any further: I am not a systems designer. I am even less an authoritative voice on systems design. What I am is a programmer, and as a programmer I do believe it's my responsibility to approach my work with at least some degree of media literacy - especially as it relates to the systems I'm personally implementing. So in this post, I thought I'd share two recent concepts, *systems surprise* and *systems suspense*, and use them as a lens to better understand more of my own experiences with comedy and games.
 
-# Embedding Humour with Systems Surprise
+Let's start by thinking about games in the abstract (this section is shamelessly cribbed from Grinblat, Kreminski, Lennon *et al.*'s seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong>Understanding Systems Suspense</strong></a>, so feel free to skip ahead if you've already familiar). A videogame is a formal, logical system that receives player inputs, transforms them through a series of rules, protocols, and processes, to return on the screen a representation of the system's current state. Abstracted, the game logic is something like a mathematical function $$f : \textrm{interaction} \mapsto \textrm{audiovisuals}$$. Now a developer in theory has perfect knowledge of $$f$$ - they have access to the codebase, after all - but a *player* can only hope to reverse engineer the function from its output. This reverse engineering is itself an evolving process, such that the player is continuously updating their *mental model* of what $$f$$ could be.
+
+(and I'm quite excited cos I really haven't seen this anyone writing about this before)
+
+## Embedding Humour with Systems Surprise
 
 
 
-# Emergent Humour and Systems Suspense
+## Emergent Humour and Systems Suspense
 
-# Selected Bibliography
+When Grinblat *et al.* talk about how systems suspense can manifest *without* surprise, they characterise it as a "dawning realization... notable for how much it allows a player to look back on their past experiences in a new light". That feeling of dawning realisation, it doesn't strike me as an conducive to telling jokes... or at least, it didn't until I came back thinking about *Arrested Development*. In its heyday, the sitcom notorious for how far in advance it'd telegraph certain punchlines. To me at least, what made the sight gags I only caught on my second or third or seventh rewatch so funny was not so much the jokes themselves, but the very fact that they'd been staring me in the face the whole time.
+
+The systems analogy to this 
+
+Another example: Gervais%.  opening your third eye and driving your close personal friend Niko Bellic to the nearest in sub-60. Probably.
+
+Take it one step further than that, even - forget subversive play, let's talk straight up glitches. Every gamedev knows that. Is committing unsafe code really a radical act of systems design? Fuck it, sure, that's what I'll be telling my boss in my next performance review.
+
+## Closing Notes
+
+Right, that' s
+
+- <strong>Changing the rules of a game midway is inherently very funny.</strong>
+- <strong>The player's experience of systems doesn't begin or end with what </strong>
+
+## Selected Bibliography
 
 <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong>Understanding Systems Suspense</strong></a> 
 
