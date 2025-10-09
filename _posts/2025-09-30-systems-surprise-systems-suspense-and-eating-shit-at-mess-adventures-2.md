@@ -35,11 +35,25 @@ Reverse engineering, or mental modelling if you will, is a continuous process.
 
 A videogame is a formal, logical system that receives player inputs, transforms them through a series of rules, protocols, and processes, to return on the screen a representation of the system's current state. Abstracted, the game logic is something like a mathematical function $$f : \textrm{interaction} \mapsto \textrm{audiovisuals}$$. Now a developer in theory has perfect knowledge of $$f$$ - they have access to the codebase, after all - but a *player* can only hope to reverse engineer the function from its output. This reverse engineering is itself an evolving process, such that the player is continuously updating their *mental model* of what $$f$$ could be.
 
-(and I'm quite excited cos I really haven't seen this anyone writing about this before)
+a boundary separating what is and what isn't. two orthogonal qualities, shape and fidelity.
+
+Systems surprise is characterised by the *shape* of this boundary, defined as *a sharp and sudden reorientation of the player's mental model into a new and noticeably different one*. Examples include can range from the genre-shattering swings taken by games like *Fez* and *Inscryption*, right down to staples like mimic chests and dreaded second healthbars.
+
+Systems suspense, on the other hand, is a matter of *fidelity*. Along . Others points will be more fuzzy, where
+We therefore arrive at our last key definition, that systems suspense is
+
+Grinblat *et al.* go on to give a rundown. The 
+
+(and I'm quite excited cos I really haven't seen this anyone writing about this before) - getting a laugh.
 
 ## Embedding Humour with Systems Surprise
 
+Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. Of course it lends itself .
 
+In these cases, there's no fuzziness involved, but that doesn't mean it can't be brought in. If you've ever heard Norm Macdonalds moth joke, you'll know the feeling 
+
+
+To me at least, I think the ways that
 
 ## Emergent Humour and Systems Suspense
 
