@@ -11,11 +11,9 @@ Here's a question, what's the funniest joke you've seen a game pull off? What ab
 
 ![Desktop View](/assets/img/posts/2025-09-25-sisyphus-is-happy.png)
 
-Early on in the roguelike *Hades*, you'll likely run into Supergiant's take on Sisyphus: a cheery chap with an even cheerier boulder (just look at that big fella's winning smile!). You'll just as likely pick up on the allusion to that old philosophical question, is Sisyphus happy? More than cheap reference humour, this is the game taking its genre conventions and using them to gently poke fun at you, the player. After all, how could any roguelike *not* characterise Sisyphus like this? If there was no meaning to be found in a repetitive and unending task - you wouldn't be playing, would you?
+Early on in the roguelike *Hades*, you'll likely run into Supergiant's take on Sisyphus: a cheery chap with an even cheerier boulder (just look at that big fella's winning smile!). You'll just as likely pick up on the allusion to that old philosophical question, is Sisyphus happy? More than cheap reference humour, this is the game taking its genre conventions and using them to gently poke fun at you, the player. After all, how could any roguelike *not* characterise Sisyphus like this? If there was no meaning to be found in a repetitive and unending task - you wouldn't be playing, would you? The worst thing one can to a joke is over-explain it, but I do want to tie in to the philosophy of humour here. For Schopenhauer, humour is "the suddenly perceived incongruity between a concept" and the real". Conceptually, that Sisyphus could be happy is absurd; in reality, you are; ergo, funny.
 
-I know the worst thing one can to a joke is over-explain it, but I do want to tie this into the philosophy of humour here. For Schopenhauer, humour is "the suddenly perceived incongruity between a concept" and the real". Conceptually, that Sisyphus could be happy is absurd; in reality, you are; ergo, funny.
-
-...But how does that make <a href="https://youtu.be/C6119Q9pDAk?t=478"><strong>this</strong></a> a joke?
+...But how does any of that make <a href="https://youtu.be/C6119Q9pDAk?t=478"><strong>this</strong></a> a joke?
 
 {% include embed/youtube.html id='C6119Q9pDAk' %}
 
@@ -50,11 +48,16 @@ Grinblat *et al.* go on to give a rundown. The
 
 Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. Of course it lends itself .
 
-In these cases, there's no fuzziness involved, but that doesn't mean it can't be brought in. If you've ever heard Norm Macdonalds moth joke, you'll understand how suspense can heighten that eventual moment of release.
+But comedy doesn't begin or end with punchlines. If you've ever heard Norm Macdonald's <a href="https://www.youtube.com/watch?v=jJN9mBRX3uo"><strong>moth joke</strong></a>, you'll know how much craft goes in to setting up a joke, how much tension can be wrung out of the fact you just can't tell where it's going. Suspense is followed by surprise; the audience's anticipation of the punchline heightens the eventual moment of release. This too is an affordance of both content and systems, especially in the case of puzzlers.
+
+Perhaps surprisingly, 
 
 Puzzle games especially lend themselves to telling this type of joke on a systematic level. They're already built around the release of a satisfying solution - so what if 
 
-(its no coincidence that both *Mess Adventures* and its sequel contain several *Baba Is You*). However, my personal favourite 
+(its no coincidence that both installments of *Mess Adventures* pastiche *Baba Is You* at several points). And once again, my favourite example is from the heyday of Adobe Flash...
+
+![Desktop View](/assets/img/posts/2025-10-09-dont-touch-blue.png)
+*<strong>Impossible to Replicate</strong> To get from A to B in question 5 of The Impossible Quiz, the player has to completel diengage with the systems of the game and move their mouse around the outside of its window - a joke that incidentally did not translate to mobile ports on account of touchscreens. The medium is the message, eh>*
 
 ## Emergent Humour and Systems Suspense
 
@@ -64,13 +67,14 @@ The systems analogy to this
 
 Another example: Gervais%.  opening your third eye and driving your close personal friend Niko Bellic to the nearest in sub-60. Probably.
 
-Take it one step further than that, even - forget subversive play, let's talk straight up glitches. Every gamedev knows that. Is committing unsafe code really a radical act of systems design? Fuck it, sure, that's what I'll be telling my boss in my next performance review.
+Take it one step further than that, even - forget subversive play, let's talk straight up glitches. Games are held together with sticky tape, JIRA tickets, and dreams.
+Is committing unsafe code really a radical act of systems design? Fuck it, sure, that's what I'll be telling my boss in my next performance review.
 
 ## Closing Notes
 
 Right, that' s
 
-- <strong>Changing the rules of a game midway is inherently very funny.</strong>
+- <strong>Changing the rules of a game midway is, inherently. *very funny*.</strong>
 - <strong>The player's experience of systems doesn't begin or end with what </strong>
 
 ## Selected Bibliography
