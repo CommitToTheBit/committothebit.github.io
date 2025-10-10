@@ -50,6 +50,8 @@ Grinblat *et al.* go on to give a rundown. The
 
 Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. Of course it lends itself .
 
+An even more elementary example is *Scary Maze Game*. The player would expect their win condition to be completing a series of mazes, but in reality their is only one level, and no way of winning - a reality that comes suddenly, shockingly, and hilariously into focus when the jumpscare comes. In mental modelling terms,
+
 In these cases, there's no fuzziness involved, but that doesn't mean it can't be brought in. If you've ever heard Norm Macdonalds moth joke, you'll understand how suspense can heighten that eventual moment of release.
 
 Puzzle games especially lend themselves to telling this type of joke on a systematic level. They're already built around the release of a satisfying solution - so what if 
