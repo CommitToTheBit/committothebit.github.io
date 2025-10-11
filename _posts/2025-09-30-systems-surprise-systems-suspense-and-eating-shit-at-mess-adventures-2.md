@@ -48,6 +48,8 @@ Grinblat *et al.* go on to give a rundown. The
 
 Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. Of course it lends itself .
 
+An even more elementary example is *Scary Maze Game*. The player would expect their win condition to be completing a series of mazes, but in reality their is only one level, and no way of winning - a reality that comes suddenly, shockingly, and hilariously into focus when the jumpscare comes. In mental modelling terms,
+
 But comedy doesn't begin or end with punchlines. If you've ever heard Norm Macdonald's <a href="https://www.youtube.com/watch?v=jJN9mBRX3uo"><strong>moth joke</strong></a>, you'll know how much craft goes in to setting up a joke, how much tension can be wrung out of the fact you just can't tell where it's going. Suspense is followed by surprise; the audience's anticipation of the punchline heightens the eventual moment of release. This too is an affordance of both content and systems, especially in the case of puzzlers.
 
 Perhaps surprisingly, 
