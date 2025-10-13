@@ -25,13 +25,22 @@ streamer and mess-adventurer Tom Walker so eloquently puts it: *i knew it i knew
 
 Okay, big glaring caveat before I go any further: I am not a systems designer. I am even less an authoritative voice on systems design. What I am is a programmer, and as a programmer I do believe it's my responsibility to approach my work with at least some degree of media literacy - especially as it relates to the systems I'm personally implementing. So in this post, I thought I'd share two recent concepts, *systems surprise* and *systems suspense*, and use them as a lens to better understand more of my own experiences with comedy and games.
 
-Let's start by thinking about games in the abstract (this section is shamelessly cribbed from Grinblat, Kreminski, Lennon *et al.*'s seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong>Understanding Systems Suspense</strong></a>, so feel free to skip ahead if you've already familiar). A videogame is a formal, computational system, governed by its rules and processes. The player can't know these rules for certain - not without access to the codebase - so must reverse engineer them by making inputs and interpreting their outputs... playing the game, in other words. We'll define a *mental model* as the framework the engineers that maps their understanding of how the game operates.
+Let's start by thinking about games in the abstract (this section is shamelessly cribbed from Grinblat, Kreminski, Lennon *et al.*'s seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong>Understanding Systems Suspense</strong></a>, so feel free to skip ahead if you've already familiar). A videogame is a formal, computational system, governed by its rules and processes. The player can't know these rules for certain - not without access to the codebase - so must reverse engineer them by making inputs and interpreting their outputs... playing the game, in other words. We'll define a <strong>mental model</strong> as the framework the engineers that maps their understanding of how the game operates.
 
-It's important to understanding the act of mental modelling as a continuous process. Florence Smith-Nicholls writes abotu archaeological games
+Mental modelling is best understood as a continuous process. Influenced by publicity, franchise/genre history, *etc.*, player expectations start to form long before booting up a game, and continue to develop long after completing its tutorial. *Understanding Systems Suspense* is interested in how two key qualities of a mental model evolve with time:
+- <strong>Shape</strong> The set of rules and processes that describe a game. We can think of it as a boundary in possibility space, separating what is possible from what isn't.
+- <strong>Fidelity</strong> A player's confidence is in the shape of their mental model. Where the boundary is clear, the player believes they understand a game's ruleset; where it is fuzzy, they are able to reverse engineer several such (contradictory) possibilities.
+As an aside, authors such as... Florence Smith-Nicholls? Max Kreminski? argue that building this mental model *is* the gameplay experience.
 
-Conceptually, we're only interested in it as a boundary separating what is and what isn't. two orthogonal qualities, shape and fidelity.
+![Desktop View]()
+*<strong>Visualing Mental Models</strong>*
 
-Systems surprise is characterised by the *shape* of this boundary, defined as *a sharp and sudden reorientation of the player's mental model into a new and noticeably different one*. Examples include can range from the genre-shattering swings taken by games like *Fez* and *Inscryption*, right down to staples like mimic chests and dreaded second healthbars.
+We're now ready to define <strong>systems surprise</strong> as *a sharp and sudden change in the shape of a player's mental model into a new and noticeably different one*. 
+
+![Desktop View]()
+*<strong>Visualing Systems Surprise</strong> By contrast, content surprise only changes: it might add*
+
+Examples of systems surprise include can range from the genre-shattering swings taken by games like *Fez* and *Inscryption*, right down to staples like mimic chests and dreaded second healthbars.
 
 Systems suspense, on the other hand, is a matter of *fidelity*. Along . Others points will be more fuzzy, where
 We therefore arrive at our last key definition, that systems suspense is
