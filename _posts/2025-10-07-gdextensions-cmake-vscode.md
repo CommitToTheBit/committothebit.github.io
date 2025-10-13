@@ -19,8 +19,16 @@ I also want to make a quick note about compilers here. If you're following this 
 
 ## godot-cpp
 
+Go into extensions. Run git submodule add -b 4.x https://github.com/godotengine/godot-cpp, then init.
+
 This is, mercifully, the first and only time we'll need scons as we generate these 
 
 ## CMake
+
+root: does what?
+
+extensions: linking
+
+gdextension: add nuance, etc.
 
 ## VSCode

@@ -25,15 +25,11 @@ streamer and mess-adventurer Tom Walker so eloquently puts it: *i knew it i knew
 
 Okay, big glaring caveat before I go any further: I am not a systems designer. I am even less an authoritative voice on systems design. What I am is a programmer, and as a programmer I do believe it's my responsibility to approach my work with at least some degree of media literacy - especially as it relates to the systems I'm personally implementing. So in this post, I thought I'd share two recent concepts, *systems surprise* and *systems suspense*, and use them as a lens to better understand more of my own experiences with comedy and games.
 
-Let's start by thinking about games in the abstract (this section is shamelessly cribbed from Grinblat, Kreminski, Lennon *et al.*'s seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong>Understanding Systems Suspense</strong></a>, so feel free to skip ahead if you've already familiar). A videogame is a formal, computational system, governed by its rules and processes. Developers know these rules - or at least can find them in their codebase - but players don't. They instead have to reverse engineer them through the game's outputs. We'll call a player's understanding of these rules their *mental model* of the game.
+Let's start by thinking about games in the abstract (this section is shamelessly cribbed from Grinblat, Kreminski, Lennon *et al.*'s seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong>Understanding Systems Suspense</strong></a>, so feel free to skip ahead if you've already familiar). A videogame is a formal, computational system, governed by its rules and processes. The player can't know these rules for certain - not without access to the codebase - so must reverse engineer them by making inputs and interpreting their outputs... playing the game, in other words. We'll define a *mental model* as the framework the engineers that maps their understanding of how the game operates.
 
-Mental model $$M$$ exists within the possibility space $$P$$ of anything a game can *be*.
+It's important to understanding the act of mental modelling as a continuous process. Florence Smith-Nicholls writes abotu archaeological games
 
-Reverse engineering, or mental modelling if you will, is a continuous process.
-
-A videogame is a formal, logical system that receives player inputs, transforms them through a series of rules, protocols, and processes, to return on the screen a representation of the system's current state. Abstracted, the game logic is something like a mathematical function $$f : \textrm{interaction} \mapsto \textrm{audiovisuals}$$. Now a developer in theory has perfect knowledge of $$f$$ - they have access to the codebase, after all - but a *player* can only hope to reverse engineer the function from its output. This reverse engineering is itself an evolving process, such that the player is continuously updating their *mental model* of what $$f$$ could be.
-
-a boundary separating what is and what isn't. two orthogonal qualities, shape and fidelity.
+Conceptually, we're only interested in it as a boundary separating what is and what isn't. two orthogonal qualities, shape and fidelity.
 
 Systems surprise is characterised by the *shape* of this boundary, defined as *a sharp and sudden reorientation of the player's mental model into a new and noticeably different one*. Examples include can range from the genre-shattering swings taken by games like *Fez* and *Inscryption*, right down to staples like mimic chests and dreaded second healthbars.
 
@@ -59,7 +55,7 @@ Puzzle games especially lend themselves to telling this type of joke on a system
 (its no coincidence that both installments of *Mess Adventures* pastiche *Baba Is You* at several points). And once again, my favourite example is from the heyday of Adobe Flash...
 
 ![Desktop View](/assets/img/posts/2025-10-09-dont-touch-blue.png)
-*<strong>Impossible to Replicate</strong> To get from A to B in question 5 of The Impossible Quiz, the player has to completel diengage with the systems of the game and move their mouse around the outside of its window - a joke that incidentally did not translate to mobile ports on account of touchscreens. The medium is the message, eh>*
+*<strong>Impossible to Replicate</strong> To get from A to B in question 5 of The Impossible Quiz, the player has to completel disengage with the systems of the game and move their mouse around the outside of its window - a joke that incidentally did not translate to mobile ports on account of touchscreens. The medium is the message, eh?*
 
 ## Emergent Humour and Systems Suspense
 
