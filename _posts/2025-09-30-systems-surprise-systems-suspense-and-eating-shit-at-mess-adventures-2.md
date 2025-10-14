@@ -25,7 +25,7 @@ streamer and mess-adventurer Tom Walker so eloquently puts it: *i knew it i knew
 
 Okay, big glaring caveat before I go any further: I am not a systems designer. I am even less an authoritative voice on systems design. What I am is a programmer, and as a programmer I do believe it's my responsibility to approach my work with at least some degree of media literacy - especially as it relates to the systems I'm personally implementing. So in this post, I thought I'd share two recent concepts, *systems surprise* and *systems suspense*, and use them as a lens to better understand more of my own experiences with comedy and games.
 
-Let's start by thinking about games in the abstract (this section is shamelessly cribbed from Grinblat, Kreminski, Lennon *et al.*'s seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong>Understanding Systems Suspense</strong></a>, so feel free to skip ahead if you've already familiar). A videogame is a formal, computational system, governed by its rules and processes. The player can't know these rules for certain - not without access to the codebase - so must reverse engineer them by making inputs and interpreting their outputs... playing the game, in other words. We'll define a <strong>mental model</strong> as the framework the engineers that maps their understanding of how the game operates.
+Let's start by thinking about games in the abstract (this section is shamelessly cribbed from the seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong>Understanding Systems Suspense</strong></a>, so feel free to skip ahead if you're already familiar). A videogame is a formal, computational system, governed by its rules and processes. The player can't know these rules for certain - not without access to the codebase - so must reverse engineer them by making inputs and interpreting their outputs... playing the game, in other words. We'll define a <strong>mental model</strong> as the framework the engineers that maps their understanding of how the game operates.
 
 Mental modelling is best understood as a continuous process. Influenced by publicity, franchise/genre history, *etc.*, player expectations start to form long before booting up a game, and continue to develop long after completing its tutorial. *Understanding Systems Suspense* is interested in how two key qualities of a mental model evolve with time:
 - <strong>Shape</strong> The set of rules and processes that describe a game. We can think of it as a boundary in possibility space, separating what is possible from what isn't.
@@ -48,7 +48,7 @@ We therefore arrive at our last key definition, that systems suspense is
 ![Desktop View]()
 *<strong>Systems Suspense</strong>*
 
-Grinblat *et al.* go on to give a rundown of several reasons a designer might include 
+*Understanding Systems Suspense* go on to give a rundown of several reasons a designer might include 
 
 (and I'm quite excited cos I really haven't seen this anyone writing about this before) - getting a laugh.
 
@@ -64,7 +64,7 @@ But comedy doesn't begin or end with punchlines. If you've ever heard Norm Macdo
 
 Perhaps surprisingly, 
 
-Puzzle games especially lend themselves to telling this type of joke on a systematic level. They're already built around the release of a satisfying solution - so what if 
+Puzzle games especially lend themselves to telling this type of joke on a systemic level. They're already built around the release of a satisfying solution - so what if 
 
 (its no coincidence that both installments of *Mess Adventures* pastiche *Baba Is You* at several points). And once again, my favourite example is from the heyday of Adobe Flash...
 
@@ -73,9 +73,13 @@ Puzzle games especially lend themselves to telling this type of joke on a system
 
 ## Emergent Humour and Systems Suspense
 
-When Grinblat *et al.* talk about how systems suspense can manifest *without* surprise, they characterise it as a "dawning realization... notable for how much it allows a player to look back on their past experiences in a new light". That feeling of dawning realisation, it doesn't strike me as an conducive to telling jokes... or at least, it didn't until I came back thinking about *Arrested Development*. In its heyday, the sitcom notorious for how far in advance it'd telegraph certain punchlines. To me at least, what made the sight gags I only caught on my second or third or seventh rewatch so funny was not so much the jokes themselves, but the very fact that they'd been staring me in the face the whole time.
+When *Understanding Systems Suspense* talks about how suspense can manifest *without* surprise, they characterise it as a "dawning realization... notable for how much it allows a player to look back on their past experiences in a new light". That feeling of dawning realisation, it doesn't strike me as an conducive to telling jokes... or at least, it didn't until I circled back to *Arrested Development*. In its heyday, the sitcom was notorious for how far in advance it'd telegraph certain punchlines. What makes the sight gags I'll only catch on a second or third or seventh rewatch so funny is not so much the jokes themselves, but the fact they've been staring me in the face the whole time.
 
-The systems analogy to this 
+Replaying games can similarly create comedy through content suspense. If you've ever revisited an RPG. However, in the same way that games might have "obviously wrong" choices at the content level, so too can their mechanics be engaged with wrong altogether. has a really insightful blog about inaction in games, where... there is humour in Batman's individual (non)responses, but more wrung out of the fact the game is just fine with this.
+
+I would argue that the systemic analogy to this, where the player 
+
+To me at least, it seems 
 
 Whereas systems surprise (with or without the help of suspense) lends itself to top-down, embedded humour, here it is <strong>emergent</strong>, arising bottom-up. It would have to be, really, seeing as subversive play can really be prescribed by a designer. Liam Mitchell has written at length on the topic, but subversive play is...
 
