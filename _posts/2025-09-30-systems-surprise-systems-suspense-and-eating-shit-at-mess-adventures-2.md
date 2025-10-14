@@ -33,25 +33,30 @@ Mental modelling is best understood as a continuous process. Influenced by publi
 As an aside, authors such as... Florence Smith-Nicholls? Max Kreminski? argue that building this mental model *is* the gameplay experience.
 
 ![Desktop View]()
-*<strong>Visualing Mental Models</strong>*
+*<strong>Mental Models</strong>*
 
 We're now ready to define <strong>systems surprise</strong> as *a sharp and sudden change in the shape of a player's mental model into a new and noticeably different one*. 
 
-![Desktop View]()
-*<strong>Visualing Systems Surprise</strong> By contrast, content surprise only changes: it might add*
-
 Examples of systems surprise include can range from the genre-shattering swings taken by games like *Fez* and *Inscryption*, right down to staples like mimic chests and dreaded second healthbars.
+
+![Desktop View]()
+*<strong>Systems Surprise</strong> By contrast, content surprise only changes: it might add*
 
 Systems suspense, on the other hand, is a matter of *fidelity*. Along . Others points will be more fuzzy, where
 We therefore arrive at our last key definition, that systems suspense is
 
-Grinblat *et al.* go on to give a rundown. The 
+![Desktop View]()
+*<strong>Systems Suspense</strong>*
+
+Grinblat *et al.* go on to give a rundown of several reasons a designer might include 
 
 (and I'm quite excited cos I really haven't seen this anyone writing about this before) - getting a laugh.
 
 ## Embedding Humour with Systems Surprise
 
-Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. Of course it lends itself .
+Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. As we saw in Mess *Adventures*,
+
+In this case, systems surprise is acting alone as the ludic equivalent of a one-liner: the player's mental model snaps from one well-defined shape (one where the ground cannot simply disappear out from under them) to another (one where it can). There's not a change in fidelity here, since the moment is, on a systemic level, self-contained. Systems surprises lend themselves to jokes <strong>embedded</strong> by the designer.
 
 An even more elementary example is *Scary Maze Game*. The player would expect their win condition to be completing a series of mazes, but in reality their is only one level, and no way of winning - a reality that comes suddenly, shockingly, and hilariously into focus when the jumpscare comes. In mental modelling terms,
 
@@ -71,6 +76,8 @@ Puzzle games especially lend themselves to telling this type of joke on a system
 When Grinblat *et al.* talk about how systems suspense can manifest *without* surprise, they characterise it as a "dawning realization... notable for how much it allows a player to look back on their past experiences in a new light". That feeling of dawning realisation, it doesn't strike me as an conducive to telling jokes... or at least, it didn't until I came back thinking about *Arrested Development*. In its heyday, the sitcom notorious for how far in advance it'd telegraph certain punchlines. To me at least, what made the sight gags I only caught on my second or third or seventh rewatch so funny was not so much the jokes themselves, but the very fact that they'd been staring me in the face the whole time.
 
 The systems analogy to this 
+
+Whereas systems surprise (with or without the help of suspense) lends itself to top-down, embedded humour, here it is <strong>emergent</strong>, arising bottom-up. It would have to be, really, seeing as subversive play can really be prescribed by a designer. Liam Mitchell has written at length on the topic, but subversive play is...
 
 Another example: Gervais%.  opening your third eye and driving your close personal friend Niko Bellic to the nearest in sub-60. Probably.
 
