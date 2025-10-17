@@ -77,8 +77,7 @@ When *Understanding Systems Suspense* talks about how suspense can manifest *wit
 
 Replaying games can create a similar sort of suspense. If you've ever revisited an RPG, I'm willing to bet you've tried seeing just how much of a horrible git you can be the second time around. Even in Fallout: New Vegas, where going all-in on Caesar's Legion can be played completely straight, mapping out the fuzzy edges of the narrative and seeing just how much of a mess you can make... playing like that strikes me as inherently *funny*. Maybe I've spent too long in the Mojave Wasteland, though.
 
-My grander point here is, in the same way that games might have "obviously wrong" choices at the content level, so too can their mechanics be engaged with wrong altogether. Dr Merlin Seller has a really insightful blog about 
-href="https://www.dearplayer.org/blog/2017/3/22/dear-player-inaction-in-an-interactive-medium"><strong>inaction in games</strong></a>, where she plays through the entirety of *Batman: The Telltale Series* in stony silence. Every dialogue choice has a timer attached to it, so she let's every choice time-out, saying nothing. There is humour in Batman's individual (non)responses, but more wrung out of the fact the game is just fine with this.
+In the same way that games might have "obviously wrong" choices at the content level, so too can their mechanics be engaged with wrong altogether. Dr Merlin Seller has a really insightful blog about <a href="https://www.dearplayer.org/blog/2017/3/22/dear-player-inaction-in-an-interactive-medium"><strong>inaction in games</strong></a>, where she plays through the entirety of *Batman: The Telltale Series* in stony silence. Every dialogue choice has a timer attached to it, so she let's every choice time-out, saying nothing. There is humour in Batman's individual (non)responses, but more wrung out of the fact the game is just fine with this.
 
 I would argue that the systemic analogy to this, where the player 
 
@@ -88,10 +87,17 @@ Whereas systems surprise (with or without the help of suspense) lends itself to 
 
 Another example: Gervais%.  opening your third eye and driving your close personal friend Niko Bellic to the nearest in sub-60. Probably.
 
-Take it one step further than that, even - forget subversive play, let's talk straight up glitches. Games are held together with sticky tape, JIRA tickets, and dreams.
+Take it one step further than that, even - forget subversive play, let's talk straight up glitches. Games are held together with sticky tape, JIRA tickets, and dreams. Liam Mitchell
 Is committing unsafe code really a radical act of systems design? Fuck it, sure, that's what I'll be telling my boss in my next performance review.
 
-## Closing Notes
+## Closing Thoughts
+
+Like I said, I'm not a systems designer; comedy is subjective; the line between content and systems is not particularly rigid; things of that nature. I especially want to highlight that systems can well facilitate humour and play without either surprises or suspense.
+
+Really, it comes down to two key points. Firstly, . In this case, we've seen how
+
+And secondly, it's never not funny to be mean to your players.
+
 
 Right, that' s
 
