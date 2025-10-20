@@ -43,15 +43,18 @@ Examples of systems surprise include can range from the genre-shattering swings 
 ![Desktop View]()
 *<strong>Systems Surprise</strong> By contrast, content surprise only changes: it might add*
 
-Systems suspense, on the other hand, is a matter of *fidelity*. Along . Others points will be more fuzzy, where
-We therefore arrive at our last key definition, that systems suspense is
+Systems suspense, on the other hand, is a matter of fidelity: *a state in which the player is actively and excitedly aware of a fuzzy edge within their mental model of the game*.
 
 ![Desktop View]()
 *<strong>Systems Suspense</strong>*
 
-*Understanding Systems Suspense* go on to give a rundown of several reasons a designer might include 
+*Understanding Systems Suspense* gives many use cases for how and why designers might use this framework, but it is not exhaustive. Where it talks about using systems suspense and surprise to ellicit specific, emotional responses from the player, it focuses predominantly on fear and loss, mimic chests and unexpected permadeaths being good examples of these. The "positive" examples it gives, feelings of achievement and satisfaction, strike me as much more utilitarian. you've understood the game better when X, but it's not exactly visceral.
 
-(and I'm quite excited cos I really haven't seen this anyone writing about this before) - getting a laugh.
+resonant emotional experiences
+
+Where the report explains how systems surprise can be used to create specific emotional beats, though (e.g. mimics) or 
+
+on a gut level (and I'm quite excited because I haven't really seen this anyone writing about this before) - getting a laugh.
 
 ## Embedding Humour with Systems Surprise
 
