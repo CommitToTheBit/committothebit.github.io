@@ -48,13 +48,11 @@ Systems suspense, on the other hand, is a matter of fidelity: *a state in which 
 ![Desktop View]()
 *<strong>Systems Suspense</strong>*
 
-*Understanding Systems Suspense* gives many use cases for how and why designers might use this framework, but it is not exhaustive. Where it talks about using systems suspense and surprise to ellicit specific, emotional responses from the player, it focuses predominantly on fear and loss, mimic chests and unexpected permadeaths being good examples of these. The "positive" examples it gives, feelings of achievement and satisfaction, strike me as much more utilitarian. you've understood the game better when X, but it's not exactly visceral.
+*Understanding Systems Suspense* gives many use cases for how and why designers might use this framework, but it is not exhaustive. Where it talks about using systems suspense and surprise to ellicit specific, emotional responses from the player, it focuses predominantly on fear and loss, mimic chests and unexpected permadeaths being good examples of these. The "positive" examples the report explores, feelings of achievement and satisfaction, strike me as much less visceral. Mastering a game's systems is rewarding, but mastery doesn't resonate.
 
-resonant emotional experiences
+By virtue of these examples, *Understanding Systems Suspense* almost presents 'players feel bad when their mental model is wrong, and good when it is right'.
 
-Where the report explains how systems surprise can be used to create specific emotional beats, though (e.g. mimics) or 
-
-on a gut level (and I'm quite excited because I haven't really seen this anyone writing about this before) - getting a laugh.
+That's why this blog post (and I'm rather excited because I really haven't seen this anyone writing about this before) is focused on a more gut level way that systems suspense and surprise can make the player feel good - getting a laugh.
 
 ## Embedding Humour with Systems Surprise
 
