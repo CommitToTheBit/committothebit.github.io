@@ -48,17 +48,7 @@ Systems suspense, on the other hand, is a matter of fidelity: *a state in which 
 ![Desktop View]()
 *<strong>Systems Suspense</strong>*
 
-*Understanding Systems Suspense* gives many use cases for how and why designers might use this framework, but it is not exhaustive. Where it talks about using systems suspense and surprise to ellicit specific, emotional responses from the player, it focuses predominantly on fear and loss. Getting eaten by your first mimic chests in *Dark Souls* is more than a cheap jumpscare. One of your fundamental assumptions about the game's rules - chests are safe - was wrong, undermining any sense of security, much less mastery, in the game.
-
- Mimic chests are effective when you aren't anticipating them. The first time a player gets eaten by one in *Dark Souls*, it's more than a jumpscare: they are forced to reckon their  However, it would be wrong to think undermining a mental model can *only* be played for dramatic tension, or in this case outright horror. That's why this blog post (and I'm rather excited because I really haven't seen this anyone writing about this before) is focused on a more gut level way that systems suspense and surprise can make the player feel good - getting a laugh.
-
- Should a player realise their mental model is incorrect or incomplete, it undermines their sense of security, their sense that they have mastered a game. When a mimic chest...
-
-By virtue of these examples however, *Understanding Systems Suspense* almost presents 'players feel bad when their mental model is wrong, and good when it is right'.
-
-Mastering a game's systems is rewarding, so when the player first falls victim to a mimic chests or...
-
-mimic chests and unexpected permadeaths being good examples of these. The "positive" examples the report explores, feelings of achievement and satisfaction, strike me as much less visceral. Mastering a game's systems is rewarding, but mastery 
+*Understanding Systems Suspense* gives many use cases for how and why designers might use this framework, but it is not exhaustive. Where it talks about using systems suspense and surprise to ellicit specific emotional responses from the player, it focuses predominantly on fear and loss. If they realise their understanding of a game is incorrect or incomplete, that can absolutely undermine their sense of security. It's why mimic chests always get a fright out of me, at least. However, it would be wrong to think upending a mental model can *only* be played for tension or outright horror. That's why this blog post (and I'm rather excited because I really haven't seen this anyone writing about this before) is focused on an altogether different affordance of systems design - getting a laugh. 
 
 ## Embedding Humour with Systems Surprise
 
