@@ -23,11 +23,11 @@ streamer and mess-adventurer Tom Walker so eloquently puts it: *i knew it i knew
 
 ## Surprise! It's a Systems Design blog
 
-Okay, big glaring caveat before I go any further: I am not a systems designer. I am not an authoritative voice on systems design. What I am is a programmer, and as a programmer I do believe it's my responsibility to approach my work with at least some degree of media literacy - especially as it relates to the systems I'm personally implementing. So in this post, I thought I'd share two recent concepts, *systems surprise* and *systems suspense*, and use them as a lens to better understand more of my own experiences with comedy and games.
+Okay, big glaring caveat before I go any further: I am not a systems designer. I am not an authoritative voice on systems design. What I am is a programmer, and as a programmer I do believe it's my responsibility to approach my work with at least some degree of media literacy - especially as it relates to the systems I'm personally implementing. So in this post, I thought I'd share two related concepts, *systems surprise* and *systems suspense*, and use them as a lens to reflect on my own experiences with comedy and games.
 
-Let's start by thinking about games in the abstract (this section is shamelessly cribbed from the seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong><i>Understanding Systems Suspense</i></strong></a>, so feel free to skip ahead if you're already familiar). A videogame is a formal, computational system, governed by its rules and processes. The player can't know these rules for certain - not without access to the codebase - so must reverse engineer them by making inputs and interpreting their outputs... playing the game, in other words. A <strong>mental model</strong> is the reversed engineered framework that maps their understanding of how the game operates.
+Let's start by thinking about games in the abstract (this section is shamelessly cribbed from the seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong><i>Understanding Systems Suspense</i></strong></a>, feel free to skip ahead if you're already familiar). A videogame is a formal, computational system, governed by its rules and processes. The player can't know these rules for certain - not without access to the codebase - so must reverse engineer them by making inputs and interpreting their outputs... playing the game, in other words. A <strong>mental model</strong> is the reversed engineered framework that maps their understanding of how the game operates.
 
-Mental modelling is best understood as a continuous process. Influenced by publicity, franchise/genre history, *etc.*, player expectations start to form long before booting up a game, and continue to develop long after completing its tutorial. *Understanding Systems Suspense* focuses on how two key qualities of a mental model evolve with time:
+Mental modelling is best understood as a continuous process. Influenced by publicity, franchise/genre history, *etc.*, player expectations start to form long before booting up a game, and continue to develop long after completing its tutorial. *Understanding Systems Suspense* focuses on how two qualities of a mental model evolve with time:
 - <strong>Shape</strong> The set of rules and processes that describe a game. We can think of it as a boundary in possibility space, separating what is possible from what isn't.
 - <strong>Fidelity</strong> A player's confidence is in the shape of their mental model. Where the boundary is clear, the player believes they understand a game's rules; where it is fuzzy, they are able to arrive at several such (contradictory) possibilities.
 
@@ -41,7 +41,7 @@ We're now ready to define <strong>systems surprise</strong> as *a sharp and sudd
 Examples of systems surprise include can range from the genre-shattering swings taken by games like *Fez* and *Inscryption*, right down to staples like mimic chests and dreaded second healthbars.
 
 ![Desktop View]()
-*<strong>Systems Surprise</strong> By contrast, content surprise only changes: it might add*
+*<strong>Systems Surprise</strong> By contrast, content surprise is only: it might add*
 
 Systems suspense, on the other hand, is a matter of fidelity: *a state in which the player is actively and excitedly aware of a fuzzy edge within their mental model of the game*.
 
@@ -52,19 +52,19 @@ Systems suspense, on the other hand, is a matter of fidelity: *a state in which 
 
 ## Embedding Humour with Systems Surprise
 
-Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. As we saw in Mess *Adventures*,
+Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. As we saw in *Mess Adventures*,
 
 In this case, systems surprise is acting alone as the ludic equivalent of a one-liner: the player's mental model snaps from one well-defined shape (one where the ground cannot simply disappear out from under them) to another (one where it can). There's not a change in fidelity here, since the moment is, on a systemic level, self-contained. Systems surprises lend themselves to jokes <strong>embedded</strong> by the designer.
 
 An even more elementary example is *Scary Maze Game*. The player would expect their win condition to be completing a series of mazes, but in reality their is only one level, and no way of winning - a reality that comes suddenly, shockingly, and hilariously into focus when the jumpscare comes. In mental modelling terms,
 
-But comedy doesn't begin or end with punchlines. If you've ever heard Norm Macdonald's <a href="https://www.youtube.com/watch?v=jJN9mBRX3uo"><strong>moth joke</strong></a>, you'll know how much craft goes in to setting up a joke, how much tension can be wrung out of the fact you just can't tell where it's going. Suspense is followed by surprise; the audience's anticipation of the punchline heightens the eventual moment of release. This too is an affordance of both content and systems, especially in the case of puzzlers.
+But comedy doesn't begin or end with punchlines. If you've ever heard Norm Macdonald's <a href="https://www.youtube.com/watch?v=jJN9mBRX3uo"><strong>moth joke</strong></a>, you'll know how much craft goes in to setting up a joke, how much comic tension can be wrung out of the fact you just can't tell where it's going. Suspense is followed by surprise; the audience's anticipation of the punchline heightens the eventual moment of release. This too is an affordance of both content and systems, especially in the case of puzzlers.
 
-Perhaps surprisingly, 
+Now, *Understanding Systems Surprise* recognises . However, it doesn't make explicit that this moment can be funny.
 
 Puzzle games especially lend themselves to telling this type of joke on a systemic level. They're already built around the release of a satisfying solution - so what if 
 
-(its no coincidence that both installments of *Mess Adventures* pastiche *Baba Is You* at several points). And once again, my favourite example is from the heyday of Adobe Flash...
+creating a paradox in *Patrick's Parabox*, or  *Baba Is You*, there's suspense and surprise here is totally systemic (its no coincidence that both installments of *Mess Adventures* pastiche *Baba* at several points). And once again, my favourite example is from the heyday of Adobe Flash...
 
 <div style="text-align:center;width:75%;display:block;margin-left:auto;margin-right:auto">
 <img src="assets/img/posts/2025-10-09-dont-touch-blue.png" alt="Alt. text." style="aspect-ratio:4/3;border-radius:0.5rem;">
