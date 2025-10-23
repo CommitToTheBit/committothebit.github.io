@@ -62,11 +62,13 @@ But comedy doesn't begin or end with punchlines. If you've ever heard Norm Macdo
 
 Now, *Understanding Systems Surprise* recognises "puzzle games as a genre commonly use [a] pattern of setting up rules and then bending them" in how their systems are designed. However, it doesn't make explicit how puzzles resemble a classic setup and punchline structure. Consider the following. You present a player with two separate mechanics. You tutorialise each of these in their own separate levels. Then, you put them together,
 
-This is, in other words, game designer Arvi Teikari's philosophy behind *Bab Is You*:
+This is, in other words, game designer Arvi Teikari's philosophy towards puzzles:
 
 Puzzle games especially lend themselves to telling this type of joke on a systemic level. They're already built around the release of a satisfying solution - so what if 
 
-creating a paradox in *Patrick's Parabox*, or  *Baba Is You*, there's suspense and surprise here is totally systemic (its no coincidence that both installments of *Mess Adventures* pastiche *Baba* at several points). And once again, my favourite example is from the heyday of Adobe Flash...
+In creating a logical paradox to solve a level of *Patrick's Parabox*, or accidentally disembodying yourself in Teikari's own *Baba Is You*, It's no coincidence that both installments of *Mess Adventures*, games with a much more explicit comedic bent, pastiche *Baba*'s core mechanics at several points. And once again, my personal favourite use of this design pattern is from the heyday of Adobe Flash...
+
+Disembodying yourself of *Baba Is You* or creating a paradox in *Patrick's Parabox*, or *Baba Is You*, there's suspense and surprise here is totally systemic (its no coincidence that both installments of *Mess Adventures* pastiche *Baba* at several points). And once again, my favourite example is from the heyday of Adobe Flash...
 
 <div style="text-align:center;width:75%;display:block;margin-left:auto;margin-right:auto">
 <img src="assets/img/posts/2025-10-09-dont-touch-blue.png" alt="Alt. text." style="aspect-ratio:4/3;border-radius:0.5rem;">
