@@ -52,23 +52,17 @@ Systems suspense, on the other hand, is a matter of fidelity: *a state in which 
 
 ## Embedding Humour with Systems Surprise
 
-Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. As we saw in *Mess Adventures*,
-
-In this case, systems surprise is acting alone as the ludic equivalent of a one-liner: the player's mental model snaps from one well-defined shape (one where the ground cannot simply disappear out from under them) to another (one where it can). There's not a change in fidelity here, since the moment is, on a systemic level, self-contained. Systems surprises lend themselves to jokes <strong>embedded</strong> by the designer.
+Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. Certainly, this tracks with our reading of *Mess Adventures*. Here, systems surprise is acting alone as the ludic equivalent of a one-liner: the player's mental model snaps from one well-defined shape (one where the ground cannot simply disappear out from under them) to another (one where it can). There's not a change in fidelity per se, since the moment is, on a systemic level, self-contained. Systems surprises lend themselves to jokes <strong>embedded</strong> by the designer.
 
 An even more elementary example is *Scary Maze Game*. The player would expect their win condition to be completing a series of mazes, but in reality their is only one level, and no way of winning - a reality that comes suddenly, shockingly, and hilariously into focus when the jumpscare comes. In mental modelling terms,
 
 But comedy doesn't begin or end with punchlines. If you've ever heard Norm Macdonald's <a href="https://www.youtube.com/watch?v=jJN9mBRX3uo"><strong>moth joke</strong></a>, you'll know how much craft goes in to setting up a joke, how much comic tension can be wrung out of the fact you just can't tell where it's going. Suspense is followed by surprise; the audience's anticipation of the punchline heightens the eventual moment of release. This too can be affected on a systemic level, particularly when designing puzzles.
 
-Now, *Understanding Systems Surprise* recognises "puzzle games as a genre commonly use [a] pattern of setting up rules and then bending them" in how their systems are designed. However, it doesn't make explicit how puzzles resemble a classic setup and punchline structure. Consider the following. You present a player with two separate mechanics. You tutorialise each of these in their own separate levels. Then, you put them together,
+Now, *Understanding Systems Surprise* recognises "puzzle games as a genre commonly use [a] pattern of setting up rules and then bending them" in how their systems are designed. However, it doesn't make explicit how puzzles resemble a classic setup and punchline structure. Consider the following. You present a player with two separate mechanics. You tutorialise each of these in their own separate levels. Then, you put them together, [...]
 
 This is, in other words, game designer Arvi Teikari's philosophy towards puzzles:
 
-Puzzle games especially lend themselves to telling this type of joke on a systemic level. They're already built around the release of a satisfying solution - so what if 
-
-In creating a logical paradox to solve a level of *Patrick's Parabox*, or accidentally disembodying yourself in Teikari's own *Baba Is You*, It's no coincidence that both installments of *Mess Adventures*, games with a much more explicit comedic bent, pastiche *Baba*'s core mechanics at several points. And once again, my personal favourite use of this design pattern is from the heyday of Adobe Flash...
-
-Disembodying yourself of *Baba Is You* or creating a paradox in *Patrick's Parabox*, or *Baba Is You*, there's suspense and surprise here is totally systemic (its no coincidence that both installments of *Mess Adventures* pastiche *Baba* at several points). And once again, my favourite example is from the heyday of Adobe Flash...
+When creating a logical paradox to solve a level of *Patrick's Parabox*, or accidentally disembodying yourself in Teikari's own *Baba Is You*, [...]. No wonder both installments of *Mess Adventures* pastiche *Baba* throughout! My personal favourite instance of this joke structure, though, onces again hails from the heyday of Adobe Flash...
 
 <div style="text-align:center;width:75%;display:block;margin-left:auto;margin-right:auto">
 <img src="assets/img/posts/2025-10-09-dont-touch-blue.png" alt="Alt. text." style="aspect-ratio:4/3;border-radius:0.5rem;">
