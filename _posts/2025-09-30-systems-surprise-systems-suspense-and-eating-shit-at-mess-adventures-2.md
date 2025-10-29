@@ -52,9 +52,19 @@ Systems suspense, on the other hand, is a matter of fidelity: *a state in which 
 
 ## Embedding Humour with Systems Surprise
 
-Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. Certainly, this tracks with our reading of *Mess Adventures*, where such surprises act as the ludic equivalents to a one-liner. The player's mental model snaps from one well-defined shape (one where the ground cannot simply disappear out from under them) to another (one where it can), with no change in fidelity per se.
+Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. Certainly, this tracks with our reading of *Mess Adventures*, where such surprises act as the ludic equivalents of one-liners. The player's mental model snaps from one well-defined shape (one where the ground cannot simply disappear out from under them) to another (one where it can), with no change in fidelity per se.
 
-An even more elementary example is *Scary Maze Game*. The player would expect their win condition to be completing a series of mazes, but in reality their is only one level, and no way of winning - a reality that comes suddenly, shockingly into focus when the jumpscare hits.
+An even more elementary example is *Scary Maze Game*. The player would expect their win condition to be completing a series of mazes, but in reality their is only one level, and no way of winning - a reality that comes suddenly, shockingly into focus when the jumpscare hits. Both *Scary Maze Game* and *Mess Adventures* need this clarity for their surprises to work,
+
+There is a clarity to both *Scary Maze Game* and *Mess Adventures*, and maybe because of this their comedy beats 
+
+
+Perhaps because of this clarity, 
+
+ Both here and in *Mess Adventures*, these moments
+
+
+ the jokes are something that happen to (and frankly at the expense of) the player.
 
 In mental modelling terms,
 
