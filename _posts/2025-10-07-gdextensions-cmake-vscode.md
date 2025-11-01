@@ -17,6 +17,25 @@ I also want to make a quick note about compilers here. If you're following this 
 
 ## File Structure
 
+
+```
+my-project
+> build
+  > windows-debug
+  > windows-release
+> exe
+> extensions
+  > godot-cpp
+  > my-gdextension
+      // Source 
+      CMakeLists.txt
+    CMakeLists.txt
+> game
+  > bin
+      my-extension.gdextension
+  CMakeLists.txt
+```
+
 ## godot-cpp
 
 Go into extensions. Run git submodule add -b 4.x https://github.com/godotengine/godot-cpp, then init.
