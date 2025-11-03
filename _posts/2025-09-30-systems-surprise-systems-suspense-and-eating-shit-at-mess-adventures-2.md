@@ -54,29 +54,7 @@ Systems suspense, on the other hand, is a matter of fidelity: *a state in which 
 
 Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. Certainly, this tracks with our reading of *Mess Adventures*, where such surprises act as the ludic equivalents of one-liners. The player's mental model snaps from one well-defined shape (one where the ground cannot simply disappear out from under them) to another (one where it can), with no change in fidelity per se. An even more elementary example is *Scary Maze Game*. The player would expect their win condition to be completing a series of mazes, but in reality their is only one level, and no way of winning - a reality that comes suddenly, shockingly into focus when the jumpscare hits. 
 
-These games share a certain sensibility. In both, systems surprises are something that happen to (and at the expense of) the player. They serve as
-
- The joke is that the game is being *deliberately unfair*, and there's no way of anticipating that in advance; the player is more or less on rails leading up to the moment of surprise. To me, 
-
-The sensibility both here and in *Mess Adventures* is the player kind of has to be kept on rails for these jokes to land. They need to communicate not only that "your mental model was wrong" but also "we deliberately tricked you" for the joke to be on the player.
-
-Both *Scary Maze Game* and *Mess Adventures* need this clarity for their surprises to work,
-
-There is a clarity to both *Scary Maze Game* and *Mess Adventures*, and maybe because of this their comedy beats 
-
-Perhaps because of this clarity, 
-
- Both here and in *Mess Adventures*, these moments
-
- the jokes are something that happen to (and frankly at the expense of) the player.
-
-In mental modelling terms,
-
-In *Scary Maze Game* and *Mess Adventures* we see
-
-maybe because of the clarity 
-
-Systems surprises lend themselves well to jokes <strong>embedded</strong> by the designer.
+These games share a certain sensibility. In both, systems surprises are something that happen to (and at the expense of) the player. In both, the comedy lies in being deliberately unfair, and there's no way of anticipating that in advance. The player does need to progress far enough to discover each joke, sure, but neither is predicated on player *agency*. All of which is to say, I find systems surprises lend themselves very well to punchlines <strong>embedded</strong> by the designer.
 
 But comedy doesn't begin or end with punchlines. If you've ever heard Norm Macdonald's <a href="https://www.youtube.com/watch?v=jJN9mBRX3uo"><strong>moth joke</strong></a>, you'll know how much craft goes in to setting up a joke, how much comic tension can be wrung out of the fact you just can't tell where it's going. Suspense is followed by surprise; the audience's anticipation of the punchline heightens the eventual moment of release. This too can be affected on a systemic level, particularly when designing puzzles.
 
