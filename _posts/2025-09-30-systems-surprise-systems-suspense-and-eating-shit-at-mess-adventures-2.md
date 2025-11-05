@@ -5,6 +5,7 @@ tags: ["design", "systems design"]
 math: true
 image:
   path: /assets/img/posts/2025-09-24-theoretical-degree-in-physics.png
+published: false
 ---
 
 Here's a question, what's the funniest joke you've seen a game pull off? What about the most impressive - is that the same? I have fond memories playing *Fallout: New Vegas* as a preteen, right in that sweet spot where a single bit of media could rewire my entire sense of humour (*Arrested Development* and the Cornetto trilogy were other such offenders). Half of, say, Fantastic's lines could just as easily have come from a Gob Bluth or a Gary King. "They asked me how well I understood theoretical physics. I said I had a theoretical degree in physics" is a great gag, but it's one told with the same techniques of wordplay and characterisation afforded to film and TV. Are there other, subtler ways of telling jokes exclusive to an interactive medium?
@@ -33,19 +34,19 @@ Mental modelling is best understood as a continuous process. Influenced by publi
 
 As an aside, authors such as... Florence Smith-Nicholls? Max Kreminski? argue that building this mental model *is* the gameplay experience.
 
-![Desktop View]()
+![Desktop View](/assets/img/posts/2025-11-05-mental-models.png)
 *<strong>Mental Models</strong>*
 
 We're now ready to define <strong>systems surprise</strong> as *a sharp and sudden change in the shape of a player's mental model into a new and noticeably different one*. 
 
 Examples of systems surprise include can range from the genre-shattering swings taken by games like *Fez* and *Inscryption*, right down to staples like mimic chests and dreaded second healthbars.
 
-![Desktop View]()
+![Desktop View](/assets/img/posts/2025-11-05-systems-surprise.png)
 *<strong>Systems Surprise</strong> Systems surprise has a shearing effect on mental . By contrast, content surprise is only: it might add*
 
-Systems suspense, on the other hand, is a matter of fidelity: *a state in which the player is actively and excitedly aware of a fuzzy edge within their mental model of the game*.
+Systems suspense, on the other hand, is a matter of fidelity: *a state in which the player is actively and excitedly aware of a ill-defined edge to their mental model of the game*.
 
-![Desktop View]()
+![Desktop View](/assets/img/posts/2025-11-05-systems-suspense.png)
 *<strong>Systems Suspense</strong>*
 
 *Understanding Systems Suspense* gives many use cases for how and why designers might use this framework, but it is not exhaustive. Where it talks about using systems suspense and surprise to ellicit specific emotional responses, it focuses predominantly on fear and loss. If the player realises their understanding of a game is incorrect or incomplete, it can absolutely undermine their sense of security. That's why mimic chests always get a fright out of me at least. However, it would be wrong to think upending a mental model can *only* be played for tension or outright horror. That's why this blog post (and I'm rather excited because I really haven't seen this anyone writing about this before) is focused on an altogether different affordance of systems design - getting a laugh. 
@@ -58,17 +59,15 @@ These games share a certain sensibility. In both, systems surprises are somethin
 
 But comedy doesn't begin or end with one-liners. If you've ever heard Norm Macdonald's <a href="https://www.youtube.com/watch?v=jJN9mBRX3uo"><strong>moth joke</strong></a>, you'll know how much craft goes in to setting up a gag, how much comic tension can be wrung out of the fact you just can't tell where it's going. Suspense is followed by surprise; the audience's anticipation of the punchline heightens the eventual moment of release. This too can be affected on a systemic level, particularly when designing puzzles.
 
-Now, *Understanding Systems Surprise* recognises "puzzle games as a genre commonly use [a] pattern of setting up rules and then bending them" in how their systems are designed. However, it doesn't make explicit how much puzzles resemble a classic setup and punchline structure.
-
-Consider the following. You present a player with two separate mechanics. You tutorialise them independent of one another. Then, you put them both in the same level for the first time: clearly, they'll both be necessary to complete the level, creating a state of systems suspense as the player maps out how exactly these two separate systems interact. This is, in other words, game designer Arvi Teikari's philosophy towards puzzles:
-
-I would argue is, 
+Now, *Understanding Systems Surprise* recognises "puzzle games as a genre commonly use [a] pattern of setting up rules and then bending them" in how their systems are designed. However, it doesn't make explicit how much puzzles resemble a classic setup and punchline structure. Suppose you present a player with two separate mechanics. You tutorialise them independent of one another. Then, you put them both in the same level for the first time: clearly, they'll both be necessary to complete the level, creating a state of systems suspense as the player maps out how exactly these two separate systems interact. This is, in other words, game designer Arvi Teikari's philosophy towards puzzles:
+> Quote from Arvi Teikari here.
+What I would argue is, 
 
 Once you've created a logical paradox to complete a level of *Patrick's Parabox* or accidentally disembodied yourself in Teikari's own *Baba Is You*, you'll know some solutions are so out of left field you can help but laugh. No wonder both installments of *Mess Adventures* pastiche *Baba* throughout! My own, personal favourite example of this design pattern, though, hails from the heyday of Adobe Flash...
 
 <div style="text-align:center;width:75%;display:block;margin-left:auto;margin-right:auto">
 <img src="assets/img/posts/2025-10-09-dont-touch-blue.png" alt="Alt. text." style="aspect-ratio:4/3;border-radius:0.5rem;">
-<p style="font-size:80%;padding:0;color:#6d6c6c;"><strong>Impossible to Replicate</strong> To get from A to B in question 5 of The Impossible Quiz, the player has to completel disengage with the systems of the game and move their mouse around the outside of its window - a joke that incidentally did not translate to mobile ports on account of touchscreens. The medium is the message, eh?</p>
+<p style="font-size:80%;padding:0;color:#6d6c6c;"><strong>Impossible to Replicate</strong> To get from A to B in question 5 of The Impossible Quiz, the player has to completely disengage with the systems of the game and move their mouse around the outside of its window - a joke that incidentally did not translate to mobile ports on account of touchscreens. The medium is the message, eh?</p>
 </div>
 
 ## Emergent Humour and Systems Suspense
