@@ -5,6 +5,7 @@ date: 2025-09-24 12:00:00 +0000
 categories: [Procedural Whodunnits]
 tags: ["devlog", "godot", "cmake", "c++"]
 math: true
+published: false
 ---
 
 So who is this post for? Myself for one: God knows I forget half this stuff every time I fire up a new project. Really, though, I've written it at anyone familiar with Godot who wants to get better with C++, and anyone familiar with C++ who wants to get better with Godot.
@@ -25,26 +26,56 @@ my-project
   > windows-release
 > exe
 > extensions
-  > godot-cpp
-  > my-gdextension
+  > my-gdextension-cpp
       // Source 
       CMakeLists.txt
+	  register_types.cpp
     CMakeLists.txt
-> game
+> game // Create godot project within this dir
   > bin
       my-extension.gdextension
+    .gitignore
+  .gitignore
   CMakeLists.txt
+```
+
+We can fill in the `.gitignore` file already. The file only needs two directories added:
+```
+build
+exe
+```
+This means...
+
+It'll also be useful to append
+```
+# GDExtension ignores
+bin/*.dll
+bin/*.exp
+bin/*.lib
+bin/*.pdb
 ```
 
 ## godot-cpp
 
-Go into extensions. Run git submodule add -b 4.x https://github.com/godotengine/godot-cpp, then init.
+There's one important directory we're currently missing. Go into extensions. Run git submodule add -b 4.x https://github.com/godotengine/godot-cpp, then init.
 
-This is, mercifully, the first and only time we'll need scons as we generate these 
+```
+git submodule add -b 4.2 https://github.com/godotengine/godot-cpp
+cd godot-cpp
+git submodule update --init
+```
+
+Then, commit the submodule (and accompanying .gitmodules file).
+
+```
+scons platform=[windows,macos,linux,android,ios] target=[template_debug,template_release,editor]
+```
+
+This is, mercifully, the first and only time we'll need scons is as we generate these
 
 ## CMake
 
-root: does what?
+
 
 extensions: linking
 

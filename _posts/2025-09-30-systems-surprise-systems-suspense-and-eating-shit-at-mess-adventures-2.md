@@ -41,7 +41,7 @@ We're now ready to define <strong>systems surprise</strong> as *a sharp and sudd
 Examples of systems surprise include can range from the genre-shattering swings taken by games like *Fez* and *Inscryption*, right down to staples like mimic chests and dreaded second healthbars.
 
 ![Desktop View]()
-*<strong>Systems Surprise</strong> By contrast, content surprise is only: it might add*
+*<strong>Systems Surprise</strong> Systems surprise has a shearing effect on mental . By contrast, content surprise is only: it might add*
 
 Systems suspense, on the other hand, is a matter of fidelity: *a state in which the player is actively and excitedly aware of a fuzzy edge within their mental model of the game*.
 
