@@ -12,15 +12,16 @@ Here's a question, what's the funniest joke you've seen a game pull off? What ab
 
 ![Desktop View](/assets/img/posts/2025-09-25-sisyphus-is-happy.png)
 
-Early on in the roguelike *Hades*, you'll likely run into Supergiant's take on Sisyphus: a cheery chap with an even cheerier boulder (just look at that big fella's winning smile!). You'll just as likely pick up on the allusion to that old philosophical question, is Sisyphus happy? More than cheap reference humour, this is the game taking its genre conventions and using them to gently poke fun at you, the player. After all, how could *Hades* <strong>not</strong> characterise Sisyphus like this? If there was no meaning to be found in a repetitive and unending task - you wouldn't be playing a roguelike, would you? The worst thing one can to a joke is over-explain it, but I do want to tie this in to the more general philosophy of humour. For Schopenhauer, humour is "the suddenly perceived incongruity between a concept and the real". Conceptually, that Sisyphus could be happy is absurd; in reality, you are; ergo: funny.
+Early on in the roguelike *Hades*, you'll likely run into Supergiant's take on Sisyphus: a cheery chap with an even cheerier boulder (just look at that big fella's winning smile!). You'll just as likely pick up on the allusion to that old philosophical question, is Sisyphus happy? More than cheap reference humour, this is the game taking its genre conventions and using them to gently poke fun at you, the player. After all, how could *Hades* not characterise Sisyphus like this? If there was no meaning to be found in a repetitive and unending task - you wouldn't be playing a roguelike, would you? The worst thing one can to a joke is over-explain it, but I do want to tie this in to the more general philosophy of humour. For Schopenhauer, humour is "the suddenly perceived incongruity between a concept and the real". Conceptually, that Sisyphus could be happy is absurd; in reality, you are; ergo: funny.
 
-...Okay, but how does any of that make <a href="https://youtu.be/C6119Q9pDAk?t=478"><strong>this</strong></a> a joke?
+...Okay great. But how does any of that make **this** a joke?
 
-{% include embed/youtube.html id='C6119Q9pDAk' %}
+![Desktop View](/assets/img/posts/2025-11-06-eating-shit-at-mess-adventures.gif)
 
 *Mess Adventures* is an extremely mean platformer. It is also, with little dialogue or writing at all, extremely funny. Where 
 
-streamer and mess-adventurer Tom Walker so eloquently puts it: *i knew it i knew do you see do you see they changed the fucking layout they ththththththey took it away.*
+Or as Tom Walker, the comedian and <a href="https://youtu.be/C6119Q9pDAk?si=1IJluW3jVgef5ui8&t=486"><strong>mess-adventurer</strong></a> captured above so eloquently puts it, 
+> I knew it! I knew- do you see? Do you see they changed the fucking layout?! They-th-th-th-th-th-they took it away!
 
 ## Surprise! It's a Systems Design blog
 
@@ -28,12 +29,10 @@ Okay, big glaring caveat before I go any further: I am not a systems designer. I
 
 Let's start by thinking about games in the abstract (this section is shamelessly cribbed from the seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong><i>Understanding Systems Suspense</i></strong></a>, feel free to skip ahead if you're already familiar). A videogame is a formal, computational system, governed by its rules and processes. The player can't know these rules for certain - not without access to the codebase - so must reverse engineer them by making inputs and interpreting their outputs... playing the game, in other words. A <strong>mental model</strong> is the reversed engineered framework that maps their understanding of how the game operates.
 
-Mental modelling is best understood as a continuous process. Influenced by publicity, franchise/genre history, *etc.*, player expectations start to form long before booting up a game, and continue to develop long after completing its tutorial. I'd even argue 
-
-In *Gaming: Essays on Algorithmic Culture*, Alexander Galloway argues of games:
+Mental modelling is best understood as a continuous process. Influenced by publicity, franchise/genre history, *etc.*, player expectations start to form long before booting up a game, and continue to develop long after completing its tutorial. Indeed, as [...]. Alexander Galloway has argued,
 > Video games don’t attempt to hide informatic control; they flaunt it. Look to the auteur work of game designers like Hideo Kojima, Yu Suzuki, or Sid Meier. In the work of Meier, the gamer is not simply playing this or that historical simulation. The gamer is instead learning, internalizing, and becoming intimate with a massive, multipart, global algorithm. <strong>To play the game means to play the code of the game. To win means to know the system.</strong> *(Allegories of Control, in* Gaming: Essays on Algorithmic Culture*, p. 89)*
 
-As an aside, authors such as... Florence Smith-Nicholls? Max Kreminski? argue that building this mental model *is* the gameplay experience.
+I'd suggest
 
 ![Desktop View](/assets/img/posts/2025-11-05-mental-models.png)
 *<strong>Mental Models</strong>. Mental models exist in the possibility space. The above ( ), but its shape is misaligned with the game it models (they are confidently wrong)*
@@ -123,10 +122,16 @@ The perverse humour of Seller's playthrough is it simultaneously represents an a
 Maybe
 One of *Grand Theft Auto IV*'s speedrun niches is Gervais%.
 Ironically, the systems we're using are much funnier than any of Ricky's hack bits.
-Speedrunning categories in a similar vein include Cuno%, Nipple%, and the very notion of <a href="https://graham.build/s/a-blog/028-unfair-flips-world-record-strategy/"><strong>attempting a world record time at <i>Unfair Flips</i></strong></a>.<sup>1</sup> 
-<p style="line-height:1.25"><sup><sup>1</sup> As <a href="https://bsky.app/profile/catacalypto.bsky.social/post/3m37tir6boc2x"><strong>Cat Manning</strong></a>, co-author of <i>Understanding Systems Suspense</i>, puts it, "some people have decided they want to speedrun [checks notes] probability"</sup></p>
+Speedrunning categories in a similar vein include <a href="https://www.speedrun.com/disco_elysium?h=punch-cuno&x=xk9zyw62"><strong>Punch Cuno</strong></a>, <a href="https://www.speedrun.com/smoce?h=Nipple-Hint_Art&x=7kjp3wzk-r8rgx62n.5q8e30yq"><strong>Nipple%</strong></a>, and the very notion of <a href="https://graham.build/s/a-blog/028-unfair-flips-world-record-strategy/"><strong>attempting a world record time at a game like <i>Unfair Flips</i></strong></a>.<sup>1</sup> 
+<p style="line-height:1.25"><sup><sup>1</sup> As <a href="https://bsky.app/profile/catacalypto.bsky.social/post/3m37tir6boc2x"><strong>Cat Manning</strong></a>, co-author of <i>Understanding Systems Suspense</i>, puts it, "some people have decided they want to speedrun [checks notes] probability."</sup></p>
+
+<div style="text-align:center;display:block;margin-left:auto;margin-right:auto">
+<iframe width="100%" style="aspect-ratio:16/9" src="https://www.youtube.com/embed/jnZ2NNYySuE"></iframe>
+<p style="font-size:80%;padding:0;color:#6d6c6c;"><strong>Jokes Done Quick</strong>In 2014, [...]. [...]. See for yourself: it absolutely crushes.</p>
+</div>
 
 Take it one step further than that, even - forget subversive play, let's talk straight up glitches. Games are held together with sticky tape, JIRA tickets, and dreams. Liam Mitchell
+
 Is committing unsafe code really a radical act of systems design? Sure, whatever, that's what I'll tell my boss at my next performance review.
 
 ## Closing Thoughts
@@ -135,6 +140,6 @@ Like I said, I'm not a systems designer; comedy is subjective; the line between 
 
 ![Desktop View](/assets/img/posts/2025-11-06-qwop.png)
 
-As far as my own feelings on comedy and systems design go, I only have two real points. Firstly, a game's systems don't start or finish where a designer wants them to. Humour can be embedded, but just as easily emerge as the player traces out the fuzzier edges of their mental model. Glitches and exploits, not to mention ROM hacks (see *Kaizo Mario World*, the original mess adventure) and mods (plopping Thomas the Tank Engine in *Alien: Isolation*), just as much exemplify this subversive behaviour.
+As far as my own feelings on comedy and systems design go, I only have two real points. Firstly, a game's systems don't begin or end where a designer intends them to. Humour can be embedded, but just as easily emerge as the player traces out the fuzzier edges of their mental model. Glitches and exploits, not to mention ROM hacks (see *Kaizo Mario World*, the original mess adventure) and mods (plopping Thomas the Tank Engine in *Alien: Isolation*), just as much exemplify this subversive behaviour.
 
-<a href="https://www.youtube.com/watch?v=7Vz1gwCRsT4"><strong>	And secondably,</strong></a> it's never not funny to be a dick to your players.
+<a href="https://www.youtube.com/watch?v=7Vz1gwCRsT4"><strong>And secondably,</strong></a> it's never not funny to be a dick to your players.
