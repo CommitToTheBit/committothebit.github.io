@@ -1,28 +1,58 @@
 ---
 title: "PGO, But Better"
-description: "Finding free performance down the back of the sofa."
+description: "Finding performance down the back of the sofa."
 date: 2025-09-24 12:00:00 +0000
 categories: [Procedural Whodunnits]
 tags: ["devlog", "godot", "cmake", "c++"]
 math: true
 published: false
+image:
+  path: /assets/img/posts/2025-11-06-its-free-cpu-performance.png
 ---
 
-Let's talk branch prediction. Don't worry if you don't know what that is. Honestly, don't worry if you don't know what <strong>anything</strong> in C++ is.
+Let's talk <strong>branch prediction</strong>. Because the modern CPU pipeline is optimised to fetch and decode instructions in advance of their actual execution, any control statement that branches those instructions along two or more paths presents a serious problem. In the `if-else` statement
+```c++
+void foo()
+{
+    if (/* branch condition */)
+    {
+        // branch a
+    }
+    else
+    {
+        // branch b
+    }
+}
+```
+the CPU doesn’t know which branch it’s taking at time of fetching `line 3` - but to wait until that branch condition has been decoded, executed and evaluated before fetching its next instruction would bring the entire pipeline to a standstill. `for` loops and `while` loops too branch at every iteration on deciding whether to terminate the loop.
 
-My own ulterior motive for this is...
+Now, stalling at a single branch condition would only cost us ~20 <strong>clock cycles</strong>, the fundamental units of CPU time. On modern microprocessors that’s in the order of about ~10ns, but along the hotter paths of your codebase these stalls add up. That’s why, on fetching a branch condition, the CPU uses a *branch predictor* to guess which path it's going to take. Instructions along that predicted path can then be fetched, decoded and speculatively executed, their results stored in temporary buffers, in the gap before the condition is evaluated. If our prediction is correct that work is committed immediately (Agner Fog's <a href="https://www.agner.org/optimize/#manuals"><strong>Optimizing Software in C++</strong></a> puts the overhead of a correctly-predicted branch instruction at 0-2 cycles all told). If we are wrong, however, the speculative work gets flushed and we start processing the actual branch, those ~20 wasted clock cycles constituting our *branch misprediction penalty*.
 
-But back to what I was saying: *branch predictions*.
+This was going to be a blog about branch prediction. This was going to be a blog about how <a href="https://web.archive.org/web/20190717130447/http://web.engr.oregonstate.edu/~benl/Projects/branch_pred/"><strong>dynamic branch prediction algorithms</strong></a> do (and don't) work. This was *going* to be about how I've been integrating <a href="https://johnfarrier.com/branch-prediction-the-definitive-guide-for-high-performance-c/"><strong>best branch prediction practices</strong></a> into my ongoing personal project <a href="https://sammakesgames.com/bad-bohemians"><strong>*Bad Bohemians*</strong></a>... but then I stumbled ass-backwards into a treasure trove of LLVM resources and decided I'd share those instead. Whoops.
 
 ## Performance-Guided Optimisations (PGO)
-
-To understand how this is possible, it's useful to take a step back and look at how clang actually compiles your source code.
 
 ### Front-End (FE) PGO
 
 ### Intermediate Representation (IR) PGO
 
 ### Context-Sensitive (CS) PGO
+
+But wait a minute! Why all this focus on the intermediate representation? Surely there’s other places in the compilation to inject PGO instrumentation?
+
+Suppose our earlier function `foo` is inlined in two other functions, `bar` and `baz`:
+```c++
+void bar()
+{
+	foo() // usually takes branch a
+}
+
+void baz()
+{
+	foo() // usually takes branch b
+}
+```
+If `bar` and `baz` get called at about the same frequency, FE and IR PGO will both register that foo takes each branch with about the same probability, and prediction will fail about half the time. By instead adding instrumentation after inlining takes place, each instance of an inlined function gets profiled and optimised independently of any others. `bar::foo` can safely be rearranged to prioritise branch `a`, and `baz::foo` branch `b`. We are gathering and applying separate telemetry data for the several contexts a single function gets inlined - hence the name, context-sensitive PGO.
 
 ## Link-Time Optimisations (LTO)
 
