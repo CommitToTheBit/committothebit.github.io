@@ -127,7 +127,7 @@ Speedrunning categories in a similar vein include Cuno%, Nipple%, and the very n
 <p style="line-height:1.25"><sup><sup>1</sup> As <a href="https://bsky.app/profile/catacalypto.bsky.social/post/3m37tir6boc2x"><strong>Cat Manning</strong></a>, co-author of <i>Understanding Systems Suspense</i>, puts it, "some people have decided they want to speedrun [checks notes] probability"</sup></p>
 
 Take it one step further than that, even - forget subversive play, let's talk straight up glitches. Games are held together with sticky tape, JIRA tickets, and dreams. Liam Mitchell
-Is committing unsafe code really a radical act of systems design? Fuck it, sure, that's what I'll be telling my boss in my next performance review.
+Is committing unsafe code really a radical act of systems design? Sure, whatever, that's what I'll tell my boss at my next performance review.
 
 ## Closing Thoughts
 
