@@ -35,7 +35,7 @@ Mental modelling is best understood as a continuous process. Influenced by publi
 I'd suggest
 
 ![Desktop View](/assets/img/posts/2025-11-05-mental-models.png)
-*<strong>Mental Models</strong>. Mental models exist in the possibility space. The above ( ), but its shape is misaligned with the game it models (they are confidently wrong)*
+*<strong>Mental Models</strong>. Mental models exist in the possibility space. The model above has a solid, well-defined boundary (the player is confident they understand the systems of the underlying game), but its shape is misaligned (they are confidently wrong)*
 
 The *shape* of mental model represents the set of rules and processes believed to describe a game. We can think of it as a boundary in possibility space, one separating what is possible from what isn't. With this in mind, we're now ready to define <strong>systems surprise</strong> as *the sharp and sudden change in the shape of a player's mental model into a new and noticeably different one*. 
 
@@ -47,7 +47,7 @@ Examples of systems surprise include can range from the genre-shattering swings 
 Suspense, on the other hand, is a matter of *fidelity*: the player's confidence is in the shape of their mental model. Where the boundary is solid, the player believes they understand a game's rules; where it is fuzzy and ill-defined, they are able to arrive at several such (contradictory) possibilities. In these terms, <strong>systems suspense</strong> is *the state in which the player is actively and excitedly aware of a ill-defined edge to their mental model of the game*.
 
 ![Desktop View](/assets/img/posts/2025-11-05-systems-suspense.png)
-*<strong>Systems Suspense</strong>*
+*<strong>Systems Suspense</strong> The boundary between suspense and its resolution goes both ways. A well-defined (but incorrect) boundary will come undone when*
 
 *Understanding Systems Suspense* gives many use cases for how and why designers might use this framework, but it is not exhaustive. Where it talks about using systems suspense and surprise to ellicit specific emotional responses, it focuses predominantly on fear and loss. If the player realises their understanding of a game is incorrect or incomplete, it can absolutely undermine their sense of security. That's why mimic chests always get a fright out of me at least. However, it would be wrong to think upending a mental model can *only* be played for tension or outright horror. That's why this blog post (and I'm rather excited because I really haven't seen this anyone writing about this before) is focused on an altogether different affordance of systems design - getting a laugh. 
 
