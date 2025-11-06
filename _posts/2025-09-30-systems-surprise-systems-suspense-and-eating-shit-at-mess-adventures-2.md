@@ -1,18 +1,17 @@
 ---
-title: "Systems Surprise, Systems Suspense, and Eating Shit at Mess Adventures 2"
+title: "Systems Surprise, Systems Suspense, and Getting Owned at Mess Adventures"
 date: 2025-09-24 12:00:00 +0000
 tags: ["design", "systems design"]
 math: true
 image:
   path: /assets/img/posts/2025-09-24-theoretical-degree-in-physics.png
-published: false
 ---
 
 Here's a question, what's the funniest joke you've seen a game pull off? What about the most impressive - is that the same? I have fond memories playing *Fallout: New Vegas* as a preteen, right in that sweet spot where a single bit of media could rewire my entire sense of humour (*Arrested Development* and the Cornetto trilogy were other such offenders). Half of, say, Fantastic's lines could just as easily have come from a Gob Bluth or a Gary King. "They asked me how well I understood theoretical physics. I said I had a theoretical degree in physics" is a great gag, but it's one told with the same techniques of wordplay and characterisation afforded to film and TV. Are there other, subtler ways of telling jokes exclusive to an interactive medium?
 
 ![Desktop View](/assets/img/posts/2025-09-25-sisyphus-is-happy.png)
 
-Early on in the roguelike *Hades*, you'll likely run into Supergiant's take on Sisyphus: a cheery chap with an even cheerier boulder (just look at that big fella's winning smile!). You'll just as likely pick up on the allusion to that old philosophical question, is Sisyphus happy? More than cheap reference humour, this is the game taking its genre conventions and using them to gently poke fun at you, the player. After all, how could any roguelike *not* characterise Sisyphus like this? If there was no meaning to be found in a repetitive and unending task - you wouldn't be playing, would you? The worst thing one can to a joke is over-explain it, but I do want to tie this in to the more general philosophy of humour. For Schopenhauer, humour is "the suddenly perceived incongruity between a concept and the real". Conceptually, that Sisyphus could be happy is absurd; in reality, you are; ergo: funny.
+Early on in the roguelike *Hades*, you'll likely run into Supergiant's take on Sisyphus: a cheery chap with an even cheerier boulder (just look at that big fella's winning smile!). You'll just as likely pick up on the allusion to that old philosophical question, is Sisyphus happy? More than cheap reference humour, this is the game taking its genre conventions and using them to gently poke fun at you, the player. After all, how could *Hades* <strong>not</strong> characterise Sisyphus like this? If there was no meaning to be found in a repetitive and unending task - you wouldn't be playing a roguelike, would you? The worst thing one can to a joke is over-explain it, but I do want to tie this in to the more general philosophy of humour. For Schopenhauer, humour is "the suddenly perceived incongruity between a concept and the real". Conceptually, that Sisyphus could be happy is absurd; in reality, you are; ergo: funny.
 
 ...Okay, but how does any of that make <a href="https://youtu.be/C6119Q9pDAk?t=478"><strong>this</strong></a> a joke?
 
@@ -28,23 +27,24 @@ Okay, big glaring caveat before I go any further: I am not a systems designer. I
 
 Let's start by thinking about games in the abstract (this section is shamelessly cribbed from the seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong><i>Understanding Systems Suspense</i></strong></a>, feel free to skip ahead if you're already familiar). A videogame is a formal, computational system, governed by its rules and processes. The player can't know these rules for certain - not without access to the codebase - so must reverse engineer them by making inputs and interpreting their outputs... playing the game, in other words. A <strong>mental model</strong> is the reversed engineered framework that maps their understanding of how the game operates.
 
-Mental modelling is best understood as a continuous process. Influenced by publicity, franchise/genre history, *etc.*, player expectations start to form long before booting up a game, and continue to develop long after completing its tutorial. *Understanding Systems Suspense* focuses on how two qualities of a mental model evolve with time:
-- <strong>Shape</strong> The set of rules and processes that describe a game. We can think of it as a boundary in possibility space, separating what is possible from what isn't.
-- <strong>Fidelity</strong> A player's confidence is in the shape of their mental model. Where the boundary is clear, the player believes they understand a game's rules; where it is fuzzy, they are able to arrive at several such (contradictory) possibilities.
+Mental modelling is best understood as a continuous process. Influenced by publicity, franchise/genre history, *etc.*, player expectations start to form long before booting up a game, and continue to develop long after completing its tutorial. I'd even argue 
+
+In *Gaming: Essays on Algorithmic Culture*, Alexander Galloway argues of games:
+> Video games don’t attempt to hide informatic control; they flaunt it. Look to the auteur work of game designers like Hideo Kojima, Yu Suzuki, or Sid Meier. In the work of Meier, the gamer is not simply playing this or that historical simulation. The gamer is instead learning, internalizing, and becoming intimate with a massive, multipart, global algorithm. <strong>To play the game means to play the code of the game. To win means to know the system.</strong> *(Allegories of Control, in* Gaming: Essays on Algorithmic Culture*, p. 89)*
 
 As an aside, authors such as... Florence Smith-Nicholls? Max Kreminski? argue that building this mental model *is* the gameplay experience.
 
 ![Desktop View](/assets/img/posts/2025-11-05-mental-models.png)
-*<strong>Mental Models</strong>*
+*<strong>Mental Models</strong>. Mental models exist in the possibility space. The above ( ), but its shape is misaligned with the game it models (they are confidently wrong)*
 
-We're now ready to define <strong>systems surprise</strong> as *a sharp and sudden change in the shape of a player's mental model into a new and noticeably different one*. 
+The *shape* of mental model represents the set of rules and processes believed to describe a game. We can think of it as a boundary in possibility space, one separating what is possible from what isn't. With this in mind, we're now ready to define <strong>systems surprise</strong> as *the sharp and sudden change in the shape of a player's mental model into a new and noticeably different one*. 
 
 Examples of systems surprise include can range from the genre-shattering swings taken by games like *Fez* and *Inscryption*, right down to staples like mimic chests and dreaded second healthbars.
 
 ![Desktop View](/assets/img/posts/2025-11-05-systems-surprise.png)
 *<strong>Systems Surprise</strong> Systems surprise has a shearing effect on mental . By contrast, content surprise is only: it might add*
 
-Systems suspense, on the other hand, is a matter of fidelity: *a state in which the player is actively and excitedly aware of a ill-defined edge to their mental model of the game*.
+Suspense, on the other hand, is a matter of *fidelity*: the player's confidence is in the shape of their mental model. Where the boundary is solid, the player believes they understand a game's rules; where it is fuzzy and ill-defined, they are able to arrive at several such (contradictory) possibilities. In these terms, <strong>systems suspense</strong> is *the state in which the player is actively and excitedly aware of a ill-defined edge to their mental model of the game*.
 
 ![Desktop View](/assets/img/posts/2025-11-05-systems-suspense.png)
 *<strong>Systems Suspense</strong>*
@@ -53,7 +53,29 @@ Systems suspense, on the other hand, is a matter of fidelity: *a state in which 
 
 ## Embedding Humour with Systems Surprise
 
-Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. Certainly, this tracks with our reading of *Mess Adventures*, where such surprises act as the ludic equivalents of one-liners. The player's mental model snaps from one well-defined shape (one where the ground cannot simply disappear out from under them) to another (one where it can), with no change in fidelity per se. An even more elementary example is *Scary Maze Game*. The player would expect their win condition to be completing a series of mazes, but in reality their is only one level, and no way of winning - a reality that comes suddenly, shockingly into focus when the jumpscare hits. 
+Systems surprise is, in Schopenhauer's terms, the sudden perception of incongruity between a mental model and the actual rules of a game. Certainly, this tracks with our reading of *Mess Adventures*, where such surprises act as the ludic equivalents of one-liners. The player's mental model snaps from one well-defined shape (one where the ground cannot simply disappear out from under them) to another (one where it can), with no change in fidelity per se.
+
+An even more elementary example is *Scary Maze Game*, pictured below.
+
+. The player would expect their win condition to be completing a series of mazes, but in reality their is only one level, and no way of winning - a reality that comes suddenly, shockingly into focus when the jumpscare hits.
+
+<div style="text-align:center;display:block;margin-left:auto;margin-right:auto">
+	<div style="box-sizing:border-box;text-align:center;float:left;width:48%;display:block;margin-left:1%;margin-right:1%;border-radius:0.5rem">
+		<img
+		src="assets/img/posts/2025-11-06-scary-maze-menu.png"
+		alt="Alt. text."
+		style="aspect-ratio:4/3;border-radius:0.5rem;margin-bottom:0.5rem"
+		>
+	</div>
+	<div style="box-sizing:border-box;text-align:center;float:left;width:48%;display:block;margin-left:1%;margin-right:1%;border-radius:0.5rem">
+		<img
+		src="assets/img/posts/2025-11-06-scary-maze-level-3.png"
+		alt="Alt. text."
+		style="aspect-ratio:4/3;border-radius:0.5rem;margin-bottom:0.5rem"
+		>
+	</div>
+<p style="font-size:80%;padding:0;color:#6d6c6c;"><strong>If you recognise this UI you may be entitled to compensation.</strong> </p>
+</div>
 
 These games share a certain sensibility. In both, systems surprises are something that happen to (and at the expense of) the player. In both, the comedy lies in their being deliberately unfair, with no way of anticipating that unfairness in advance. The player does need to progress far enough to discover each joke, sure, but neither is predicated on player *agency*. Instead, they exemplify how systems surprise lends itself to 'one-liners' <strong>embedded</strong> - predetermined, more or less - by the designer.
 
@@ -61,20 +83,34 @@ But comedy doesn't begin or end with one-liners. If you've ever heard Norm Macdo
 
 Now, *Understanding Systems Surprise* recognises "puzzle games as a genre commonly use [a] pattern of setting up rules and then bending them" in how their systems are designed. However, it doesn't make explicit how much puzzles resemble a classic setup and punchline structure. Suppose you present a player with two separate mechanics. You tutorialise them independent of one another. Then, you put them both in the same level for the first time: clearly, they'll both be necessary to complete the level, creating a state of systems suspense as the player maps out how exactly these two separate systems interact. This is, in other words, game designer Arvi Teikari's philosophy towards puzzles:
 > Quote from Arvi Teikari here.
+
 What I would argue is, 
 
 Once you've created a logical paradox to complete a level of *Patrick's Parabox* or accidentally disembodied yourself in Teikari's own *Baba Is You*, you'll know some solutions are so out of left field you can help but laugh. No wonder both installments of *Mess Adventures* pastiche *Baba* throughout! My own, personal favourite example of this design pattern, though, hails from the heyday of Adobe Flash...
 
-<div style="text-align:center;width:75%;display:block;margin-left:auto;margin-right:auto">
-<img src="assets/img/posts/2025-10-09-dont-touch-blue.png" alt="Alt. text." style="aspect-ratio:4/3;border-radius:0.5rem;">
-<p style="font-size:80%;padding:0;color:#6d6c6c;"><strong>Impossible to Replicate</strong> To get from A to B in question 5 of The Impossible Quiz, the player has to completely disengage with the systems of the game and move their mouse around the outside of its window - a joke that incidentally did not translate to mobile ports on account of touchscreens. The medium is the message, eh?</p>
+<div style="text-align:center;display:block;margin-left:auto;margin-right:auto">
+	<div style="box-sizing:border-box;text-align:center;float:left;width:48%;display:block;margin-left:1%;margin-right:1%;border-radius:0.5rem">
+		<img
+		src="assets/img/posts/2025-11-06-the-impossible-quiz.png"
+		alt="Alt. text."
+		style="aspect-ratio:4/3;border-radius:0.5rem;margin-bottom:0.5rem"
+		>
+	</div>
+	<div style="box-sizing:border-box;text-align:center;float:left;width:48%;display:block;margin-left:1%;margin-right:1%;border-radius:0.5rem">
+		<img
+		src="assets/img/posts/2025-10-09-dont-touch-blue.png"
+		alt="Alt. text."
+		style="aspect-ratio:4/3;border-radius:0.5rem;margin-bottom:0.5rem"
+		>
+	</div>
+<p style="font-size:80%;padding:0;color:#6d6c6c;"><strong>Impossible to Replicate</strong> To get from A to B in question 5 of <i>The Impossible Quiz</i>, the player has to completely disengage with the systems of the game and move their mouse around the outside of its window - a joke that incidentally did not translate to mobile ports on account of touchscreens. The medium is the message, eh?</p>
 </div>
 
 ## Emergent Humour and Systems Suspense
 
 When *Understanding Systems Suspense* describes how suspense can manifest *without* surprise, it is characterised as a "dawning realization... notable for how much it allows a player to look back on their past experiences in a new light". That feeling of dawning realisation, it doesn't strike me as an conducive to telling jokes - or at least, it didn't until I circled back to *Arrested Development*. In its heyday, the sitcom was notorious for how far in advance it'd telegraph certain punchlines. What makes the sight gags I'll only catch on a second or third or seventh rewatch so funny is not so much the jokes themselves, but the fact they've been staring me in the face the whole time.
 
-Confession time: I have a guilty pleasure when it comes to replaying RPGs. I am not a sadist (nor an achievement hunter) but if I'm starting New Game+ it's to respec my character as a truly horrible git. Even in *Fallout: New Vegas*, where going all-in on Caesar's Legion can be played harrowingly straight, I still find this perverse humour to romping through the Mojave Wasteland and seeing just how much of a mess I can make. Amongst Dr Merlin Seller's writings on <a href="https://www.dearplayer.org/blog/2017/3/22/dear-player-inaction-in-an-interactive-medium"><strong>inaction in games</strong></a>, she retells a similar experience with *Batman: The Telltale Series*. As is the Telltale style, every dialogue choice has a timer attached to it; Seller lets every choice time-out, finding humour in Batman's stoic (non)responses as the plot unfolds in stony silence. Where I was only making "obviously wrong" choices at *Fallout*'s narrative level, she engages with an entire mechanic the wrong way altogether.
+Confession time: I have a guilty pleasure when it comes to replaying RPGs. I am not a sadist (nor an achievement hunter) but if I'm starting New Game+ it's to respec my character as a truly horrible git. Even in *Fallout: New Vegas*, where going all-in on Caesar's Legion can be played harrowingly straight, I still find this perverse humour to romping through the Mojave Wasteland and seeing just how much of a mess I can make. Amongst Merlin Seller's writings on <a href="https://www.dearplayer.org/blog/2017/3/22/dear-player-inaction-in-an-interactive-medium"><strong>inaction in games</strong></a>, she retells a similar experience with *Batman: The Telltale Series*. As is the Telltale style, every dialogue choice has a timer attached to it; Seller lets every choice time-out, finding humour in Batman's stoic (non)responses as the plot unfolds in stony silence. Where I was only making "obviously wrong" choices at *Fallout*'s narrative level, she engages with an entire mechanic the wrong way altogether.
 
 We've seen how surprise, whether embedded in systems or content, lends itself to top-down, authored jokes, but here the comedy is <strong>emergent</strong>, arising bottom-up through our own player behaviours. I have unresolved questions about narrative *(how evil will* Fallout *let me be?)*, Seller has an unresolved mental model *(how little will* Batman *let me play?);* both of us go out of our way to resolve that suspense. Whether or not it pays off in an actually surprising punchline, I would argue any such wilfully obtuse playstyle is - if only in a self-reflexive sense - inherently funny. Obstinance, though, is an unkind word. Liam Mitchell might better recognise this as a form of <strong>subversive play</strong>,
 
@@ -94,8 +130,10 @@ Is committing unsafe code really a radical act of systems design? Fuck it, sure,
 
 ## Closing Thoughts
 
-Like I said, I'm not a systems designer; comedy is subjective; the line between content and systems is not particularly rigid; caveats abound. I do want to highlight, though, that systems can well facilitate humour and play without either surprises or suspense. Games like *QWOP* and *Octodad: Dadliest Catch* have a very tight, transparent systems design. 
+Like I said, I'm not a systems designer; comedy is subjective; the line between content and systems is not particularly rigid; caveats abound. I do want to highlight, though, that systems can well facilitate humour and play without either surprises or suspense. Bennett Foddy's whole ouvre, from the browser-based *QWOP*, *GIRP* and *CLOP* through to this year's AAA satire *Baby Steps*, relies on incredibly <a href="https://lostgarden.com/2012/07/01/building-tight-game-systems-of-cause-and-effect/"><strong>tight, transparent systems design</strong></a>. 
 
-Really, it comes down to two key points. Firstly, . In this case, we've seen how
+![Desktop View](/assets/img/posts/2025-11-06-qwop.png)
 
-And secondably, it's never not funny to be a dick to your players.
+As far as my own feelings on comedy and systems design go, I only have two real points. Firstly, a game's systems don't start or finish where a designer wants them to. Humour can be embedded, but just as easily emerge as the player traces out the fuzzier edges of their mental model. Glitches and exploits, not to mention ROM hacks (see *Kaizo Mario World*, the original mess adventure) and mods (plopping Thomas the Tank Engine in *Alien: Isolation*), just as much exemplify this subversive behaviour.
+
+<a href="https://www.youtube.com/watch?v=7Vz1gwCRsT4"><strong>	And secondably,</strong></a> it's never not funny to be a dick to your players.
