@@ -18,14 +18,16 @@ Early on in the roguelike *Hades*, you'll likely run into Supergiant's take on S
 
 ![Desktop View](/assets/img/posts/2025-11-06-eating-shit-at-mess-adventures.gif)
 
-*Mess Adventures* is an extremely mean platformer. It is also, with little dialogue or writing at all, extremely funny. Where 
+*Mess Adventures* is an extremely mean platformer. It is also, with little dialogue or writing at all, extremely funny. 
+
+Where the previous jokes play out only through *content* (assets like writing, art, sound), *Mess Adventure* is making full use of its *systems* (design, scripting, code). More than , it is doing something it isn't allowed to.
 
 Or as Tom Walker, the comedian and <a href="https://youtu.be/C6119Q9pDAk?si=1IJluW3jVgef5ui8&t=486"><strong>mess-adventurer</strong></a> captured above so eloquently puts it, 
 > I knew it! I knew- do you see? Do you see they changed the fucking layout?! They-th-th-th-th-th-they took it away!
 
 ## Surprise! It's a Systems Design blog
 
-Okay, big glaring caveat before I go any further: I am not a systems designer. I am not an authoritative voice on systems design. What I am is a programmer, and as a programmer I do believe it's my responsibility to approach my work with at least some degree of media literacy - especially as it relates to the systems I'm personally implementing. So in this post, I thought I'd share two related concepts, *systems surprise* and *systems suspense*, and use them as a lens to reflect on my own formative experiences with games.
+Okay, big glaring caveat before I go any further: I am not a systems designer. I am not an authoritative voice on systems design. What I am is a programmer, and as a programmer I do believe it's my responsibility to approach my work with at least some degree of media literacy - especially as it relates to the systems I'm personally implementing. So in this post, I thought I'd share two related concepts, **systems surprise** and **systems suspense**, and use them as a lens to reflect on my own formative experiences with games.
 
 Let's start by thinking about games in the abstract (this section is shamelessly cribbed from the seminal <a href="https://polarisgamedesign.com/2023/understanding-systems-suspense/"><strong><i>Understanding Systems Suspense</i></strong></a>, feel free to skip ahead if you're already familiar). A videogame is a formal, computational system, governed by its rules and processes. The player can't know these rules for certain - not without access to the codebase - so must reverse engineer them by making inputs and interpreting their outputs... playing the game, in other words. A <strong>mental model</strong> is the reversed engineered framework that maps their understanding of how the game operates.
 
