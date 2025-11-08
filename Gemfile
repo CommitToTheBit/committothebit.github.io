@@ -4,6 +4,7 @@ source "https://rubygems.org"
 
 gemspec
 
+gem "sass-embedded", "~> 1.79", "< 1.93.0"
 gem "html-proofer", "~> 5.0", group: :test
 
 platforms :mingw, :x64_mingw, :mswin, :jruby do
