@@ -133,6 +133,6 @@ Like I said, I'm not a systems designer; comedy is subjective; the line between 
 
 ![Desktop View](/assets/img/posts/2025-11-06-qwop.png)
 
-As far as my own comedic sensibilities go, this post comes down to two main points. Firstly, a game's systems don't begin or end where a designer intends them to. Humour can be embedded, but just as easily emerge as the player traces out the fuzzier edges of their mental model. Speed tricks and exploits, not to mention ROM hacks (see *Kaizo Mario World*, the original mess adventure) and mods (Thomas the Tank Engine in *Alien: Isolation*), all are vehicles for subversive comedy. Galloway is right that to play a game means to play its code,
+As far as my own comedic sensibilities go, this post comes down to two main points. Firstly, a game's systems don't begin or end where a designer intends them to. Humour can be embedded, but just as easily emerge as the player traces out the fuzzier edges of their mental model. Speed tricks and exploits, not to mention ROM hacks (see *Kaizo Mario World*, the original mess adventure) and mods (Thomas the Tank Engine in *Alien: Isolation*), all become vehicles for subversive comedy with a little lateral thinking. To borrow a phrase from Galloway, these are the ways players play **on** the code of a game.
 
-<a href="https://www.youtube.com/watch?v=7Vz1gwCRsT4"><strong>And secondably,</strong></a> it's never not funny to be a dick to your players.
+<a href="https://www.youtube.com/watch?v=7Vz1gwCRsT4"><strong>And secondably:</strong></a> it's never not funny to be an absolute dick to your audience.
