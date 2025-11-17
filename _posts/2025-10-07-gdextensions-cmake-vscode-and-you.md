@@ -8,6 +8,8 @@ math: true
 published: false
 ---
 
+This is going to be, I suspect, rather dry an inaugural blog post. I've wanted to start Actually Writing about programming, procedural generation, and games in general since God knows when - the problem is, historically, whenever I've found time to Actually Write, no Actual Writing has materialised.
+
 So who is this post for? Myself for one: God knows I forget half this stuff every time I fire up a new project. Really, though, I've written it at anyone familiar with Godot who wants to get better with C++, and anyone familiar with C++ who wants to get better with Godot.
 
 The theme is more or less, some things I wish I knew the first time around.
