@@ -28,25 +28,25 @@ the CPU doesn’t know which branch it’s taking at time of fetching `line 3` -
 
 Now, stalling at a single branch condition would only cost us ~20 <strong>clock cycles</strong>, the fundamental units of CPU time. On modern microprocessors that’s in the order of about ~10ns, but along the hotter paths of your codebase these stalls add up. That’s why, on fetching a branch condition, the CPU uses a *branch predictor* to guess which path it's going to take. Instructions along that predicted path can then be fetched, decoded and speculatively executed, their results stored in temporary buffers, in the gap before the condition is evaluated. If our prediction is correct that work is committed immediately (Agner Fog's <a href="https://www.agner.org/optimize/#manuals"><strong>Optimizing Software in C++</strong></a> puts the overhead of a correctly-predicted branch instruction at 0-2 cycles all told). If we are wrong, however, the speculative work gets flushed and we start processing the actual branch, those ~20 wasted clock cycles constituting our *branch misprediction penalty*.
 
-This was going to be a blog about branch prediction. This was going to be a blog about how <a href="https://web.archive.org/web/20190717130447/http://web.engr.oregonstate.edu/~benl/Projects/branch_pred/"><strong>dynamic branch prediction algorithms</strong></a> do (and don't) work. This was *going* to be about how I've been integrating <a href="https://johnfarrier.com/branch-prediction-the-definitive-guide-for-high-performance-c/"><strong>best branch prediction practices</strong></a> into my ongoing work on <a href="https://sammakesgames.com/bad-bohemians"><strong>*Bad Bohemians*</strong></a>... but then I stumbled ass-backwards into a treasure trove of LLVM resources and decided I'd share those instead. Whoops.
+This was going to be a blog about branch prediction. This was going to be a blog about how <a href="https://web.archive.org/web/20190717130447/http://web.engr.oregonstate.edu/~benl/Projects/branch_pred/"><strong>dynamic branch prediction algorithms</strong></a> do (and don't) work. This was *going* to be about how I've been integrating <a href="https://johnfarrier.com/branch-prediction-the-definitive-guide-for-high-performance-c/"><strong>best branch prediction practices</strong></a> into my ongoing work on <a href="https://sammakesgames.com/bad-bohemians"><strong>*Bad Bohemians*</strong></a>... but I got bored of that and went and overhauled my build pipeline instead. oops!!
 
 ## Performance-Guided Optimisation (PGO)
 
-clang - or more accurately, LLVM, the middle-end compiler clang is built on - comes with a suite of tools for **performance-guided optimisation**. The central conceit is, if we identify the hot/cold paths of a game's code in a realplaythrough, the compiler can use this information to better improve subsequent builds: hotpaths are tuned for performance, cold paths for size. After manually playing through an *instrumented* build to collect a profile (personally, I prefer the term*telemetry data*), that profile is then fed back into 
-LLVM to, surprise surprise, guide its *PGO-optimised* builds.
+clang - or more accurately, LLVM, the middle-end compiler clang is built on - comes with a suite of tools for **performance-guided optimisation**. The central conceit is, if we identify the hot/cold paths of a game's code in a realplaythrough, the compiler can use this information to better improve subsequent builds. Playing an *instrumented* build will accumulate raw *telemetry data*, data which together form a profile of the game. This will be fed back into LLVM to, surprise surprise, guide its optimisations: hotpaths get tuned for performance, cold paths for size.
 
-What do performance-guided optimisations look like in practice? In the case of branchpredictions, it means logging branch frequencies as part of our telemetry data. Then, when
-optimising with
+What do these optimisations look like in practice? In the case of branchpredictions, it means tracking branch frequencies in the telemetry data. And
+
+Crucially, this is all done statically - your final, PGO-optimised program won't be bloated by any telemetry data, those are only needed at compile-time!
 
 Other common optimisations include:
 * Function inlining
 * Function reordering
 * Virtual call speculation
-...Several of which well deserved a blog of their own. However, for today's purposes, I'm happy to treat the optimisations themselves as something of a black box. I'm not so much interested 
+* Memory intrinsics
+* Register allocation
+...Several of which well deserve blog posts of their own. However, for today's purposes, I'm happy to treat the optimisations themselves as something of a black box. This discussion is about where and how we collect telemetry data, not so much what we do with it.
 
-The theory here is largely a rehashing of"The Many Faces of PGO and FDO," mixing in the reasoning behind how I've integrated it in personal and professional projects. For instance, all the techniques and compiler flags I mention here are used for
-instrumented PGO, where the compiler builds profiling tools directly into its PGOGen builds.
-This instrumentation introduces some overhead, but Not covered are alternatives like
+The theory here is largely a rehashing of"The Many Faces of PGO and FDO," mixing in the reasoning behind how I've integrated it in personal and professional projects. For instance, all the techniques and compiler flags I mention here are used for**instrumented PGO**, where the compiler insert profiling tools directly into builds .Instrumentation introduces some overhead, and maybe even  but Not covered are alternatives like
 sampling PGO, profiling instead with an external tool and sacrificing granularity for
 convenience (any non-PGOLink build can be used for sampling). Chances are, you’re only
 going to care about PGO if your project is CPU-bound, and in those cases neither you nor
