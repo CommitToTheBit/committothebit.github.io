@@ -34,9 +34,8 @@ This was going to be a blog about branch prediction. This was going to be a blog
 
 clang - or more accurately, LLVM, the middle-end compiler clang is built on - comes with a suite of tools for **performance-guided optimisation**. The central conceit is, if we identify the hot/cold paths of a game's code in a realplaythrough, the compiler can use this information to better improve subsequent builds. Playing an *instrumented* build will accumulate raw *telemetry data*, data which together form a profile of the game. This will be fed back into LLVM to, surprise surprise, guide its optimisations: hotpaths get tuned for performance, cold paths for size.
 
-What do these optimisations look like in practice? In the case of branchpredictions, it means tracking branch frequencies in the telemetry data. And
-
-Crucially, this is all done statically - your final, PGO-optimised program won't be bloated by any telemetry data, those are only needed at compile-time!
+What do these optimisations look like in practice? In the case of branchpredictions, it means tracking branch frequencies in the telemetry data. The compiler can then reorganise the code to place more likely paths sooner after each branch condition, while is most efficient for the resulting binaries. Crucially, this is all done statically - your final, PGO-optimised program won't be bloated by any telemetry data, those are only needed at compile-time!
+Branch reordering is also 
 
 Other common optimisations include:
 * Function inlining
