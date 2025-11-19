@@ -32,15 +32,19 @@ This was going to be a blog about branch prediction. This was going to be a blog
 
 ## Performance-Guided Optimisation (PGO)
 
-clang - or more accurately, LLVM, the middle-end compiler clang is built on - comes with a suite of tools for **performance-guided optimisation**. The central conceit is, if we identify the hot/cold paths of a game's code in a realplaythrough, the compiler can use this information to better improve subsequent builds: hotpaths are tuned for performance, cold paths for size. QA will first be sent an instrumented PGOGen build with which to collect a profile (personally, I prefer the term*telemetry data*), a profile we then feed back into 
-LLVM to, surprise surprise, guide its PGO-optimised builds.
+clang - or more accurately, LLVM, the middle-end compiler clang is built on - comes with a suite of tools for **performance-guided optimisation**. The central conceit is, if we identify the hot/cold paths of a game's code in a realplaythrough, the compiler can use this information to better improve subsequent builds: hotpaths are tuned for performance, cold paths for size. After manually playing through an *instrumented* build to collect a profile (personally, I prefer the term*telemetry data*), that profile is then fed back into 
+LLVM to, surprise surprise, guide its *PGO-optimised* builds.
 
 What do performance-guided optimisations look like in practice? In the case of branchpredictions, it means logging branch frequencies as part of our telemetry data. Then, when
 optimising with
 
+Other common optimisations include:
+* Function inlining
+* Function reordering
+* Virtual call speculation
+...Several of which well deserved a blog of their own. However, for today's purposes, I'm happy to treat the optimisations themselves as something of a black box. I'm not so much interested 
 
-
-On that note, I want to quickly set up some scope. The theory here is largely a rehashing of"The Many Faces of PGO and FDO," mixing in the reasoning behind how I've integrated it in personal and professional projects. For instance, all the techniques and compiler flags I mention here are used for
+The theory here is largely a rehashing of"The Many Faces of PGO and FDO," mixing in the reasoning behind how I've integrated it in personal and professional projects. For instance, all the techniques and compiler flags I mention here are used for
 instrumented PGO, where the compiler builds profiling tools directly into its PGOGen builds.
 This instrumentation introduces some overhead, but Not covered are alternatives like
 sampling PGO, profiling instead with an external tool and sacrificing granularity for
@@ -70,6 +74,10 @@ void baz()
 }
 ```
 If `bar` and `baz` get called at about the same frequency, FE and IR PGO will both register that foo takes each branch with about the same probability, and prediction will fail about half the time. By instead adding instrumentation after inlining takes place, each instance of an inlined function gets profiled and optimised independently of any others. `bar::foo` can safely be rearranged to prioritise branch `a`, and `baz::foo` branch `b`. We are gathering and applying separate telemetry data for the several contexts a single function gets inlined - hence the name, context-sensitive PGO.
+
+### Temporal Profiling
+
+## On Faustian Pacts
 
 ## Link-Time Optimisations (LTO)
 
