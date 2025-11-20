@@ -44,12 +44,15 @@ Other common optimisations include:
 * Memory intrinsics
 * Register allocation
 
-...Several of which well deserve blog posts of their own. However, for today's purposes I'm happy to treat the optimisations themselves as something of a black box. This discussion is about where and how we collect telemetry data, not so much what we do with it.
+...Several of which well deserve blog posts of their own. However, for today's purposes I'm happy to treat the optimisations themselves as something of a black box. This discussion is about **where** and **how** we collect telemetry data, not so much **what** we do with it.
 
-The theory here is largely a rehashing of Amir Aupov's <a href="https://aaupov.github.io/blog/2023/07/09/pgo"><strong><i>The Many Faces of PGO and FDO</i></strong></a>, mixing in some reasoning behind how I've integrated it in personal and professional projects myself. For instance, all the techniques and compiler flags I mention here are used for **instrumented PGO**, where the compiler insert profiling tools directly into builds. Instrumentation introduces some overhead, and might even have an observer effect on its readings, but it is also 
-Not covered are alternatives like **sampling PGO**, which would mean profiling with an external tool like `perf` and sacrificing granularity for convenience (we don't need a 'special' build for sampling). Aupov suggests this is the better choice for, e.g., web servers, but between <a href="https://developer.android.com/games/agde/pgo-overview#:~:text=Profile%2Dguided%20optimization%20(also%20known,played%20in%20the%20real%2Dworld."><strong>Android development</strong></a> at Feral and experimenting with Godot at home, I'm satisfied that instrumentation is suitable for optimising games. I'll be using "PGO" as shorthand for "instrumented PGO" going forward, then.
+The theory here is largely a rehashing of Amir Aupov's <a href="https://aaupov.github.io/blog/2023/07/09/pgo"><strong><i>The Many Faces of PGO and FDO</i></strong></a>, mixing in some reasoning behind how I've integrated it in personal and professional projects myself. For instance, all the techniques and compiler flags I mention here are used for **instrumented PGO**, where the compiler insert profiling tools directly into builds. Instrumentation introduces some overhead, and might even have an observer effect on its readings, but can be trusted to return exact call counts and precise timings. Not covered are alternatives like **sampling PGO**, which would mean profiling with an external tool like `perf` and sacrificing granularity for convenience (we don't need a 'special' build for sampling). Aupov suggests this is the better choice for, e.g., web servers, but between <a href="https://developer.android.com/games/agde/pgo-overview#:~:text=Profile%2Dguided%20optimization%20(also%20known,played%20in%20the%20real%2Dworld."><strong>Android development</strong></a> at Feral and experimenting with Godot at home, I'm satisfied instrumentation is suitable for optimising games. I'll be using "PGO" as shorthand for "instrumented PGO" going forward, then.
+
+// Diagram of instrumented build pipeline 
 
 ### Front-End (FE) PGO
+
+**Front-end PGO** is, if not the best form of PGO, certainly the most intuitive. With this method, instrumentation is inserted more or less how you'd expect: by clang, at the source level, right at the front of the LLVM toolchain. It's that toolchain, though,
 
 **clang flags** `-fprofile-instr-generate`, `-fprofile-instr-use=<path/to/.profdata>`
 
