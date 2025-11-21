@@ -52,7 +52,15 @@ The theory here is largely a rehashing of Amir Aupov's <a href="https://aaupov.g
 
 ### Front-End (FE) PGO
 
-**Front-end PGO** is, if not the best form of PGO, certainly the most intuitive. With this method, instrumentation is inserted more or less how you'd expect: by clang, at the source level, right at the front of the LLVM toolchain. It's that toolchain, though,
+**Front-end PGO** is, if not the best form of PGO, certainly the most intuitive. With this method, instrumentation is inserted more or less how you'd expect: by clang, at the source level, right at the front of the LLVM toolchain.
+
+// Diagram
+**The LLVM Toolchain,** compiling source code into machine code.
+
+If you're unfamiliar, any modern compiler architecture consists of three main components. First, there is the **front-end** that interfaces directly with you source code in whatever language it's written it. LLVM, for instance, uses clang...
+
+Then there's the **middle-end**:
+What makes LLVM so special (this is <strong>apparently</strong> unusual for compilers).
 
 **clang flags** `-fprofile-instr-generate`, `-fprofile-instr-use=<path/to/.profdata>`
 
