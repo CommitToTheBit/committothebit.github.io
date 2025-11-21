@@ -90,6 +90,8 @@ This last one's for my fellow mobile devs. A few years ago now, the compiler tea
 
 The immediate danger, not just of PGO but similar methods like LTO, PLO, is . At Feral, for instance, 
 
-If your code doesn't outright break, then lucky you - but you might still have made it slower.
+If your code doesn't outright break, then lucky you - but you might still have made it slower. The devil's in the details.
+
+`-sparse=true`... As I understand it (and I'd certainly welcome any corrections!) LLVM will optimise any . This isn't 
 
 There's also . Personally, I'd recommend
