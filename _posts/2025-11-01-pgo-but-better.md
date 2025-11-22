@@ -31,7 +31,7 @@ This was going to be a blog about branch prediction. This was going to be a blog
 
 ## Profile-Guided Optimisation (PGO)
 
-clang - or more accurately, LLVM, the middle-/back-end compiler clang is built on - comes with a suite of tools for **profile-guided optimisation**. The central conceit is, if we identify the hot/cold paths of a game's code in a real
+clang - or more accurately, LLVM, the middle/back-end compiler clang is built on - comes with a suite of tools for **profile-guided optimisation**. The central conceit is, if we identify the hot/cold paths of a game's code in a real
 playthrough, the compiler can use this information to better improve subsequent builds. Playing an *instrumented* build will accumulate raw *telemetry data*, data which together form a profile of the game. This gets fed back into LLVM to, surprise surprise, guide its optimisations: hot paths will be tuned for performance, cold paths for size.
 
 What do these optimisations look like in practice? In the case of branch predictions, we track branch frequencies in the telemetry data. The compiler can then reorganise the code to place more likely paths sooner after each branch condition, which is most efficient for the resulting machine code.<sup>1</sup> Crucially, this is all done statically - the final PGO-optimised program won't be bloated by any telemetry data, those are only needed at compile-time!
@@ -48,11 +48,12 @@ Other common optimisations include:
 
 The theory here is largely a rehashing of Amir Aupov's <a href="https://aaupov.github.io/blog/2023/07/09/pgo"><strong><i>The Many Faces of PGO and FDO</i></strong></a>, mixing in some reasoning behind how I've integrated it in personal and professional projects myself. For instance, all the techniques and compiler flags I mention here are used for **instrumented PGO**, where the compiler insert profiling tools directly into builds. Instrumentation introduces some overhead, and might even have an observer effect on its readings, but can be trusted to return exact call counts and precise timings. Not covered are alternatives like **sampling PGO**, which would mean profiling with an external tool like `perf` and sacrificing granularity for convenience (we don't need a 'special' build for sampling). Aupov suggests this is the better choice for, e.g., web servers, but between <a href="https://developer.android.com/games/agde/pgo-overview#:~:text=Profile%2Dguided%20optimization%20(also%20known,played%20in%20the%20real%2Dworld."><strong>Android development</strong></a> at Feral and experimenting with Godot at home, I'm satisfied instrumentation is suitable for optimising games. I'll be using "PGO" as shorthand for "instrumented PGO" going forward, then.
 
-// Diagram of instrumented build pipeline 
+![Desktop View](/assets/img/posts/2025-11-22-pgo-pipeline.png)
+*<strong>Improve CPU times with this ONE WEIRD TRICK!!</strong> Instrumented PGO follows a multi-stage build process.*
 
 ### Front-End (FE) PGO
 
-**Front-end PGO** is, if not the best form of PGO, certainly the most intuitive. With this method, instrumentation is inserted more or less how you'd expect: by clang, at the source level, right at the front of the LLVM toolchain.
+**Front-end PGO** is, if not the best form of PGO, certainly the most intuitive. With this method, instrumentation is inserted more or less how you'd expect: by clang, at the source level, right at the start of the LLVM toolchain.
 
 // Diagram
 **The LLVM Toolchain,** compiling source code into machine code.
@@ -60,7 +61,11 @@ The theory here is largely a rehashing of Amir Aupov's <a href="https://aaupov.g
 If you're unfamiliar, any modern compiler architecture consists of three main components. First, there is the **front-end** that interfaces directly with you source code in whatever language it's written it. LLVM, for instance, uses clang...
 
 Then there's the **middle-end**:
-What makes LLVM so special (this is <strong>apparently</strong> unusual for compilers).
+in a series of optimisation *passes*. What makes LLVM so special, and what makes its middle-end so nice and modular, is every pass represents code *the same way* (this is <a href="https://www.cs.cornell.edu/~asampson/blog/llvm.html"><strong>apparently</strong></a> unusual for compilers).
+
+THe **back-end** is 
+
+All of this is to say, yeah, front-end instrumentation is added at the front-end of the compiler. The benefit of this is a strong source correlation
 
 **clang flags** `-fprofile-instr-generate`, `-fprofile-instr-use=<path/to/.profdata>`
 
@@ -85,6 +90,9 @@ void baz()
 If `bar` and `baz` get called at about the same frequency, FE and IR PGO will both register that foo takes each branch with about the same probability, and prediction will fail about half the time. By instead adding instrumentation *after* inlining takes place, each instance of an inlined function gets profiled and optimised independently of any others. `bar::foo` can safely be rearranged to prioritise branch `a`, and `baz::foo` branch `b`. We are gathering and applying separate telemetry data for the several contexts a single function gets inlined - hence the name, **context-sensitive PGO**.
 
 Taking all three methods into account, IR PGO is still be expected to give the biggest gains. Don't get me wrong, CS PGO greatly improves inlined functions, but it just isn't all that powerful on its own. That's why we're lucky CS instrumentation can be layered on top of an already IR-optimised program, the two phases of telemetry data eventually being merged together to fine-tune a third and final build. If you're willing to accept a multi-stage pipeline, **CSIR PGO** really is the gold standard for profile-guided optimisations.
+
+![Desktop View](/assets/img/posts/2025-11-22-csir-pgo.png)
+*<strong>QA testers HATE him!!</strong> Depending on the scope of your game CSIR PGO (any PGO, to be honest) might be overkill. If you're working with dedicated QA tester(s), let them decide whether the performance gains they're seeing justify the multi-stage builds, and coordinate when you send over instrumented builds to minimise disruptions to their schedule. Short of a benchmarking suite that can replicate the workload of actual playthroughs, it'll be QA that's putting in the man hours to collect your telemetry data, after all - be consistently and vocally grateful to them!*
 
 **clang flags** `-fcs-profile-generate`, `-fprofile-use=<path/to/.profdata>`
 
