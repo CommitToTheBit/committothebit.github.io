@@ -31,11 +31,11 @@ This was going to be a blog about branch prediction. This was going to be a blog
 
 ## Profile-Guided Optimisation (PGO)
 
-clang - or more accurately, LLVM, the middle/back-end compiler clang is built on - comes with a suite of tools for **profile-guided optimisation**. The central conceit is, if we identify the hot/cold paths of a game's code in a real
+Clang - or more accurately, LLVM, the middle/back-end compiler Clang is built on - comes with a suite of tools for **profile-guided optimisation**. The central conceit is, if we identify the hot/cold paths of a game's code in a real
 playthrough, the compiler can use this information to better improve subsequent builds. Playing an *instrumented* build will accumulate raw *telemetry data*, data which together form a profile of the game. This gets fed back into LLVM to, surprise surprise, guide its optimisations: hot paths will be tuned for performance, cold paths for size.
 
 What do these optimisations look like in practice? In the case of branch predictions, we track branch frequencies in the telemetry data. The compiler can then reorganise the code to place more likely paths sooner after each branch condition, which is most efficient for the resulting machine code.<sup>1</sup> Crucially, this is all done statically - the final PGO-optimised program won't be bloated by any telemetry data, those are only needed at compile-time!
-<p style="line-height:1.25"><sup><sup>1</sup> It's also why C++20 introduced the <code>[[likely]]</code> and <code>[[unlikely]]</code> attributes.</sup></p>
+<p style="line-height:1.25"><sup><sup>1</sup> That's also why C++ 20 introduced the <code>[[likely]]</code> and <code>[[unlikely]]</code> attributes, incidentally.</sup></p>
 
 Other common optimisations include:
 * Function inlining
@@ -53,29 +53,35 @@ The theory here is largely a rehashing of Amir Aupov's <a href="https://aaupov.g
 
 ### Front-End (FE) PGO
 
-**Front-end PGO** is, if not the best form of PGO, certainly the most intuitive. With this method, instrumentation is inserted more or less how you'd expect: by clang, at the source level, right at the start of the LLVM toolchain.
+**Front-end PGO** is, if not the best form of PGO, certainly the most intuitive. With this method, instrumentation is inserted more or less how you'd expect: by Clang, at the source level, right at the start of the LLVM toolchain... but what does that actually mean?
 
 // Diagram
 **The LLVM Toolchain,** compiling source code into machine code.
 
-If you're unfamiliar, any modern compiler architecture consists of three main components. First, there is the **front-end** that interfaces directly with you source code in whatever language it's written it. LLVM, for instance, uses clang...
+If you're unfamiliar, modern compiler architecture consists of three main components. First, there is the **front-end** that interfaces directly with source code in whatever language it's written it. LLVM parses C/C++ with Clang, for instance, Rust with rustc, Go with Gollvm, and so on. The front-end is the only part of the pipeline that *isn't* language-agnostic: its sole purpose is translating your work to read more like assembly, standardising any of the its supported languages into the one **intermediate representation** (IR) the rest of the toolchain can understand.
 
-Then there's the **middle-end**:
-in a series of optimisation *passes*. What makes LLVM so special, and what makes its middle-end so nice and modular, is every pass represents code *the same way* (this is <a href="https://www.cs.cornell.edu/~asampson/blog/llvm.html"><strong>apparently</strong></a> unusual for compilers).
+Intermediate representations of code are then ready to be fed into the **middle-end** of the compiler, LLVM proper. This is where optimisations happen through a series of **passes** that 'rotate' loops into `do-while` loops (`loop-rotate`), strip dead code (`simplifycfg`), and much, <a href="https://llvm.org/docs/Passes.html"><strong>much</strong></a> more.<sup>2</sup> The LLVM middle-end is nice and modular by design, and it's very easy to enable, disable, or even hack in custom passes without borking the entire toolchain. What makes this possible, and what makes LLVM so special when taken as a whole, is each of its passes represents input and output code *the same way* (<a href="https://www.cs.cornell.edu/~asampson/blog/llvm.html"><strong>apparently</strong></a> unusual amongst compilers).
+<p style="line-height:1.25"><sup><sup>2</sup> <a href="https://anniecherkaev.com/2016/11/10/LLVM-optimizations.html"><strong>Annie Cherkaev</strong></a> has a great explainer on what these optimisations look like under the hood. Highly recommend it, especially if (like me) you're not normally interested in reading low-level IR/assembly.</sup></p>
 
-THe **back-end** is 
+Knowing the front-end maps source code to IR, and the middle-end IR to IR, it'll come as no surprise that the **back-end** is what finally gives us our actual machine code. Much like the finer details of the front-end vary language-to-language, so too will this part of the toolchain vary instruction set-to-instruction set - x86, ARM, hell, even RISC-V if that's the sort of thing you're into. For the purposes of this article, there's actually only detail we *do* need to know - because the back-end doesn't apply its own optimisations, we can ignore it altogether!
 
-All of this is to say, yeah, front-end instrumentation is added at the front-end of the compiler. The benefit of this is a strong source correlation
+So yeah, front-end instrumentation is added at the front-end of the compiler. The benefit of this is its strong source correlation, a must for assessing the <a href="https://clang.llvm.org/docs/SourceBasedCodeCoverage.html"><strong>code coverage</strong></a> of a given set of unit tests. FE PGO would be an altogether less useful use case for front-end instrumentation, but for the sake of completeness I've still included the associated compiler flags below.
 
-**clang flags** `-fprofile-instr-generate`, `-fprofile-instr-use=<path/to/.profdata>`
+**Clang flags** `-fprofile-instr-generate`, `-fprofile-instr-use=<path/to/.profdata>`
 
 ### Intermediate Representation (IR) PGO
 
-**clang flags** `-fprofile-generate`, `-fprofile-use=<path/to/.profdata>`
+This is **intermediate representation PGO**, and for the avoidance of any doubt - <a href="https://discourse.llvm.org/t/status-of-ir-vs-frontend-pgo-fprofile-generate-vs-fprofile-instr-generate/58323/3"><strong>it's just better.</strong></a>
+
+Finally, IR `.profraw`s are significantly smaller. I wouldn't have expected this to have any implications outside of instrumented builds, but I did come across one lead on a recent-ish blog about <a href="https://kobzol.github.io/rust/cargo/2023/07/28/rust-cargo-pgo.html"><strong>compiling Rust with PGO</strong></a>.  I've not tested this on my own work because *Bad Bohemians* just does not have enough code to generate that magnitude of files, and I've not tested it at Feral for fear of generating too much data for Android/iOS test devices to handle, so if anyone wants to take one for the team let me know how it goes in the comments below!
+
+Does FE PGO have *anything* going for it? In the interests of balance, I have heard anecdotally that IR telemetry data deprecate faster than FE. However, if your game genuinely needs PGO you'll have to collect fresh data for release candidates regardless, so this basically doesn't matter.
+
+**Clang flags** `-fprofile-generate`, `-fprofile-use=<path/to/.profdata>`
 
 ### Context-Sensitive (CS) PGO
 
-Of course, even IR PGO has its limits. Suppose our earlier function `foo` is inlined in two other functions, `bar` and `baz`:
+Of course, that's not to suggest IR PGO doesn't have other, more meaningful limits. Suppose our earlier function `foo` is inlined in two other functions, `bar` and `baz`:
 ```c++
 void bar()
 {
@@ -94,13 +100,13 @@ Taking all three methods into account, IR PGO is still be expected to give the b
 ![Desktop View](/assets/img/posts/2025-11-22-csir-pgo.png)
 *<strong>QA testers HATE him!!</strong> Depending on the scope of your game CSIR PGO (any PGO, to be honest) might be overkill. If you're working with dedicated QA tester(s), let them decide whether the performance gains they're seeing justify the multi-stage builds, and coordinate when you send over instrumented builds to minimise disruptions to their schedule. Short of a benchmarking suite that can replicate the workload of actual playthroughs, it'll be QA that's putting in the man hours to collect your telemetry data, after all - be consistently and vocally grateful to them!*
 
-**clang flags** `-fcs-profile-generate`, `-fprofile-use=<path/to/.profdata>`
+**Clang flags** `-fcs-profile-generate`, `-fprofile-use=<path/to/.profdata>`
 
 ### Temporal Profiling
 
 This last one's for my fellow mobile devs. A few years ago now, the compiler team at Meta identified 
 
-**clang flags** `-pgo-temporal-instrumentation`
+**Clang flags** `-pgo-temporal-instrumentation`
 
 ## On the Nature of Faustian Pacts
 
