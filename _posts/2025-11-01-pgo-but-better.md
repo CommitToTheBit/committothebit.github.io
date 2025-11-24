@@ -73,7 +73,14 @@ So yeah, front-end instrumentation is added at the front-end of the compiler. Th
 
 This is **intermediate representation PGO**, and for the avoidance of any doubt - <a href="https://discourse.llvm.org/t/status-of-ir-vs-frontend-pgo-fprofile-generate-vs-fprofile-instr-generate/58323/3"><strong>it's just better.</strong></a>
 
-Finally, IR `.profraw`s are significantly smaller. I wouldn't have expected this to have any implications outside of instrumented builds, but I did come across one lead on a recent-ish blog about <a href="https://kobzol.github.io/rust/cargo/2023/07/28/rust-cargo-pgo.html"><strong>compiling Rust with PGO</strong></a>.  I've not tested this on my own work because *Bad Bohemians* just does not have enough code to generate that magnitude of files, and I've not tested it at Feral for fear of generating too much data for Android/iOS test devices to handle, so if anyone wants to take one for the team let me know how it goes in the comments below!
+[Why *can* IR instrumentation have a lower overhead?]
+
+Because it's instrumentation is less obtrusive, the readings are more reflective of 
+
+The other benefit of a lower overheard is collecting telemetry data from PGO-instrumented builds becomes much more tolerable.
+From a QA perspective, instrumented builds will never be usable for performance checks, but at least IR PGO can be reliably playtested while gathering their data.
+
+Last of all, IR `.profraw`s are significantly smaller. I wouldn't have expected this to have any implications outside of instrumented builds, but I did come across one lead on a recent-ish blog about <a href="https://kobzol.github.io/rust/cargo/2023/07/28/rust-cargo-pgo.html"><strong>compiling Rust with PGO</strong></a>.  I've not tested this on my own work because *Bad Bohemians* just does not have enough code to generate that magnitude of files, and I've not tested it at Feral for fear of generating too much data for Android/iOS test devices to handle, so if anyone wants to take one for the team let me know how it goes in the comments below!
 
 Does FE PGO have *anything* going for it? In the interests of balance, I have heard anecdotally that IR telemetry data deprecate faster than FE. However, if your game genuinely needs PGO you'll have to collect fresh data for release candidates regardless, so this basically doesn't matter.
 
