@@ -71,7 +71,7 @@ So yeah, front-end instrumentation is added at the front-end of the compiler. Th
 
 ### Intermediate Representation (IR) PGO
 
-This is **intermediate representation PGO**, and for the avoidance of any doubt - <a href="https://discourse.llvm.org/t/status-of-ir-vs-frontend-pgo-fprofile-generate-vs-fprofile-instr-generate/58323/3"><strong>it's just better.</strong></a>
+With this new understanding of the LLVM toolchain, there's now a more natural place to instrument our code. The front-end, after all, only exists to translate it IR; surely it'd be cleaner to run an extra instrumentation pass as part of the middle-end? This is **intermediate representation PGO**, and for the avoidance of any doubt - <a href="https://discourse.llvm.org/t/status-of-ir-vs-frontend-pgo-fprofile-generate-vs-fprofile-instr-generate/58323/3"><strong>it is just better.</strong></a>
 
 The <a href="https://discourse.llvm.org/t/rfc-pgo-late-instrumentation-for-llvm/37747"><strong>reasoning</strong> here is, by the time we're in the middle-end, the compiler will have already started making its optimisations. Thanks to LLVM's modularity it is absolutely possible to slot an IR instrumentation pass into the toolchain, and because that IR will be partway optimised once it gets here instrumenting it incurs a much lower performance overhead. Players will never see these instrumented builds, of course, but this simple reduction has striking knock-on effects.
 
