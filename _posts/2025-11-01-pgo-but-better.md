@@ -108,11 +108,19 @@ Taking all three methods into account, IR PGO is still be expected to give the b
 
 ### Temporal Profiling
 
-This last one's for my fellow mobile devs. A few years ago now, the compiler team at Meta identified 
+This last one's for my fellow mobile devs. A few years ago now, the compiler team at Meta figured out how to reduce one particular bottleneck: **page faults**. These are what happen when an application has to...
+As such, they pose a uniquely annoying performance problem for mobile apps, ; as research bears out, 
+
+The innovation here is **temporal profiling**, and it's surprisingly straightforward.
+It's easy to integrate into your build process too - if you're already running
+
+Of course, temporal profiling isn't going to be useful in many cases; even in my own mobile development at Feral, I've not really seen a . I suspect this is because our ports are larger ? ...but I don't have anything to back that hunch up.
 
 **Clang flags** `-pgo-temporal-instrumentation`
 
 ## On the Nature of Faustian Pacts
+
+// Diagram here
 
 The immediate danger, not just of PGO but similar methods like LTO, PLO, is . At Feral, for instance, 
 
