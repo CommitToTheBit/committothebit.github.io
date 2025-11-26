@@ -77,7 +77,7 @@ By improving the performance of instrumented builds, we improve the quality of t
 
 And instrumenting the IR isn't just more accurate - it's more tolerable. Whether it's you or QA collecting the telemetry data, it's always better when your build runs more like a game than a slideshow. Making internal builds more performant is a quality-of-life improvement, but it also has tangible benefits on the development cycle. No instrumented build will ever be viable for performance checks, but unlike FE, these ones can at least be playtested while gathering data.
 
-Last of all, IR `.profraw`s are significantly smaller. I wouldn't have expected this to have any implications outside of instrumented builds, but I did come across one lead on a recent-ish blog about <a href="https://kobzol.github.io/rust/cargo/2023/07/28/rust-cargo-pgo.html"><strong>compiling Rust with PGO</strong></a>.  I've not tested this on my own work because *Bad Bohemians* just does not have enough code to generate that magnitude of files, and I've not tested it at Feral for fear of generating too much data for Android/iOS test devices to handle. If anyone decides to take one for the team sound off in the comments below!
+Last of all, IR `.profraw`s are significantly smaller. I wouldn't have expected this to have any implications outside of instrumented builds, but I did come across one lead on a recent-ish blog about <a href="https://kobzol.github.io/rust/cargo/2023/07/28/rust-cargo-pgo.html"><strong>compiling Rust with PGO</strong></a>.  I've not tested this on my own work because *Bad Bohemians* just does not have enough code to generate that magnitude of files, and I've not tested it at Feral for fear of generating too much data for Android/iOS test devices to handle. If anyone decides to take one for the team, do sound off in the comments below!
 
 Does FE PGO have *anything* going for it? In the interests of balance, I have heard anecdotally that IR telemetry data deprecate faster than FE. However, if your game genuinely needs PGO you'll have to collect fresh data for release candidates regardless, so this basically doesn't matter.
 
@@ -110,16 +110,15 @@ Taking all three methods into account, IR PGO is still be expected to give the b
 
 This last one's for my fellow mobile devs. A few years ago now, the compiler team at Meta set their sights on a peculiar bottleneck: **page faults**. When an application tries to access a *page* of (virtual) memory that isn't mapped to a *page frame* of (physical) RAM, the CPU's memory management unit throws an exception and waits for the OS to fetch that page from disk. Without the jargon, loading data/code into memory wastes time, especially when launching a program completely cold. This is uniquely problematic for mobile games, with users taking shorter, more frequent play sessions than on console or PC; as <strong>the literature</strong> bears out, cold start-up performance has a significant impact on user satisfaction and retention,
 
-The innovation here is **temporal profiling**, and it's surprisingly straightforward.
-It's easy to integrate into your build process too - if you're already running
+The innovation here is **temporal profiling**, and it's surprisingly intuitive. Over a profiled run, we take a timestamp the first time each function is called, with which they can be ordered into a single *function trace*. Using one (or more!) of these, the compiler identifies which functions are likely to be called in close succession at start-up and stores them nearby in memory, reducing the number of pages the app has to load completely cold. This one trick can cut down page faults by <a href="https://llvm.org/devmtg/2024-04/slides/TechnicalTalks/Hoag-TemporalProfiling-and-OrderfileOptimization-forMobileApps.pdf"><strong>up to 40%</strong></a>. It's easy to integrate it into your build process too - if you're already running IR PGO, you just need to enable an extra `-pgo-temporal-instrumentation` flag for your first build.
 
-Of course, temporal profiling isn't going to be useful in many cases; even in my own mobile development at Feral, I've not really seen a . I suspect this is because our ports are larger ? ...but I don't have anything to back that hunch up.
-
-**Clang flags** `-pgo-temporal-instrumentation`
+Of course, temporal profiling isn't going to be useful for everyone; even in my own experiments, I'm yet to see a good reduction in start-up times or page faults. I suspect this is because the mobile ports I'm working on have substantially more gamedata than the average app, so cold starts are bound by that more so than the code? ...It's a shaky hunch at best. As with any optimisation, it needs measured to confirm the expected gains emerge in practice, *SPEAKING OF WHICH-*
 
 ## On the Nature of Faustian Pacts
 
 // Diagram here
+
+I wanted to give a rundown of PGO for a
 
 The immediate danger, not just of PGO but similar methods like LTO, PLO, is . At Feral, for instance, 
 
