@@ -108,8 +108,7 @@ Taking all three methods into account, IR PGO is still be expected to give the b
 
 ### Temporal Profiling
 
-This last one's for my fellow mobile devs. A few years ago now, the compiler team at Meta figured out how to reduce one particular bottleneck: **page faults**. These are what happen when an application has to...
-As such, they pose a uniquely annoying performance problem for mobile apps, ; as research bears out, 
+This last one's for my fellow mobile devs. A few years ago now, the compiler team at Meta set their sights on a peculiar bottleneck: **page faults**. When an application tries to access a *page* of (virtual) memory that isn't mapped to a *page frame* of (physical) RAM, the CPU's memory management unit throws an exception and waits for the OS to fetch that page from disk. Without the jargon, loading data/code into memory wastes time, especially when launching a program completely cold. This is uniquely problematic for mobile games, with users taking shorter, more frequent play sessions than on console or PC; as <strong>the literature</strong> bears out, cold start-up performance has a significant impact on user satisfaction and retention,
 
 The innovation here is **temporal profiling**, and it's surprisingly straightforward.
 It's easy to integrate into your build process too - if you're already running
