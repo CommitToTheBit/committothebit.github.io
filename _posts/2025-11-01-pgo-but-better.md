@@ -124,7 +124,9 @@ The immediate danger, not just of this technique but similar methods like LTO, P
 
 If your code doesn't outright break, then lucky you - but you might still have made it slower. The devil's in the details. If you imagine 
 
-`-sparse=true`... As I understand it (and I'd certainly welcome any corrections!) LLVM will optimise any . This isn't 
+Running `llvm-profdata merge` with `--sparse=true` set is the accepted workaround for this problem. As I understand it (and I'd certainly welcome any corrections!) `.profdata` files contain a profile for every function in the codebase, even ones that call; sparse `.profdata` strips these trivial cases. This makes a difference for, say, a hot function in part of the game that hasn't been tested properly. When the compiler sees it never calls. However, with sparse telemetry data, the compiler *can't* see it never calls: this function is unprofiled, an unknown, and as such -! The trade-off is cold functions that never call are also stripped, and won't necessarily be optimised for size like they should, but coming back to the relative size of game data vs game code a slightly bigger executable is a small price to pay for safer telemetry data.
+
+LLVM will optimise any . This isn't 
 
 What's more, your data collection needs balanced with. Personally, I'd recommend
 
