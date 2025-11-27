@@ -118,12 +118,14 @@ Of course, temporal profiling isn't going to be useful for everyone; even in my 
 
 // Diagram here
 
-I wanted to give a rundown of PGO for a
+Like I said, I wanted to give a rundown of PGO from the perspective of the game developer, to stake out my position that yes it absolutely can be used to improve a game's performance. Just because it can, though, doesn't mean it should. Personally, I think *The Many Faces of PGO* could do more to warn devs PGO is kind of a deal with the devil. In some cases, ~10-20% better CPU performance is what you need to get your game over the line - but not always.
 
-The immediate danger, not just of PGO but similar methods like LTO, PLO, is . At Feral, for instance, 
+The immediate danger, not just of this technique but similar methods like LTO, PLO, is . Now I think of it, it's just as true of `-O3` optimisations: whenever you tell the compiler to be aggressive, it'llbe aggressive. This doesn't so much *create* bugs as *expose* them, . At Feral, for instance, 
 
-If your code doesn't outright break, then lucky you - but you might still have made it slower. The devil's in the details.
+If your code doesn't outright break, then lucky you - but you might still have made it slower. The devil's in the details. If you imagine 
 
 `-sparse=true`... As I understand it (and I'd certainly welcome any corrections!) LLVM will optimise any . This isn't 
 
-There's also . Personally, I'd recommend
+What's more, your data collection needs balanced with. Personally, I'd recommend
+
+Look, I'm not going to
