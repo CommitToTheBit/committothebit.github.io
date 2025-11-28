@@ -120,14 +120,17 @@ Of course, temporal profiling isn't going to be useful for everyone; even in my 
 
 Like I said, I wanted to give a rundown of PGO from the perspective of the game developer, to stake out my position that yes it absolutely can be used to improve a game's performance. Just because it can, though, doesn't mean it should. Personally, I think *The Many Faces of PGO* could do more to warn devs PGO is kind of a deal with the devil. In some cases, ~10-20% better CPU performance is what you need to get your game over the line - but not always.
 
-The immediate danger, not just of this technique but similar methods like LTO, PLO, is . Now I think of it, it's just as true of `-O3` optimisations: whenever you tell the compiler to be aggressive, it'llbe aggressive. This doesn't so much *create* bugs as *expose* them, . At Feral, for instance, 
+The immediate danger, not just of this technique but similar methods like LTO, PLO, is . Now I think of it, it's just as true of `-O3` optimisations: whenever you tell the compiler to be aggressive, it gets aggressive. This doesn't so much *create* bugs as *expose* them, . At Feral, for instance, 
 
 If your code doesn't outright break, then lucky you - but you might still have made it slower. The devil's in the details. If you imagine 
 
-Running `llvm-profdata merge` with `--sparse=true` set is the accepted workaround for this problem. As I understand it (and I'd certainly welcome any corrections!) `.profdata` files contain a profile for every function in the codebase, even ones that call; sparse `.profdata` strips these trivial cases. This makes a difference for, say, a hot function in part of the game that hasn't been tested properly. When the compiler sees it never calls. However, with sparse telemetry data, the compiler *can't* see it never calls: this function is unprofiled, an unknown, and as such -! The trade-off is cold functions that never call are also stripped, and won't necessarily be optimised for size like they should, but coming back to the relative size of game data vs game code a slightly bigger executable is a small price to pay for safer telemetry data.
+Running `llvm-profdata merge` with `--sparse=true` set is the accepted workaround for this problem. As I understand it (and I'd certainly welcome any corrections!) `.profdata` files contain a profile for every function in the codebase, even ones that call; sparse `.profdata` strips these trivial cases. This makes a difference for, say, a hot function in part of the game that hasn't been tested properly. From the data, the compiler will think this is cold and tune it for size rather than speed. However, with sparse telemetry data, the compiler *can't* see it never calls: this function is unprofiled, an unknown, and as such optimise however it would with PGO disabled! The trade-off is cold functions that never call are also stripped, and won't necessarily be optimised for size like they should, but coming back to the relative size of game data vs game code a slightly bigger executable is a small price to pay for safer telemetry data.
 
-LLVM will optimise any . This isn't 
+These are constraints you can work around, but .
+
+Changing compiler flags, even, can completely invalidate your current batch of telemetry data. awesome-pgo finds that toggling LTO or bumping your `-O` level, then collecting again, `llvm-` will find literally zero between the two profiles.
+
+
+Happy optimising!
 
 What's more, your data collection needs balanced with. Personally, I'd recommend
-
-Look, I'm not going to
