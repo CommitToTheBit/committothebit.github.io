@@ -9,11 +9,15 @@ order: 3
 
 #### **Feral Interactive, London** *Graduate Developer, November 2023 - Present*
 
-Shipped my first title in the industry, seeing our port of [**GRID Legends**](https://committothebit.github.io/grid-legends) through development and up to release. Experienced with Android, wrangling its API for both mobile and VR development. Supplemented forward-facing, game-specific work with larger and more lasting projects improving Feral's internal libraries, most focused on fleshing out our existing framework for UI.
+Shipped my first title in the industry, seeing our port of [**GRID Legends**](https://committothebit.github.io/grid-legends) through development and up to release. Experienced with Android, wrangling its API for both mobile and VR development. Supplemented forward-facing, game-specific work with larger and more lasting projects improving Feral's internal libraries.
+
+Passionate about C++ optimisation, LLVM and its subprojects. Took initiative to integrate CSIR PGO into Feral's build pipeline, improving performance of CPU-bound ports like *Napoleon: Total War* by ~10-20%.
 
 #### **Tripledot Studios, London** *Junior Level Designer, February 2022 - September 2022*
 
 Offered a full-time role on the merits of my contract work, taking on new challenges whilst fulfilling existing responsibilities. A/B tested live games, justifying key design decisions with real-time data. Experienced in SQL and Looker, using visualisation tools to better understand player behaviour.
+
+Assumed responsibility for *Woodoku*'s weekly "Journeys" feature, increasing DAU by 11%.
 
 #### *Junior Level Designer (Contractor), September 2021 - February 2022*
 
