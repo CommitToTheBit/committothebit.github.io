@@ -119,7 +119,6 @@ comments:
     repo: committothebit/committothebit.github.io
     issue_term: pathname
     label: comment
-    theme: github-light
   # Giscus options › https://giscus.app
   # giscus:
   #  repo: # <gh-username>/<repo>

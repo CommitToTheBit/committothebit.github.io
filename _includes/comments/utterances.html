@@ -3,7 +3,7 @@
   (function () {
     const origin = 'https://utteranc.es';
     const themeMapper = Theme.getThemeMapper('github-light', 'github-dark');
-    const initTheme = themeMapper[Theme.visualState];
+    const initTheme = 'github-light' <!-- themeMapper[Theme.visualState]; -->
 
     let script = document.createElement('script');
     script.src = 'https://utteranc.es/client.js';
