@@ -1,11 +1,10 @@
 ---
 title: "GDExtensions, CMake, VSCode and you"
 description: "Waiting for Godot (to switch to a Not Terrible build system)."
-date: 2025-09-24 12:00:00 +0000
+date: 2025-07-22 10:30:00 +0000
 categories: [Procedural Whodunnits]
 tags: ["devlog", "godot", "cmake", "c++"]
 math: true
-published: false
 ---
 
 This is, I suspect, rather dry for an inaugural blog post. I've been meaning to start Actually Writing about programming, procedural generation, and games in general since God knows when... the problem is, historically, whenever I've found time to Actually Write, no Actual Writing has materialised.
