@@ -3,7 +3,7 @@ title: "PGO, But Better"
 description: "Finding performance down the back of the sofa."
 date: 2025-11-18 10:30:00 +0000
 categories: [Procedural Whodunnits]
-tags: ["devlog", "godot", "cmake", "c++"]
+tags: ["c++", "llvm", "pgo", "optimisation"]
 math: true
 image:
   path: /assets/img/posts/2025-11-06-its-free-cpu-performance.png
