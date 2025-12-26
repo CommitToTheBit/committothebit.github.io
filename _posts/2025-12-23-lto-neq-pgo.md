@@ -5,6 +5,8 @@ date: 2025-12-23 10:30:00 +0000
 categories: [Procedural Whodunnits]
 tags: ["c++", "llvm", "pgo", "lto", "optimisation"]
 math: true
+image:
+  path: /assets/img/posts/2025-12-26-pgo-and-lto.png
 ---
 
 I didn't know what *stubs* were until surprisingly (shamefully) recently. Okay, well, I knew what they were - I'm sure most devs, self included, use them on instinct - but I didn't *know* I did for the longest time. A stub is [...]. Likewise a *driver* would be [...]. Both terms are often trussed up in the language of unit testing and CI/CD, but I find that overcomplicates thngs for programmers who don't have to think about DevOps every day. Stubs and drivers are, at their core, just two useful idioms to get new code up and running, whether you're implementing it top-down or bottom-up, respectively.
