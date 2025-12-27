@@ -7,6 +7,7 @@ tags: ["c++", "llvm", "pgo", "lto", "optimisation"]
 math: true
 image:
   path: /assets/img/posts/2025-12-26-pgo-and-lto.png
+published: false
 ---
 
 **I didn't know what stubs were until surprisingly (shamefully) recently.** Sort of, anyway.
