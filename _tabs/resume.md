@@ -13,11 +13,13 @@ Shipped my first title in the industry, seeing our port of [**GRID Legends**](ht
 
 Passionate about C++ optimisation, LLVM and its subprojects. Took initiative to integrate CSIR PGO into Feral's build pipeline, improving performance of CPU-bound ports like *Napoleon: Total War* by ~10-20%.
 
+Fostered skills as a technical communicator, researching, organising, and delivering my department's weekly dev talks since July 2025.
+
 #### **Tripledot Studios, London** *Junior Level Designer, February 2022 - September 2022*
 
 Offered a full-time role on the merits of my contract work, taking on new challenges whilst fulfilling existing responsibilities. A/B tested live games, justifying key design decisions with real-time data. Experienced in SQL and Looker, using visualisation tools to better understand player behaviour.
 
-Assumed responsibility for *Woodoku*'s weekly "Journeys" feature, increasing DAU by 11%.
+Assumed responsibility for *Woodoku*'s weekly Journeys feature, increasing DAU by 11%.
 
 #### *Junior Level Designer (Contractor), September 2021 - February 2022*
 
