@@ -7,6 +7,7 @@ tags: ["c++", "llvm", "pgo", "optimisation"]
 math: true
 image:
   path: /assets/img/posts/2025-11-06-its-free-cpu-performance.png
+sitemap: true
 ---
 
 Let's talk <strong>branch prediction</strong>. Because the modern CPU pipeline is optimised to fetch and decode instructions in advance of their actual execution, any control statement that branches those instructions along two or more paths presents a serious problem. In the `if-else` statement
@@ -126,4 +127,4 @@ Running `llvm-profdata merge` with `--sparse=true` set is an accepted workaround
 
 Collecting any data though, not matter how sparse, is still going to take time. If you're lucky, you can offload that work to QA, but you need to coordinate. Don't send them instrumented builds when they're doing performance checks, and don't ask them to collect data that you know will go stale very quickly. Changing compiler flags, even, can completely invalidate your current batch of telemetry data. The <a href="https://github.com/zamazan4ik/awesome-pgo/blob/02a47ef95ea9400ebf774555f1024c73a3855f11/article/article.md?plain=1#L463-L474"><strong>awesome-pgo</strong></a> repo finds that on toggling LTO or bumping your `-O` level, then collecting a second profile, `llvm-profdata overlap` will find literally no overlap before and after. All profiles have a lifespan, so you'll need to fresh data at every significant milestone. For efficiency's sake, I'd recommend setting up PGO early on a new project, trying a test run to estimate the expected gains, then leave it alone until you've enabled LTO and/or any other major optimisations.
 
-So yes, profile-guided optimisations are a deal with the devil, and like any deal with the devil you'd be well-advised to <a href="https://clang.llvm.org/docs/UsersManual.html#profiling-with-instrumentation"></strong>read the small print</strong></a>. The saving grace is, if things do go wrong, you can literally just turn the `-fprofile-use` flag back off and move on with your life; these optimisations are entirely reversible. If you too would like to live deliciously then I heartily, heartily recommend you give PGO a try, but if it sucks... **hit da bricks!!**
+So yes, profile-guided optimisations are a deal with the devil, and like any deal with the devil you'd be well-advised to <a href="https://clang.llvm.org/docs/UsersManual.html#profiling-with-instrumentation"></strong>read the small print<strong></a>. The saving grace is, if things do go wrong, you can literally just turn the `-fprofile-use` flag back off and move on with your life; these optimisations are entirely reversible. If you too would like to live deliciously then I heartily, heartily recommend you give PGO a try, but if it sucks... **hit da bricks!!**
