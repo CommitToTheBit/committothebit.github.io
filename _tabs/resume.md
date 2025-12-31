@@ -13,7 +13,7 @@ Shipped my first title in the industry, seeing our port of [**GRID Legends**](ht
 
 Passionate about C++ optimisation, LLVM and its subprojects. Took initiative to integrate CSIR PGO into Feral's build pipeline, improving performance of CPU-bound ports like *Napoleon: Total War* by ~10-20%.
 
-Fostered skills as a technical communicator, researching, organising, and delivering my department's weekly dev talks since July 2025.
+Fostered skills as a technical communicator, researching, organising, and delivering department-wide dev talks since July 2025.
 
 #### **Tripledot Studios, London** *Junior Level Designer, February 2022 - September 2022*
 
