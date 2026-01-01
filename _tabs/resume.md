@@ -27,15 +27,15 @@ Created new levels across multiple mobile titles, realising and evaluating ideas
 
 ## Education
 
-#### **MSc Computer Games Technology, Distinction** *Abertay University, Dundee, September 2022 - October 2023*
+#### **MSc Computer Games Technology** *Abertay University, Dundee, September 2022 - October 2023*
 
 Achieved an A+ in the majority of my modules, including: Advanced Procedural Methods, Applied Mathematics and Artificial Intelligence, and Programming for Games. Specialised with a dissertation on procedural narrative.
 
-Winner of the Andrew De Vries Memorial Prize, graduating top of my year.
+Winner of the Andrew De Vries Memorial Prize, graduating with distinction at the top of my year.
 
-#### **MA (Cantab) Mathematics, 2.ii** *University of Cambridge, Cambridge, October 2018 - July 2021*
+#### **MA (Cantab) Mathematics** *University of Cambridge, Cambridge, October 2018 - July 2021*
 
-Graduated with 59% in Part II of the Tripos. Demonstrably experienced in 3D mathematics, with modules including: Quantum Information and Computation, Principles of Quantum Mechanics, Linear Algebra, Classical Dynamics, Statistics. First learned to code as part of the degree, scoring 85% in my final year computational projects.
+Scored 59% in Part II of the Tripos, missing out on a 2.i by a hair's breadth. Demonstrably experienced in 3D mathematics, with modules including: Quantum Information and Computation, Principles of Quantum Mechanics, Linear Algebra, Classical Dynamics, Statistics. First learned to code as part of the degree, scoring 85% in my final year computational projects.
 
 Involved in 20+ plays in my time at Cambridge, taking one to the Edinburgh Fringe. Experienced as an actor, writer, and producer. Treasurer of Girton Amateur Dramatics Society (2019-2021).
 
