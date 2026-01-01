@@ -58,7 +58,7 @@ $sidebar-display: 'sidebar-display'; /* the attribute for sidebar display */
     width: 6.5rem;
     height: 6.5rem;
     overflow: hidden;
-    box-shadow: #ffffff10 0 0 0 10.5px;
+    box-shadow: rgb(255, 250, 241, 0.1) 0 0 0 10.5px; /* ≈ var(--sidebar-hover-bg) */
     transform: translateZ(0); /* fixed the zoom in Safari */
 
     @include bp.sm {
