@@ -10,24 +10,44 @@ image:
 published: false
 ---
 
-**I didn't know what stubs were until surprisingly (shamefully) recently.** Sort of, anyway.
+> PGO is just LTO with extra profiling data, right?
 
-Like I knew what they were **obviously** I knew what they were I'm sure most devs self included use them on instinct ...but I didn't *know* I knew for the longest time, y'know?
+**Wrong!** Just before the holidays, I found myself chatting to a - - it's been rattling around at the back of my head for the 
 
-I'm gonna try this again. A *stub* is [...]. Likewise a *driver* would be [...]. Both terms are often trussed up in the language of unit testing and CI/CD, but I find that overcomplicates thngs for programmers who don't have to think about DevOps every day. Stubs and drivers are, at their core, just two useful idioms to get new code up and running, whether you're implementing it top-down or bottom-up, respectively.
+Link-time optimisation (LTO) is what it says on the tin. 
 
- and the like, but I prefer to think of them in isolation: as two idioms
+between my previous post about <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a> (PGO), and another, much larger project of mine that I'm not quite ready to share just yet.
 
-At any rate, none of this actually matters, because this isn't actually a blog about stubbing - it is, however, more or less the blogged equivalent of a stub. , between my previous post about <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a> (PGO), and another, much larger project of mine that I'm not quite ready to share just yet.
+Plenty of digital ink (pixels?) has been spilled on link-time optimisations, J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>guide</strong></a> being  accessible yet comprehensive. But, in the lead up to shipping *Tomb Raider*, a senior dev at Feral asked me a really quite good question,
 
-J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>guide</strong></a> is surprisingly comprehensive for how accessible it is. But, in the lead up to shipping *Tomb Raider*, a senior dev at Feral asked me a really quite good question,
-
-> Quote goes here
+Back to my colleague.
+> I think my mistake was imagining the optimisation steps in LTO is distinct from normal compiler optimisation
+I figured oh *okay,* there's a blog post in here.
 
 which was enough to convince me a circuitous and more-than-a-little-self-indulgent answer might be in order.
 
-## The Why
+## A Worked Example
 
-## The Where
+## Link-Time Optimisations (LTO)
 
-## The How
+Describe w/o...
+
+### Full LTO
+
+### Thin LTO
+
+End that - this is the limit!
+
+## Fast(er) Link-Times
+
+Describe the benefit of LTO as being faster, philosophy of link-times (especially as it relates to indie development). then...
+
+### Unified LTO
+
+### Fat LTO
+
+### Linker Caching
+
+## LTO && PGO
+
+If LTO is "optimisation with knowledge of
