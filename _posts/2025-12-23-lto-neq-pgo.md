@@ -22,11 +22,14 @@ Plenty of digital ink (pixels?) has been spilled on link-time optimisations, J. 
 
 Back to my colleague.
 > I think my mistake was imagining the optimisation steps in LTO is distinct from normal compiler optimisation
+
 I figured oh *okay,* there's a blog post in here.
 
 which was enough to convince me a circuitous and more-than-a-little-self-indulgent answer might be in order.
 
 ## A Worked Example
+
+If there's one idea I want to get across with this blog, it's this: the linker makes the same optimisations across *multiple* sources that compiler does within *each* source.
 
 ## Link-Time Optimisations (LTO)
 
@@ -50,4 +53,6 @@ Describe the benefit of LTO as being faster, philosophy of link-times (especiall
 
 ## LTO && PGO
 
-If LTO is "optimisation with knowledge of
+If LTO is "optimisation with knowledge of all sources," PGO might be thought of as "optimisation with knowledge of how a source is used". **These are orthogonal properties,** you can absolutely have either one without the other.
+
+In theory, that is. In practice, MSVC won't let you enable PGO without LTO because of how the compiler has been written; Clang and GCC, however, support either/or.
