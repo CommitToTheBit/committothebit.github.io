@@ -6,12 +6,12 @@ categories: [Procedural Whodunnits]
 tags: ["c++", "godot", "devlog"]
 math: true
 image:
-  path: /assets/img/posts/2025-12-26-pgo-and-lto.png
-published: false
+  path: /assets/img/posts/2026-02-04-dr-manhattan.png
+published: true
 ---
 It's December, 2022. Once this is done, I'm never making a detective game again. It's January, 2025. Once this is done, I'm never making a detective game again. It's February 2026... what gives?
 
-<a href=""><strong><i>Minute Murders</i></strong></a> is my latest tilt at generating the perfect murder mystery. That's the dream, anyway. Less Quixotically, it's an
+<a href="https://sam-drysdale.itch.io/minute-murders"><strong><i>Minute Murders</i></strong></a> is my latest tilt at generating the perfect murder mystery. That's the dream, anyway. Less Quixotically put, it's the latest iteration of a project I've had marinating for - long enough, let's call it - that I figure's due a little update.
 
 It's faster, that's for sure.
 
