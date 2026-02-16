@@ -28,6 +28,14 @@ I figured oh *okay,* there's a blog post in here.
 
 which was enough to convince me a circuitous and more-than-a-little-self-indulgent answer might be in order.
 
+## LLVM, Revisited
+
+I was, I think, a bit tricksy with how I wrote *PGO, But Better*. It's not got any outright lies or outstanding corrections - I like to think I'm pretty rigorous in how I put these posts together - but like any  programming blog I had to elide some finer points for the sake of clarity. You might remember how I introduced LLVM, 
+
+### LLVM IR
+
+### llvm-link
+
 ## A Worked Example
 
 Compile and decompile this example, play about!!
