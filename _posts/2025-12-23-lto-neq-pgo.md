@@ -12,13 +12,14 @@ published: false
 
 > PGO is just LTO with extra profiling data, right?
 
-**Wrong!** Just before the holidays, I found myself chatting to a - - it's been rattling around at the back of my head for the 
+**Wrong!** Just before the holidays, I found myself chatting to a senior dev at my work - - it's been rattling around at the back of my head for the 
 
 Link-time optimisation (LTO) is what it says on the tin. 
 
-between my previous post about <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a> (PGO), and another, much larger project of mine that I'm not quite ready to share just yet.
+between my previous post about <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a> (PGO), and another, much larger project of mine that I'm not quite ready to share just yet. But plenty of digital ink (pixels?) have been spilled on link-time optimisations (J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>guide</strong></a> being my personal favourite). I honestly don't think 
 
-Plenty of digital ink (pixels?) has been spilled on link-time optimisations, J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>guide</strong></a> being  accessible yet comprehensive. But, in the lead up to shipping *Tomb Raider*, a senior dev at Feral asked me a really quite good question,
+
+But, in the lead up to shipping *Tomb Raider*, a senior dev at Feral asked me a really quite good question,
 
 Back to my colleague.
 > I think my mistake was imagining the optimisation steps in LTO is distinct from normal compiler optimisation
@@ -29,7 +30,11 @@ which was enough to convince me a circuitous and more-than-a-little-self-indulge
 
 ## A Worked Example
 
-If there's one idea I want to get across with this blog, it's this: the linker makes the same optimisations across *multiple* sources that compiler does within *each* source.
+Compile and decompile this example, play about!!
+
+If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source. If you understand one, you do understand the other.
+
+Further example, undefined behaviour...
 
 ## Link-Time Optimisations (LTO)
 
