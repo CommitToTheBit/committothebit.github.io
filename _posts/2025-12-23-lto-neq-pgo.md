@@ -30,7 +30,11 @@ which was enough to convince me a circuitous and more-than-a-little-self-indulge
 
 ## LLVM, Revisited
 
-I was, I think, a bit tricksy with how I wrote *PGO, But Better*. It's not got any outright lies or outstanding corrections - I like to think I'm pretty rigorous in how I put these posts together - but like any  programming blog I had to elide some finer points for the sake of clarity. You might remember how I introduced LLVM, 
+I was, I'll admit, a bit tricksy with how I wrote *PGO, But Better*. It's not got any outright lies or outstanding corrections - I like to think I'm pretty rigorous in how I put these posts together - but like any programming blog I had to elide some finer points for the sake of clarity. You might remember how I introduced Clang as my C++ . You might remember that it's part of the LLVM compiler infrastructure,
+
+LLVM as my compiler infrastructure of choice, providing 
+
+What you won't remember is where the linker fits into the toolchain - I didn't even mention it.
 
 ### LLVM IR
 
