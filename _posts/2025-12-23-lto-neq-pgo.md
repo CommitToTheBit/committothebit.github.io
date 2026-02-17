@@ -63,17 +63,19 @@ Describe w/o...
 
 ### Thin LTO
 
+Notes on linker caching here, actually get technical with it?
+
 End that - this is the limit!
 
 ## Fast(er) Link-Times
 
 Describe the benefit of LTO as being faster, philosophy of link-times (especially as it relates to indie development). then...
 
+If you're working on an extremely large project, chances are you're running **distributed builds** across a whole network of machines, with each taking responsibility for its own units of work. Full LTO, being single-threaded, also needs run on one single linker, but Thin LTO slots into a distributed system nicely. Here, machines receive their own [index files?], and can be [...]. But I digress.  
+
 ### Unified LTO
 
 ### Fat LTO
-
-### Linker Caching
 
 ## LTO && PGO
 
