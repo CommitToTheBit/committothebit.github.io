@@ -30,11 +30,18 @@ which was enough to convince me a circuitous and more-than-a-little-self-indulge
 
 ## LLVM, Revisited
 
-I was, I'll admit, a bit tricksy with how I wrote *PGO, But Better*. It's not got any outright lies or outstanding corrections - I like to think I'm pretty rigorous in how I put these posts together - but like any programming blog I had to elide some finer points for the sake of clarity. You might remember how I introduced Clang as my C++ . You might remember that it's part of the LLVM compiler infrastructure,
+I was, I'll admit, a bit tricksy with how I wrote *PGO, But Better*. It's not got any outright lies or outstanding corrections - I like to think I'm pretty rigorous in how I put these posts together - but like any programming blog I had to elide some finer points for the sake of clarity. You might remember I introduced Clang as my compiler of choice, the one I'll be writing these blogs about. You might also remember that it's the C/C++ frontend of the LLVM compiler infrastructure. What you won't remember is where the linker fits into this infrastructure - I didn't even mention it.
 
-LLVM as my compiler infrastructure of choice, providing 
+LLVM
 
-What you won't remember is where the linker fits into the toolchain - I didn't even mention it.
+As a refresher, the linker is a
+**modules**
+
+How exactly does our source code pass through...
+
+The LLVM Middle-End
+
+Let's look at this in a 
 
 ### LLVM IR
 
