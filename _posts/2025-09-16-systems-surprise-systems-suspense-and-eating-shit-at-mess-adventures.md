@@ -1,12 +1,12 @@
 ---
 title: "Systems Surprise, Systems Suspense, and Eating Shit at Mess Adventures"
-date: 2025-09-16 10:30:00 +0000
+date: 2026-02-03 10:30:00 +0000
 tags: ["design", "systems design"]
 math: true
 image:
   path: /assets/img/posts/2025-09-24-theoretical-degree-in-physics.png
 comments: true
-published: false
+published: true
 ---
 
 Here's a question, what's the funniest joke you've seen a game pull off? What about the most impressive - is that the same? I have fond memories playing *Fallout: New Vegas* as a preteen, right in that sweet spot where a single bit of media could rewire my entire sense of humour (*Arrested Development* and the Cornetto trilogy were other such offenders). Half of, say, Fantastic's lines could just as easily have come from a Gob Bluth or a Gary King. "They asked me how well I understood theoretical physics. I said I had a theoretical degree in physics" is a great gag, but it's one told with the same techniques of wordplay and characterisation afforded to film and TV. Are there other, subtler ways of telling jokes exclusive to an interactive medium?
@@ -125,9 +125,11 @@ Take it one step further than that, even - forget subversive play, let's talk st
 
 Is committing unsafe code really a radical act of systems design? Sure, whatever, that's what I'll tell my boss at my next performance review.
 
-## Closing Thoughts
+## ooooouugghhghhh i took too long to write this post and now my conclusion is ruined
 
-Like I said, I'm not a systems designer; comedy is subjective; the line between content and systems is not particularly rigid; caveats abound. I do want to highlight, though, that systems can well facilitate humour and play without either surprises or suspense. Bennett Foddy's whole oeuvre, from the browser-based *QWOP*, *GIRP* and *CLOP* through to upcoming AAA satire *Baby Steps*, relies on incredibly <a href="https://lostgarden.com/2012/07/01/building-tight-game-systems-of-cause-and-effect/"><strong>tight, transparent systems design</strong></a>. Foddy's brand of <a href="https://www.dearplayer.org/blog/2017/1/11/dear-player-ludic-humour"><strong>ludic humour</strong></a> is no less derived from incongruity, but he prefers to draw that incongruity from the practical difficulties of operating conceptually simple controls.
+So, a little context for this part is required. , including one called... <a href="https://polarisgamedesign.com/2025/mechanical-comedy-in-games/"><strong><i>Mechanical Comedy In Games</i> 🤡😂</strong></a>. Goddammit.
+
+Like I said, I'm not a systems designer; comedy is subjective; the line between content and systems is not particularly rigid; caveats abound. I do want to highlight, though, that systems can well facilitate humour and play without either surprises or suspense. Bennett Foddy's whole oeuvre, from the browser-based *QWOP*, *GIRP* and *CLOP* through to last year's AAA satire *Baby Steps*, relies on incredibly <a href="https://lostgarden.com/2012/07/01/building-tight-game-systems-of-cause-and-effect/"><strong>tight, transparent systems design</strong></a>. Foddy's brand of <a href="https://www.dearplayer.org/blog/2017/1/11/dear-player-ludic-humour"><strong>ludic humour</strong></a> is no less derived from incongruity, but he prefers to draw that incongruity from the practical difficulties of operating conceptually simple controls.
 
 ![Desktop View](/assets/img/posts/2025-11-06-qwop.png)
 

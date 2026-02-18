@@ -1,7 +1,7 @@
 ---
 title: "Introducing... Minute Murders"
 description: "Time is a flat circle."
-date: 2026-02-04 10:30:00 +0000
+date: 2026-02-24 10:30:00 +0000
 categories: [Procedural Whodunnits]
 tags: ["c++", "godot", "devlog"]
 math: true
