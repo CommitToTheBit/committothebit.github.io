@@ -12,12 +12,13 @@ published: false
 
 > PGO is just LTO with extra profiling data, right?
 
-**Wrong!** Just before the holidays, I found myself chatting to a senior dev at my work - - it's been rattling around at the back of my head for the 
+**Wrong!** Just before the holidays, I found myself chatting to a senior dev at my work - - it's been rattling around at the back of my head for the festive period. 
+
+
 
 Link-time optimisation (LTO) is what it says on the tin. 
 
 between my previous post about <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a> (PGO), and another, much larger project of mine that I'm not quite ready to share just yet. But plenty of digital ink (pixels?) have been spilled on link-time optimisations (J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>guide</strong></a> being my personal favourite). I honestly don't think 
-
 
 But, in the lead up to shipping *Tomb Raider*, a senior dev at Feral asked me a really quite good question,
 
@@ -34,8 +35,10 @@ I was, I'll admit, a bit tricksy with how I wrote *PGO, But Better*. It's not go
 
 LLVM
 
-As a refresher, the linker is a
-**modules**
+But what even is a linker? [Definition of linker]. [Definition of modules].
+
+Compile-time and link-time are, well, finicky concepts.
+Linking actually happens *within* `llc`, the LLVM static compiler!
 
 How exactly does our source code pass through...
 
@@ -45,7 +48,17 @@ Let's look at this in a
 
 ### LLVM IR
 
-### llvm-link
+To get even more granular (and this subsection is totally optional), LLVM translates to 
+
+: a human-readable **textual form**, and a **binary form** often referred to as **LLVM bitcode**.
+
+As an example of what this IR looks like, let's take a minimal example. Here's two modules I made earlier:
+
+Using LLVM X.Y.Z, I can feed these in to...
+
+Optimising...
+
+Finally, linking with...
 
 ## A Worked Example
 
