@@ -5,20 +5,16 @@ date: 2026-01-13 10:30:00 +0000
 categories: [Procedural Whodunnits]
 tags: ["c++", "llvm", "pgo", "lto", "optimisation"]
 math: true
-image:
-  path: /assets/img/posts/2025-12-26-pgo-and-lto.png
 published: true
 ---
 
 > PGO is just LTO with extra profiling data, right?
 
-**Wrong!** Just before the holidays, I found myself chatting to a senior dev at my work - - it's been rattling around at the back of my head for the festive period. 
-
-
+**Wrong!** Right before the holidays, I found myself chatting to a senior dev at my work - - it's been rattling around at the back of my head for the festive period. 
 
 Link-time optimisation (LTO) is what it says on the tin. 
 
-between my previous post about <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a> (PGO), and another, much larger project of mine that I'm not quite ready to share just yet. But plenty of digital ink (pixels?) have been spilled on link-time optimisations (J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>guide</strong></a> being my personal favourite). I honestly don't think 
+between my previous post about <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a> (PGO), and another, much larger project of mine that I'm not quite ready to share just yet. But plenty of digital ink (pixels?) have been spilled on link-time optimisations (J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>guide</strong></a> is one I'll refer back to throughout). I honestly don't think 
 
 But, in the lead up to shipping *Tomb Raider*, a senior dev at Feral asked me a really quite good question,
 
@@ -39,13 +35,14 @@ The linker is, if nothing else
 Now, this post is going to get a pedantic at points, so I want to clarify up top what an object file actually is. 
 
 As far as the linker's role goes,
+(<a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> gets much more technical here if you feel like further reading).
 
 ## LLVM, Revisited
 
 I was, I'll admit, a bit tricksy with how I wrote *PGO, But Better*. It's not got any outright lies or outstanding corrections - I like to think I'm pretty rigorous in how I put these posts together - but like any programming blog I had to elide some finer points for the sake of clarity. You might remember I introduced Clang as my compiler of choice, the one I'll be writing these blogs about. You might also remember that it's the C/C++ frontend of the LLVM compiler infrastructure. What you won't remember is where the linker fits into this infrastructure - I didn't even mention it.
 
 ![Desktop View](/assets/img/posts/2025-11-25-compiler-architecture.png)
-*<strong>The LLVM "Toolchain"`</strong> The front-end [...]*
+*<strong>The story so far...</strong> The front-end [...]*
 
 But what even is a linker? [Definition of linker]. [Definition of modules].
 
@@ -60,7 +57,7 @@ Let's look at this in a
 
 ### LLVM IR
 
-To get even more granular (and this subsection is totally optional), LLVM translates to 
+To get even more granular, LLVM translates to 
 
 forms: a human-readable **textual form**, and a **binary form** often referred to as **LLVM bitcode**.
 
@@ -73,13 +70,11 @@ Optimising...
 Finally, linking with...
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
-*<strong>Linking</strong>*
+*<strong>The LLVM Toolchain, Revisited</strong> Crucially, modules can be compiled in parallel, but linking must take place on a single thread.*
 
 ## Link-Time Optimisations (LTO)
 
 Compile and decompile this example, play about!!
-
-If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source. If you understand one, you do understand the other.
 
 Further example, undefined behaviour...
 
@@ -87,33 +82,54 @@ Describe w/o...
 
 ### Full LTO
 
+If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source. If you understand one, you do understand the other.
+
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-full-lto.png)
 *<strong>Full LTO</strong>*
 
+Because in this implementation, after that first pass through the linker, libLTO has to run <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15745-s13/public/lectures/L3-LLVM-Overview-1up.pdf#page=10"><strong>20-odd</strong></a> of the usual optimisation passes on the monolithic module we've merged our IRs into - all on a single thread. At best impractical, at worst unusable, these extra optimisations will slow your link times to a crawl (and that's assuming so large a `monolithic.bc` will even fit in memory). Surely, surely, there's a compromise to be found between performance and quality-of-life?
+
 ### Thin LTO
+
+The funny thing [...] noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time.
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
 *<strong>Thin LTO</strong>*
 
+The corollary to this is thin LTO is also incremental. Again, full LTO merges all of its sources into a single module; when any of those sources are edited, libLTO will have to rerun. Because [...]
+
 Notes on linker caching here, actually get technical with it?
 
-End that - this is the limit!
+**Linker flags** [...]
 
 ## LTO, But Better... Link Times
 
-Describe the benefit of LTO as being faster, philosophy of link-times (especially as it relates to indie development). then...
+In terms of raw performance, thin LTO is negligibly worse: [...] finds a speed-up of 2.63% versus full LTO's 2.86%.
+
+This section is really , and, while they're not going to meaningfully worsen your LTO, they're not going to make it more perfromant either.
 
 ### Unified LTO
 
+**Linker flags** [...]
+
 ### Fat LTO
+
+**Linker flags** [...]
 
 ### Distributed Thin LTO (DTLTO)
 
+Now, in Stinett's guide to LTO, he flags up three more advanced LTO concepts for the curious reader: symbol visibility, linker caching, and distributed build support. The first two are already covered about, but what about the third? A **distributed build**...
+
 If you're working on an extremely large project, chances are you're running **distributed builds** across a whole network of machines, with each taking responsibility for its own units of work. Full LTO, being single-threaded, also needs run on one single linker, but Thin LTO slots into a distributed system nicely. Here, machines receive their own [index files?], and can be [...]. But I digress.  
+
+**Linker flags** [...]
 
 ## LTO && PGO
 
-And now, I think, I'm ready to circle back to the question that started this all. Stepping back, the most intuitive definition of LTO I can think of is *optimisation with knowledge of all sources*. If you'd asked me the same thing on my last post, I'd probably have described PGO as something like *optimisation with knowledge of how a source is used*. **These are orthogonal properties,** you can absolutely have either one without the other.
+All told, the most intuitive definition of LTO I can think of is *optimisation with knowledge of all sources*. If you'd asked me the same thing on my last post, I'd probably have described PGO as something like *optimisation with knowledge of how a source is used*. **These are orthogonal properties,** you can absolutely have either one without the other. And that, I think, gets us back to where we started.
+
+![Desktop View](/assets/img/posts/2026-02-21-pgo-and-lto.png)
+*<strong>Just LTO with extra profiling data, right?</strong> PGO and LTO*
 
 I've spent a lot of this post running off the various ,
 
