@@ -45,7 +45,7 @@ As far as the linker's role goes,
 I was, I'll admit, a bit tricksy with how I wrote *PGO, But Better*. It's not got any outright lies or outstanding corrections - I like to think I'm pretty rigorous in how I put these posts together - but like any programming blog I had to elide some finer points for the sake of clarity. You might remember I introduced Clang as my compiler of choice, the one I'll be writing these blogs about. You might also remember that it's the C/C++ frontend of the LLVM compiler infrastructure. What you won't remember is where the linker fits into this infrastructure - I didn't even mention it.
 
 ![Desktop View](/assets/img/posts/2025-11-25-compiler-architecture.png)
-*<strong>The LLVM "Toolchain"</strong> The front-end [...]*
+*<strong>The LLVM "Toolchain"`</strong> The front-end [...]*
 
 But what even is a linker? [Definition of linker]. [Definition of modules].
 
@@ -72,6 +72,9 @@ Optimising...
 
 Finally, linking with...
 
+![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
+*<strong>Linking</strong>*
+
 ## Link-Time Optimisations (LTO)
 
 Compile and decompile this example, play about!!
@@ -84,7 +87,13 @@ Describe w/o...
 
 ### Full LTO
 
+![Desktop View](/assets/img/posts/2026-02-21-llvm-full-lto.png)
+*<strong>Full LTO</strong>*
+
 ### Thin LTO
+
+![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
+*<strong>Thin LTO</strong>*
 
 Notes on linker caching here, actually get technical with it?
 
