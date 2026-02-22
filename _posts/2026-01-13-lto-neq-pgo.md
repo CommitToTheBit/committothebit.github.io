@@ -29,19 +29,16 @@ We're going to treat this as bitcode...
 
 ## But what is a Linker?
 
+**translation units** (your `.cpp` files, basically)
+
 ![Desktop View](/assets/img/posts/2026-02-20-compiler-and-linker.png)
 *<strong>The toolchain</strong> that transforms source code to (executable) machine code. The preprocessor, compiler, and assembler are, technically, their own programs, but I'll be lumping them all together and calling them the compiler for convenience; they aren't the part of the toolchain we're interested in today.*
 
-At compile time, modules get translated, one by one, into **machine code** native to your desired instruction set (x86, ARM, *etc.*). The linker is what takes those native `.o` files and merging them together, maybe as an executable (`.exe`), or maybe a library (`.dll`). Whatever the file extension, 
+At compile time, translation units get transformed, one by one, into **machine code** binaries native to your desired instruction set (x86, ARM, *etc.*). The linker is what takes those native object files (`.o`) and merging them together, maybe as an executable (`.exe`), or maybe a library (`.dll`). It's machine code in, machine code out.
 
-, maybe in the form of a native object file (with a `.o` file extension), into a `.exe` executable, maybe a `.dll` library (`.dll`, `.so`). While their  written in machine code.
+Now, when we talk about linking object files, what need linked by their **symbols**. These are the [...]. <a href="https://chessman7.substack.com/i/164431639/the-compilation-pipeline-where-symbols-come-from"><strong>The compiler will [...],</strong></a>, so that 
 
-By the time these modules reach the linker, they've already been transformed into machine code.
-
-The linker is, if nothing else... object code, bit code [...], 
-
-As far as the linker's role goes,
-(<a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> gets much more technical here if you feel like further reading).
+Beyond symbol resolution, linkers are responsible for [memory addresses], plus [relocations]. <a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> goes into much more technical here if you feel like further reading, I highly recommend you check his work out. Once you're back, I reckon it'll be time to narrow down this discussion from toolchains in general to one toolchain in particular.
 
 ## LLVM, Revisited
 
@@ -50,18 +47,13 @@ I was, I'll admit, a bit tricksy with how I wrote *PGO, But Better*. It's not go
 ![Desktop View](/assets/img/posts/2025-11-25-compiler-architecture.png)
 *<strong>The story so far...</strong> The front-end [...]*
 
-But what even is a linker? [Definition of linker]. [Definition of modules].
-
-Compile-time and link-time are, well, finicky concepts.
-Linking actually happens *within* `llc`, the LLVM static compiler!
-
 How exactly does our source code pass through...
 
-The LLVM Middle-End
-
-Let's look at this in a 
+Linking actually happens *within* `llc`, the LLVM static compiler!
 
 ### LLVM IR
+
+I've talked about the **intermediate representation** (IR) LLVM uses before, but it's another topic that could use some elaboration. 
 
 To get even more granular, LLVM translates to 
 
@@ -71,16 +63,18 @@ This is an aside, but - until writing this blog, I never really *got* the concep
 
 any file that contains machine code, virtual or native.
 
-As an example of what this IR looks like, let's take a minimal example. Here's two modules I made earlier:
+As an example of what this IR looks like, let's take a minimal example. Here's two translation units I made earlier:
 
 Using LLVM X.Y.Z, I can feed these in to...
 
-Optimising...
+Note also that LLVM IR is a **static single assignment form** (SSA), where each variable `%n` gets set exactly once. If you're curious as to why that's a useful property for an intermediate representation, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man.
+
+When optimised, we see
 
 Finally, linking with...
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
-*<strong>The LLVM Toolchain, Revisited</strong> Crucially, modules can be compiled in parallel, but linking must take place on a single thread.*
+*<strong>The LLVM Toolchain, Revisited</strong> Crucially, translation units can be compiled in parallel, but linking must take place on a single thread.*
 
 ## Link-Time Optimisations (LTO)
 
@@ -106,13 +100,13 @@ The funny thing [...] noticed about LTO is, well, there's not all that many symb
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
 *<strong>Thin LTO</strong>*
 
-The corollary to this is thin LTO is also incremental. Again, full LTO merges all of its sources into a single module; when any of those sources are edited, libLTO will have to rerun. Because [...]
+The corollary to this is thin LTO is also incremental. Again, full LTO merges all of its translation units into a single module; when any of those sources are edited, libLTO will have to rerun. Because [...]
 
 Notes on linker caching here, actually get technical with it?
 
 **Linker flags** [...]
 
-## LTO, But Better... Link Times
+## LTO, But Better (Better Link Times, Anyway)
 
 In terms of raw performance, thin LTO is negligibly worse: [...] finds a speed-up of 2.63% versus full LTO's 2.86%.
 

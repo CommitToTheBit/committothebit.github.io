@@ -1,6 +1,6 @@
 ---
 title: "PGO, But Better"
-description: "Finding performance down the back of the sofa."
+description: "Finding spare performance down the back of the sofa."
 date: 2025-11-18 10:30:00 +0000
 categories: [Procedural Whodunnits]
 tags: ["c++", "llvm", "pgo", "optimisation"]
