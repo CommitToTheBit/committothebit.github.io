@@ -25,14 +25,20 @@ I figured oh *okay,* there's a blog post in here.
 
 which was enough to convince me a circuitous and more-than-a-little-self-indulgent answer might be in order.
 
+We're going to treat this as bitcode... 
+
 ## But what is a Linker?
 
 ![Desktop View](/assets/img/posts/2026-02-20-compiler-and-linker.png)
-*<strong>The toolchain</strong> that transforms source code to (executable) machine code. The preprocessor, compiler, and assembler are, technically, their own programs, but I'll be lumping them together as the compiler for convenience; the part of the toolchain we're really interested in is the linker.*
+*<strong>The toolchain</strong> that transforms source code to (executable) machine code. The preprocessor, compiler, and assembler are, technically, their own programs, but I'll be lumping them all together and calling them the compiler for convenience; they aren't the part of the toolchain we're interested in today.*
 
-The linker is, if nothing else
+At compile time, modules get translated, one by one, into **machine code** native to your desired instruction set (x86, ARM, *etc.*). The linker is what takes those native `.o` files and merging them together, maybe as an executable (`.exe`), or maybe a library (`.dll`). Whatever the file extension, 
 
-Now, this post is going to get a pedantic at points, so I want to clarify up top what an object file actually is. 
+, maybe in the form of a native object file (with a `.o` file extension), into a `.exe` executable, maybe a `.dll` library (`.dll`, `.so`). While their  written in machine code.
+
+By the time these modules reach the linker, they've already been transformed into machine code.
+
+The linker is, if nothing else... object code, bit code [...], 
 
 As far as the linker's role goes,
 (<a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> gets much more technical here if you feel like further reading).
@@ -59,7 +65,11 @@ Let's look at this in a
 
 To get even more granular, LLVM translates to 
 
-forms: a human-readable **textual form**, and a **binary form** often referred to as **LLVM bitcode**.
+forms: a human-readable **textual form** (`.ll`), and a **binary form** (`.bc`) often referred to as **LLVM bitcode**.
+
+This is an aside, but - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? LLVM bitcode is just machine code for a virtual machine. `.bc` files are , and `.ll`s likewise the virtual versions of assembly.
+
+any file that contains machine code, virtual or native.
 
 As an example of what this IR looks like, let's take a minimal example. Here's two modules I made earlier:
 
@@ -82,7 +92,7 @@ Describe w/o...
 
 ### Full LTO
 
-If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source. If you understand one, you do understand the other.
+If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source.
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-full-lto.png)
 *<strong>Full LTO</strong>*
