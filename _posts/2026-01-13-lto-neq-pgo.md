@@ -63,13 +63,27 @@ This is an aside, but - until writing this blog, I never really *got* the concep
 
 any file that contains machine code, virtual or native.
 
-As an example of what this IR looks like, let's take a minimal example. Here's two translation units I made earlier:
+As an example of what this IR looks like, let's take a minimal example. Here's some source code I wrote earlier:
+
+```foobar.h
+```
+
+```foobar.cpp
+```
 
 Using LLVM X.Y.Z, I can feed these in to...
+
+```
+$ clang foobar.cpp -S -emit-llvm
+```
 
 Note also that LLVM IR is a **static single assignment form** (SSA), where each variable `%n` gets set exactly once. If you're curious as to why that's a useful property for an intermediate representation, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man.
 
 When optimised, we see
+
+```
+$ clang foobar.cpp -S -emit-llvm -O2 -o foobar.O2.ll
+```
 
 Finally, linking with...
 
@@ -80,11 +94,37 @@ Finally, linking with...
 
 Compile and decompile this example, play about!!
 
-Further example, undefined behaviour...
+```
+$ clang foobar.cpp -c -O2
+$ clang main.cpp -c -O2
+$ clang foobar.o main.o -o main
+```
+
+but if the output was disaambled and raised back to IR, we'd expect it to look something like this:
+
+```main.preopt.ll
+
+```
+
+Further example, undefined behaviour?
 
 Describe w/o...
 
 ### Full LTO
+
+```
+$ clang foobar.cpp -c -O2 -flto
+$ clang main.cpp -c -O2 -flto
+$ clang foobar.o main.o -flto -Wl,-plugin-opt=save-temps -o main
+```
+
+```
+$ llvm-dis main.preopt.bc -o main.preopt.ll
+```
+
+```
+$ llvm-dis main.opt.bc -o main.opt.ll
+```
 
 If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source.
 
