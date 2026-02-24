@@ -63,6 +63,9 @@ This is an aside, but - until writing this blog, I never really *got* the concep
 
 any file that contains machine code, virtual or native.
 
+![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
+*<strong>The LLVM Toolchain, Revisited</strong> We now understand Llvm in terms of [...]. Crucially, translation units can be compiled in parallel, but linking must take place on a single thread.*
+
 As an example of what this IR looks like, let's take a minimal example. Here's some source code I wrote earlier:
 
 ```foobar.h
@@ -85,32 +88,37 @@ When optimised, we see
 $ clang foobar.cpp -S -emit-llvm -O2 -o foobar.O2.ll
 ```
 
-Finally, linking with...
-
-![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
-*<strong>The LLVM Toolchain, Revisited</strong> Crucially, translation units can be compiled in parallel, but linking must take place on a single thread.*
-
 ## Link-Time Optimisations (LTO)
 
-Compile and decompile this example, play about!!
+Of course, this is a blog about linking, so continuing this example we need a second source to link `foobar.cpp` to.
+```main.cpp
+#include "foobar.h"
+#include <stdio.h>
 
+int main()
+{
+
+}
+
+void baz()
+{
+
+}
 ```
-$ clang foobar.cpp -c -O2
-$ clang main.cpp -c -O2
-$ clang foobar.o main.o -o main
-```
+At link-time, we can expect the linker to recognise `bar` as [...], and strip it accordingly. What we can't expect is...
 
-but if the output was disaambled and raised back to IR, we'd expect it to look something like this:
+This is where **link-time optimisation** (LTO) comes in.
 
-```main.preopt.ll
+LLVM in specific does this by making calls to libLTO, a [...]. 
 
-```
-
-Further example, undefined behaviour?
-
-Describe w/o...
+If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source.
 
 ### Full LTO
+
+. This is called **full LTO**, and I tend to think of it as the 'correct' way to go about these optimisations.
+
+![Desktop View](/assets/img/posts/2026-02-21-llvm-full-lto.png)
+*<strong>Full LTO</strong>*
 
 ```
 $ clang foobar.cpp -c -O2 -flto
@@ -126,12 +134,9 @@ $ llvm-dis main.preopt.bc -o main.preopt.ll
 $ llvm-dis main.opt.bc -o main.opt.ll
 ```
 
-If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source.
-
-![Desktop View](/assets/img/posts/2026-02-21-llvm-full-lto.png)
-*<strong>Full LTO</strong>*
-
 Because in this implementation, after that first pass through the linker, libLTO has to run <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15745-s13/public/lectures/L3-LLVM-Overview-1up.pdf#page=10"><strong>20-odd</strong></a> of the usual optimisation passes on the monolithic module we've merged our IRs into - all on a single thread. At best impractical, at worst unusable, these extra optimisations will slow your link times to a crawl (and that's assuming so large a `monolithic.bc` will even fit in memory). Surely, surely, there's a compromise to be found between performance and quality-of-life?
+
+*Clang flags* `-flto[=full]`
 
 ### Thin LTO
 
@@ -144,7 +149,7 @@ The corollary to this is thin LTO is also incremental. Again, full LTO merges al
 
 Notes on linker caching here, actually get technical with it?
 
-**Linker flags** [...]
+**Clang flags** `-flto=thin`
 
 ## LTO, But Better (Better Link Times, Anyway)
 
@@ -154,11 +159,11 @@ This section is really , and, while they're not going to meaningfully worsen you
 
 ### Unified LTO
 
-**Linker flags** [...]
+**Clang flags** [...]
 
 ### Fat LTO
 
-**Linker flags** [...]
+**Clang flags** [...]
 
 ### Distributed Thin LTO (DTLTO)
 
@@ -166,7 +171,7 @@ Now, in Stinett's guide to LTO, he flags up three more advanced LTO concepts for
 
 If you're working on an extremely large project, chances are you're running **distributed builds** across a whole network of machines, with each taking responsibility for its own units of work. Full LTO, being single-threaded, also needs run on one single linker, but Thin LTO slots into a distributed system nicely. Here, machines receive their own [index files?], and can be [...]. But I digress.  
 
-**Linker flags** [...]
+**Clang flags** [...]
 
 ## LTO && PGO
 
