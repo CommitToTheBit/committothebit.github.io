@@ -68,13 +68,82 @@ any file that contains machine code, virtual or native.
 
 As an example of what this IR looks like, let's take a minimal example. Here's some source code I wrote earlier:
 
-```foobar.h
+```c++
+extern int  foo();
+extern void bar();
+extern void baz();
 ```
+{: file='foobar.h'}
 
-```foobar.cpp
+```c++
+#include "foobar.h"
+
+static int qux();
+static int i = 24;
+
+int foo()
+{
+    int data = 0;
+    if (i < 0)
+    {
+        data = qux();
+    }
+
+    data = data + 42;
+    return data;
+}
+
+void bar()
+{
+    i = -1;
+}
+
+int qux()
+{
+    baz();
+    return 10;
+}
 ```
+{: file='foobar.cpp'}
 
 Using LLVM X.Y.Z, I can feed these in to...
+
+```llvm
+@i = internal global i32 24
+
+define i32 @foo() {
+    %1 = alloca i32
+    store i32 0, ptr %1
+    %2 = load i32, ptr @i
+    %3 = icmp slt i32 %2, 0
+    br i1 %3, label %qux, label %add10
+
+qux:
+    %4 = call i32 @_ZL3quxv()
+    store i32 %4, ptr %1
+    br label %add10
+
+add10:
+    %5 = load i32, ptr %1
+    %6 = add nsw i32 %5, 42
+    store i32 %6, ptr %1
+    %7 = load i32, ptr %1
+    ret i32 %7
+}
+
+define void @bar() {
+    store i32 -1, ptr @i
+    ret void
+}
+
+declare void @baz()
+
+define internal i32 @qux() {
+    call void @baz()
+    ret i32 10
+}
+```
+{: file='foobar.ll'}
 
 ```
 $ clang foobar.cpp -S -emit-llvm
@@ -82,29 +151,51 @@ $ clang foobar.cpp -S -emit-llvm
 
 Note also that LLVM IR is a **static single assignment form** (SSA), where each variable `%n` gets set exactly once. If you're curious as to why that's a useful property for an intermediate representation, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man.
 
-When optimised, we see
+Speaking of optimisations, rebuilding with an extra `-O2` flag greatly simplifies the IR:
+```llvm
+@i = internal global i1 false
 
+define i32 @foo() {
+    %1 = load i1, ptr @i
+    br i1 %1, label %qux, label %add10
+
+qux:
+    tail call void @baz()
+    br label %3
+
+add10:
+    %2 = phi i32 [ 42, %0 ], [ 52, %qux ]
+    ret i32 %2
+}
+
+define void @bar() {
+    store i1 true, ptr @i
+    ret void
+}
+
+declare void @baz()
 ```
-$ clang foobar.cpp -S -emit-llvm -O2 -o foobar.O2.ll
-```
+{: file='foobar.optimised.ll'}
+Here, `qux` has been inlined, our internal variable `i` safely simplified to a boolean (`i1` in the LLVM parlance), and several registers removed. We also see a **phi node** in `line 12`, which [...].
 
 ## Link-Time Optimisations (LTO)
 
 Of course, this is a blog about linking, so continuing this example we need a second source to link `foobar.cpp` to.
-```main.cpp
+```c++
 #include "foobar.h"
 #include <stdio.h>
 
 int main()
 {
-
+    return foo();
 }
 
 void baz()
 {
-
+    printf("Hello world!\n");
 }
 ```
+{: file='main.cpp'}
 At link-time, we can expect the linker to recognise `bar` as [...], and strip it accordingly. What we can't expect is...
 
 This is where **link-time optimisation** (LTO) comes in.
@@ -130,9 +221,46 @@ $ clang foobar.o main.o -flto -Wl,-plugin-opt=save-temps -o main
 $ llvm-dis main.preopt.bc -o main.preopt.ll
 ```
 
+```llvm
+@i = internal global i1 false,
+@s = private unnamed_addr constant [13 x i8] c"Hello world!\00"
+
+define i32 @main() {
+    %1 = tail call i32 @foo()
+    ret i32 %1
+}
+
+define i32 @foo() {
+    %1 = load i1, ptr @i
+    br i1 %1, label %qux, label %add10
+
+qux:
+    tail call void @_Z3bazv()
+    br label %add10
+
+add10:
+    %2 = phi i32 [ 42, %0 ], [ 52, %qux ]
+    ret i32 %2
+}
+
+define void @baz() {
+    %1 = tail call i32 (ptr, ...) @printf(ptr @.s)
+    ret void
+}
+```
+{: file='main.preopt.ll'}
+
+
 ```
 $ llvm-dis main.opt.bc -o main.opt.ll
 ```
+
+```llvm
+define i32 @main() {
+    ret i32 42
+}
+```
+{: file='main.opt.ll'}
 
 Because in this implementation, after that first pass through the linker, libLTO has to run <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15745-s13/public/lectures/L3-LLVM-Overview-1up.pdf#page=10"><strong>20-odd</strong></a> of the usual optimisation passes on the monolithic module we've merged our IRs into - all on a single thread. At best impractical, at worst unusable, these extra optimisations will slow your link times to a crawl (and that's assuming so large a `monolithic.bc` will even fit in memory). Surely, surely, there's a compromise to be found between performance and quality-of-life?
 
