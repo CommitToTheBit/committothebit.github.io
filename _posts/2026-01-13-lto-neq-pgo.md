@@ -29,20 +29,16 @@ We're going to treat this as bitcode...
 
 ## But what is a Linker?
 
-**translation units** (your `.cpp` files, basically)
+**compilation units** (your `.cpp` files, basically)
 
 ![Desktop View](/assets/img/posts/2026-02-20-compiler-and-linker.png)
 *<strong>The toolchain</strong> that transforms source code to (executable) machine code. The preprocessor, compiler, and assembler are, technically, their own programs, but I'll be lumping them all together and calling them the compiler for convenience; they aren't the part of the toolchain we're interested in today.*
 
-At compile time, translation units get transformed, one by one, into **machine code** binaries native to your desired instruction set (x86, ARM, *etc.*). The linker is what takes those native object files (`.o`) and merging them together, maybe as an executable (`.exe`), or maybe a library (`.dll`). It's machine code in, machine code out.
+At compile time, source code gets transformed, unit by unit, into **machine code** binaries native to your desired instruction set (x86, ARM, *etc.*). The linker is what takes those native object files (`.o`) and merging them together, maybe as an executable (`.exe`), or maybe a library (`.dll`). It's machine code in, machine code out.
 
-Now, when we talk about linking object files, we're linking them by their **symbols**. These are the named entities in a program that get attached to a fixed memory location, a definition that encompasses functions and class methods, variables global and static. Because compilers only deal with one compilation unit at a time, they have to attach table of **weak symbols** (function declarations, uninitialised variables) and  **strong symbols**. It's the linker that mixes and matches these references to the definitions in a process known as **symbol resolution.**
+Now, when we talk about linking object files, we're linking them by their **symbols**. These are the named entities in a program that get attached to a fixed memory location - *e.g.* functions and class methods, global and static variables - many of which will be **externally visible** beyond the scope of their own compilation unit. When externals are referenced elsewhere it's the linker that matches them to their definitions, a process known as <a href="https://chessman7.substack.com/i/164431639/symbol-resolution-in-action"><strong>symbol resolution</strong></a>.
 
-<a href="https://chessman7.substack.com/i/164431639/the-compilation-pipeline-where-symbols-come-from"><strong>The compiler will [...],</strong></a>, so that 
-
-From here, [...] dead code stripping on unused externals, plus relocation mapping symbols into actual memory.
-
-Beyond symbol resolution, linkers are responsible for [memory addresses], plus [relocations]. <a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> goes into much more technical here if you feel like further reading, I highly recommend you check his work out. Once you're back, I reckon it'll be time to narrow down this discussion from toolchains in general to one toolchain in particular.
+While they will attempt some amount of dead code stripping, compilers can only [...]. Crucially, linkers don't [...]. They're also responsible for resolving *relocations* using newly-finalised runtime memory addresses, but we won't get into those here. <a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> goes on some good tangents on this topic if you feel like the further reading, I highly recommend you check his work out; once you're back, it'll be time to narrow down this discussion from toolchains in general to one toolchain in particular.
 
 ## LLVM, Revisited
 
@@ -68,7 +64,7 @@ This is an aside, but - until writing this blog, I never really *got* the concep
 any file that contains machine code, virtual or native.
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
-*<strong>The LLVM Toolchain, Revisited</strong> We now understand Llvm in terms of [...]. Crucially, translation units can be compiled in parallel, but linking must take place on a single thread.*
+*<strong>The LLVM Toolchain, Revisited</strong> We now understand Llvm in terms of [...]. Crucially, compilation units can be compiled in parallel, but linking must take place on a single thread.*
 
 As an example of what this IR looks like, let's take a minimal example. Here's some source code I wrote earlier:
 
@@ -200,7 +196,7 @@ void baz()
 }
 ```
 {: file='main.cpp'}
-At link-time, we can expect the linker to recognise `bar` as [...], and strip it accordingly. What we can't expect is...
+We can expect the linker to recognise `bar` as an unused external and strip it accordingly. What we can't expect is it to make any of the inferences that would follow: that `i` is never changed, that `%qux` and therefore `baz` becomes inaccessible, that `main` will not never return a value of `42`. Further simplification 
 
 This is where **link-time optimisation** (LTO) comes in.
 
@@ -272,7 +268,7 @@ The funny thing [...] noticed about LTO is, well, there's not all that many symb
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
 *<strong>Thin LTO</strong>*
 
-The corollary to this is thin LTO is also incremental. Again, full LTO merges all of its translation units into a single module; when any of those sources are edited, libLTO will have to rerun. Because [...]
+The corollary to this is thin LTO is also incremental. Again, full LTO merges all of its compilation units into a single module; when any of those sources are edited, libLTO will have to rerun. Because [...]
 
 Notes on linker caching here, actually get technical with it?
 
