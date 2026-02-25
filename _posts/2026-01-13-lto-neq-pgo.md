@@ -249,12 +249,7 @@ define void @baz() {
 }
 ```
 {: file='main.preopt.ll'}
-
-
-```
-$ llvm-dis main.opt.bc -o main.opt.ll
-```
-
+Here, we see the after effects of symbol resolution: the linker has already been able to strip `bar` safe in the knowledge it goes unused in `main.cpp`. However... we all know `main` always returns `42`, don't we? Like, we can all, tangibly see that - so why can't LLVM? It's because the inferences that follow from removing `bar` - that `i` is always false, that `%qux` is inaccessible, that `baz` can also be stripped - are all link-time optimisations we need to route through libLTO. And surely enough, disassembling `main.opt.ll` gives us exactly that:
 ```llvm
 define i32 @main() {
     ret i32 42
@@ -262,9 +257,9 @@ define i32 @main() {
 ```
 {: file='main.opt.ll'}
 
-Because in this implementation, after that first pass through the linker, libLTO has to run <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15745-s13/public/lectures/L3-LLVM-Overview-1up.pdf#page=10"><strong>20-odd</strong></a> of the usual optimisation passes on the monolithic module we've merged our IRs into - all on a single thread. At best impractical, at worst unusable, these extra optimisations will slow your link times to a crawl (and that's assuming so large a `monolithic.bc` will even fit in memory). Surely, surely, there's a compromise to be found between performance and quality-of-life?
+Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've seen above it, after that first pass through the linker, libLTO has to run <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15745-s13/public/lectures/L3-LLVM-Overview-1up.pdf#page=10"><strong>20-odd</strong></a> of the usual optimisation passes on the monolithic module we've merged our IRs into - all on a single thread. At best impractical, at worst unusable, these extra optimisations will slow your link times to a crawl (and that's assuming so large a `monolithic.bc` will even fit in memory). Surely, surely, there's a compromise to be found between performance and quality-of-life?
 
-*Clang flags* `-flto[=full]`
+**Clang flags** `-flto[=full]`
 
 ### Thin LTO
 
