@@ -36,7 +36,11 @@ We're going to treat this as bitcode...
 
 At compile time, translation units get transformed, one by one, into **machine code** binaries native to your desired instruction set (x86, ARM, *etc.*). The linker is what takes those native object files (`.o`) and merging them together, maybe as an executable (`.exe`), or maybe a library (`.dll`). It's machine code in, machine code out.
 
-Now, when we talk about linking object files, what need linked by their **symbols**. These are the [...]. <a href="https://chessman7.substack.com/i/164431639/the-compilation-pipeline-where-symbols-come-from"><strong>The compiler will [...],</strong></a>, so that 
+Now, when we talk about linking object files, we're linking them by their **symbols**. These are the named entities in a program that get attached to a fixed memory location, a definition that encompasses functions and class methods, variables global and static. Because compilers only deal with one compilation unit at a time, they have to attach table of **weak symbols** (function declarations, uninitialised variables) and  **strong symbols**. It's the linker that mixes and matches these references to the definitions in a process known as **symbol resolution.**
+
+<a href="https://chessman7.substack.com/i/164431639/the-compilation-pipeline-where-symbols-come-from"><strong>The compiler will [...],</strong></a>, so that 
+
+From here, [...] dead code stripping on unused externals, plus relocation mapping symbols into actual memory.
 
 Beyond symbol resolution, linkers are responsible for [memory addresses], plus [relocations]. <a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> goes into much more technical here if you feel like further reading, I highly recommend you check his work out. Once you're back, I reckon it'll be time to narrow down this discussion from toolchains in general to one toolchain in particular.
 
