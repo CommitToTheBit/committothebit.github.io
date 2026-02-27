@@ -10,9 +10,12 @@ published: true
 
 > PGO is just LTO with extra profiling data, right?
 
-**Wrong!** Right before the holidays, I found myself chatting to a senior dev at work, and it's been rattling around at the back of my head for the festive period. Where does the 'O' in LTO actually come from?
+**Wrong!** Right before the holidays, I found myself having a chat with a senior dev at work, and it's been rattling around at the back of my head this whole festive period. I'd recently given a dev talk on link-time optimisations (LTO): how to enable them, why Feral should use them, things of that. It was only afterwards I realised, I was never clear on what those Os in LTO actually *were*.
 
-LTO is short for link-time optimisation, a compiler flags that. The theory here falls somewhere between my previous post about <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a> (PGO), and another, much larger project of mine that I'm not quite ready to share just yet. But plenty of digital ink (pixels?) have been spilled on link-time optimisations (J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>guide</strong></a> is one I'll refer back to throughout). I honestly don't think 
+I'm going to answer this in something of a spiritual sequel to my last post about <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a> (PGO). PGO, LTO, and indeed a third, much larger project of mine I'm not quite ready to share just yet, are conceptually very similar; I tend to think of all three as optimisation via cheat code. As a programmer increasingly specialised in the dark art of Make CPU Run Good, my energies . , the Coke Zero of performance engineering.
+
+
+But plenty of digital ink (pixels?) have been spilled on link-time optimisations (J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>guide</strong></a> is one I'll refer back to throughout). I honestly don't think 
 
 But, in the lead up to shipping *Tomb Raider*, a senior dev at Feral asked me a really quite good question,
 
