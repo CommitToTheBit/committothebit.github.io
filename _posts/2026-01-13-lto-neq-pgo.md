@@ -10,11 +10,23 @@ published: true
 
 > PGO is just LTO with extra profiling data, right?
 
-**Wrong!** Right before the holidays, I found myself having a chat with a senior dev at work, and it's been rattling around at the back of my head this whole festive period. I'd recently given a dev talk on link-time optimisations (LTO): how to enable them, why Feral should use them, things of that nature. It was only afterwards I realised, I was never clear on what those Os in LTO actually *were*.
+**Wrong!** December, 2025: hot off my last dev talk of the year, I get a message from a team lead at Feral. My talk was about link-time optimisation (LTO) - what it - and up to this point I'm thinking it's gone pretty well. Anyway, my colleague, he's got the launch of *Tomb Raider* coming up, and he's wondering how . because it makes me 
 
-I'm going to answer this in something of a spiritual sequel to my last post about <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a> (PGO). PGO, LTO, and indeed a third, much larger project of mine I'm not quite ready to share just yet, are conceptually very similar; I tend to think of all three as optimisation via cheat code. As a programmer increasingly specialised in the dark art of Make CPU Run Good, my energies . , less the ABCs than the ↑↑↓↓←→←→BAs of performance engineering.
+My colleague wants to enable it on builds of *Tomb Raider*, 
 
-Plenty of digital ink (pixels?) have already been spilled on link-time optimisations, J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>guide</strong></a> being a personal favourite - and one I'll rehash most of here. Much like I did with PGO, though, I want to blend this theory with practical guidance about how to implement LTO with minimal foot-shooting along the way. It'll be a bit circuitous, but by the end of the article you should come away with a greater confidence as to how and why LTO and PGO can coexist in your build pipeline. Oh, and I will be centering this discussion around my compiler of choice, LLVM; it's the one I use day-to-day, and the one I feel making declarative statements on, but I'm sure there'll be enough in here that'll be of use whatever tools you're using.
+I'm 
+
+I'd never 
+
+
+and he asked a question that's been rattling around my head this whole festive period. I'd recently given a dev talk on link-time optimisations (LTO): how to enable them, why Feral should use them, things of that nature. It was only afterwards I realised, I was never clear on what those Os in LTO actually *were*.
+
+So this is my *mea culpa*, a spiritual sequel to my previous post on <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a>. PGO, LTO, plus a third, much larger project of mine I'm not quite ready to share just yet, are conceptually very similar. I like to think of them as cheat codes for CPU optimisation; less the ABCs than the ↑↑↓↓←→←→BAs of performance engineering. They're cheating because, well, they're glorified compiler flags, and the only reason more devs don't exploit them is they don't know they exist.
+
+Now, plenty of digital ink (pixels?) has already been spilled on LTO, J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>introduction</strong></a> being 
+
+
+Plenty of digital ink (pixels?) have already been spilled on LTO, J. Ryan Stinnett's <a href="https://convolv.es/guides/lto/"><strong>guide</strong></a> being a personal favourite - and one I'll rehash most of here. Much like I did with PGO, though, I want to blend this theory with practical guidance about how to implement LTO, hopefully with minimal foot-shooting along the way. It'll be a bit circuitous, but by the end of the article you should come away with a greater confidence as to how and why LTO can coexist with PGO in your build pipeline. Oh, and I will be centering this discussion around my compiler of choice, LLVM; it's the one I use day-to-day, and the one I feel making declarative statements on, but I'm sure there'll be enough in here that'll be of use whatever tools you're using.
 
 ## But what is a Linker?
 
@@ -291,6 +303,9 @@ All told, the most intuitive definition of LTO I can think of is *optimisation w
 
 ![Desktop View](/assets/img/posts/2026-02-21-pgo-and-lto.png)
 *<strong>Just LTO with extra profiling data, right?</strong> PGO and LTO*
+
+My colleague sums up the point quite nicely:
+> I think my mistake was imagining the optimisation steps in LTO is distinct from normal compiler optimisation
 
 I've spent a lot of this post running off the various ,
 
