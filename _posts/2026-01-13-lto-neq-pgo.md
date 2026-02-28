@@ -10,16 +10,19 @@ published: true
 
 > PGO is just LTO with extra profiling data, right?
 
-**Wrong!** December, 2025: hot off my last dev talk of the year, I get pinged this question from one of the leads at Feral. My talk was about link-time optimisation (LTO), a nice, easy, one-and-done topic that (little do I know it) will be rattling around the back of my head for the rest of the festive period. That's because my colleague just made me realise, I've given a whole presentation on how linking unlocks extra optimisations a compiler can't make on a per-unit basis - and completely failed to explain what those extra optimisations actually *are*.
+**Wrong!** December, 2025: hot off my last dev talk of the year, I get asked this question by one of the leads at Feral. My talk was about link-time optimisation (LTO), a nice, easy, one-and-done topic that (little do I know it yet) will end up rattling around the back of my head for the rest of the festive period. That's because my colleague just made me realise, I've given a whole presentation on how linking unlocks extra optimisations a compiler can't make on a per-unit basis - and completely failed to explain what those extra optimisations actually are.
 
-Please consider this my *mea culpa*, a spiritual sequel to my last post on <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a>. PGO, LTO, and a third, much larger project of mine I'm not quite ready to share just yet, are conceptually very similar. Think of them as cheat codes for CPU optimisation; less the ABCs than the ↑↑↓↓←→←→BAs of performance engineering. They're cheating because, well, they're glorified compiler flags, and I strongly suspect what stops most devs from using them is not knowing they exist.
+Please consider this my *mea culpa*, a spiritual sequel to my last post on <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a>. PGO, LTO, and a third, much larger project of mine I'm not quite ready to share just yet, are conceptually very similar. I like to think of them as cheat codes for CPU optimisation; less the ABCs than the ↑↑↓↓←→←→BAs of performance engineering. They're cheating because, well, they're glorified compiler flags, and I strongly suspect what stops most devs from using them is not knowing they exist.
 
-But plenty of digital ink (pixels?) have already been spilled on LTO, <a href="https://convolv.es/guides/lto/"><strong>J. Ryan Stinnett's</strong></a> being one of many very accessible introductions to the topic. Much like I did with PGO, I'll have to rehash some of the theory,
+But plenty of digital ink (pixels?) have already been spilled on LTO, <a href="https://convolv.es/guides/lto/"><strong>J. Ryan Stinnett's</strong></a> being my favourite of the many very accessible introductions to the topic.
 
+I'll have to rehash the theory that's already out there, because - much like I did with PGO - I'll
+It'll be a bit circuitous, but by the end of the article you should come away with a greater confidence as to how and why LTO can coexist with PGO in your build pipeline. 
+Oh, and I will be centering this discussion around my compiler of choice, LLVM; it's the one I use day-to-day, and the one I feel making declarative statements on, but I'm sure there'll be enough in here that'll be of use whatever tools you're using.
 
 I'll be rehashing some of this theory, but - much like I did with PGO - it's to better situate my practical guide on
 
-and one I'll rehash most of here. Much like I did with PGO, though, I want to blend this theory with practical guidance about how to implement LTO, hopefully with minimal foot-shooting along the way. It'll be a bit circuitous, but by the end of the article you should come away with a greater confidence as to how and why LTO can coexist with PGO in your build pipeline. Oh, and I will be centering this discussion around my compiler of choice, LLVM; it's the one I use day-to-day, and the one I feel making declarative statements on, but I'm sure there'll be enough in here that'll be of use whatever tools you're using.
+and one I'll rehash most of here. Much like I did with PGO, though, I want to blend this theory with practical guidance about how to implement LTO, hopefully with minimal foot-shooting along the way.
 
 ## But what is a Linker?
 
