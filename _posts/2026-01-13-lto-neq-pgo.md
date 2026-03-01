@@ -10,23 +10,15 @@ published: true
 
 > PGO is just LTO with extra profiling data, right?
 
-**Wrong!** December, 2025: hot off my last dev talk of the year, I get asked this question by one of the leads at Feral. My talk was about link-time optimisation (LTO), a nice, easy, one-and-done topic that (little do I know it yet) will end up rattling around the back of my head for the rest of the festive period. That's because my colleague just made me realise, I've given a whole presentation on how linking unlocks extra optimisations a compiler can't make on a per-unit basis - and completely failed to explain what those extra optimisations actually are.
+**Wrong!** December, 2025: hot off my last dev talk of the year, I get asked this question by one of the leads at Feral. My talk was about link-time optimisation (LTO), a nice, easy, one-and-done topic that (little do I know it yet) will end up rattling around the back of my head far beyond the festive period. That's because my colleague has made me realise, I've given a whole presentation on how linking unlocks extra optimisations a compiler can't make on a per-unit basis - and completely failed to explain what those extra optimisations actually are.
 
-Please consider this my *mea culpa*, a spiritual sequel to my post on <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a>. PGO, LTO, and a third, much larger project of mine I'm not quite ready to share just yet, are conceptually very similar. I like to think of them as cheat codes for CPU optimisation; less the ABCs than the ↑↑↓↓←→←→BAs of performance engineering. They're cheating because, well, they're glorified compiler flags, and I strongly suspect what stops most devs from using them is not knowing they exist.
+Please consider this my *mea culpa*, a spiritual sequel to my post on <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a>. PGO, LTO, plus a third, much larger project of mine I'm not quite ready to share just yet, are conceptually very similar. I like to think of them as cheat codes for CPU optimisation; less the ABCs than the ↑↑↓↓←→←→BAs of performance engineering. They're cheating because, well, they're glorified compiler flags, and I strongly suspect what stops most devs from using them is simply not knowing they exist.
 
-But plenty of digital ink - pixels? - have already been spilled on LTO (<a href="https://convolv.es/guides/lto/"><strong>J. Ryan Stinnett's</strong></a> being my personal favourite of the many very accessible introductions to the topic). Much like I did with PGO, I want to try and consolidate my reading and my own practical experience , and 
-
-I'll have to rehash the theory that's already out there, in order to - much like I did with PGO - 
-It'll be a bit circuitous, but by the end of the article you should come away with a greater confidence as to how and why LTO can coexist with PGO in your build pipeline. 
-Oh, and while some code snippets and console commands will be specific to LLVM, my compiler of choice, there's enough in here that should be relevant whatever your toolchain.
-
-I will be centering this discussion around my compiler of choice, LLVM, but I'm sure there'll be enough in here that'll be of use whatever tools you're using.
-
-I'll be rehashing some of this theory, but - much like I did with PGO - it's to better situate my practical guide on
-
-and one I'll rehash most of here. Much like I did with PGO, though, I want to blend this theory with practical guidance about how to implement LTO, hopefully with minimal foot-shooting along the way.
+But plenty of digital ink - pixels? - have already been spilled on LTO (<a href="https://convolv.es/guides/lto/"><strong>J. Ryan Stinnett's</strong></a> being my personal favourite of the many very accessible introductions available). Much like I did with PGO, what I want to do here is walk through my own personal experience integrating the process, and sort of show my working on the subtler points I've had to read between the lines elsewhere. It'll be a bit circuitous, but by the end of this article I should have convinced you of what the Os in LTO and PGO are really doing, just the same as my colleague and I have convinced ourselves. Oh, and while some code snippets and console commands will be specific to LLVM, my compiler of choice, there's enough in here that should be relevant whatever your toolchain.
 
 ## But what is a Linker?
+
+What, for that matter, is a toolchain? 
 
 **compilation units** (your `.cpp` files, basically)
 
@@ -37,7 +29,7 @@ At compile time, source code gets transformed, unit by unit, into **machine code
 
 Now, when we talk about linking object files, we're linking them by their **symbols**. These are the named entities in a program that get attached to a fixed memory location - *e.g.* functions and class methods, global and static variables - many of which will be **externally visible** beyond the scope of their own compilation unit. When externals are referenced elsewhere it's the linker that matches them to their definitions, a process known as <a href="https://chessman7.substack.com/i/164431639/symbol-resolution-in-action"><strong>symbol resolution</strong></a>.
 
-While they will attempt some amount of dead code stripping, compilers can only [...]. Crucially, linkers don't [...]. They're also responsible for resolving *relocations* using newly-finalised runtime memory addresses, but we won't get into those here. <a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> goes on some good tangents on this topic if you feel like the further reading, I highly recommend you check his work out; once you're back, it'll be time to narrow down this discussion from toolchains in general to one toolchain in particular.
+While they will attempt some amount of dead code stripping, compilers are limited to optimising one unit at a time. Only the linker, with its global view of an executable, can spot unused externals and remove them. Linkers are also responsible for resolving *relocations* using newly-finalised runtime memory addresses, but I'll refer you to <a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> for the further reading there. Once you've checked his site out, it'll be time to narrow down our own discussion from toolchains in general to one toolchain in particular...
 
 ## LLVM, Revisited
 

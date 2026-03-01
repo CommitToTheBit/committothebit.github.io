@@ -6,7 +6,7 @@ categories: [Procedural Whodunnits]
 tags: ["c++", "llvm", "pgo", "optimisation"]
 math: true
 image:
-  path: /assets/img/posts/2025-11-06-its-free-cpu-performance.png
+  path: /assets/img/posts/2026-03-01-its-free-real-estate.png
 sitemap: true
 ---
 
