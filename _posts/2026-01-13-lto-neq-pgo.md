@@ -18,9 +18,29 @@ But plenty of digital ink - pixels? - have already been spilled on LTO (<a href=
 
 ## But what is a Linker?
 
-What, for that matter, is a toolchain? 
+The C++'s developer's toolchain is [...] source code to (executable) machine code. It takes, as inputs,
 
-**compilation units** (your `.cpp` files, basically)
+What, for that matter, is a toolchain? 
+[In abstract terms, it's just a series of programs used to build software.]
+Really though, 
+
+
+Really, it's just a series 
+
+
+ Here 
+
+
+
+It starts out with several **compilation units** (your `.cpp` files, basically), and transforms 
+
+Previously, when I've 
+
+- and I think that's fair, the compiler is undoubtedly the most important program -
+
+Previously, where I've talked about the **toolchain**, 
+
+that takes a bunch of  
 
 ![Desktop View](/assets/img/posts/2026-02-20-compiler-and-linker.png)
 *<strong>The toolchain</strong> that transforms source code to (executable) machine code. The preprocessor, compiler, and assembler are, technically, their own programs, but I'll be lumping them all together and calling them the compiler for convenience; they aren't the part of the toolchain we're interested in today.*
