@@ -18,34 +18,12 @@ But plenty of digital ink - pixels? - have already been spilled on LTO (<a href=
 
 ## But what is a Linker?
 
-The C++'s developer's toolchain is [...] source code to (executable) machine code. It takes, as inputs,
-
-What, for that matter, is a toolchain? 
-[In abstract terms, it's just a series of programs used to build software.]
-Really though, 
-
-
-Really, it's just a series 
-
-
- Here 
-
-
-
-It starts out with several **compilation units** (your `.cpp` files, basically), and transforms 
-
-Previously, when I've 
-
-- and I think that's fair, the compiler is undoubtedly the most important program -
-
-Previously, where I've talked about the **toolchain**, 
-
-that takes a bunch of  
+When we talk about a C++ developer's toolchain, it's easy to get hung up on the compiler. It is, for a start, where the optimisation happens. But compilation alone does not a toolchain make; there are other, admittedly lesser programs nonetheless deserving of attention:
 
 ![Desktop View](/assets/img/posts/2026-02-20-compiler-and-linker.png)
-*<strong>The toolchain</strong> that transforms source code to (executable) machine code. The preprocessor, compiler, and assembler are, technically, their own programs, but I'll be lumping them all together and calling them the compiler for convenience; they aren't the part of the toolchain we're interested in today.*
+*<strong>The Toolchain</strong> that transforms source code to (executable) machine code. The preprocessor, compiler, and assembler are, technically, their own programs, but I'm lumping them all together and calling them the compiler for convenience; they aren't the part of the toolchain we're interested in today.*
 
-At compile time, source code gets transformed, unit by unit, into **machine code** binaries native to your desired instruction set (x86, ARM, *etc.*). The linker is what takes those native object files (`.o`) and merging them together, maybe as an executable (`.exe`), or maybe a library (`.dll`). It's machine code in, machine code out.
+Toolchains think about a project in terms of **compilation units**, which in C++ are just its `.cpp` source files. At compile time, these sources get lowered, unit by unit, into independent **machine code** binaries native to your desired instruction set (x86, ARM, *etc.*). The linker is what then takes the native object files (`.o`) and merges them together. Whether as an executable (`.exe`) or maybe a library (`.dll`), this last tool in the chain is machine code in, machine code out.
 
 Now, when we talk about linking object files, we're linking them by their **symbols**. These are the named entities in a program that get attached to a fixed memory location - *e.g.* functions and class methods, global and static variables - many of which will be **externally visible** beyond the scope of their own compilation unit. When externals are referenced elsewhere it's the linker that matches them to their definitions, a process known as <a href="https://chessman7.substack.com/i/164431639/symbol-resolution-in-action"><strong>symbol resolution</strong></a>.
 
