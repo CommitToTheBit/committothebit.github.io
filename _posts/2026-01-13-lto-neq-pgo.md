@@ -10,43 +10,39 @@ published: true
 
 > PGO is just LTO with extra profiling data, right?
 
-**Wrong!** December, 2025: hot off my last dev talk of the year, I get asked this question by one of the leads at Feral. My talk was about link-time optimisation (LTO), a nice, easy, one-and-done topic that (little do I know it yet) will end up rattling around the back of my head far beyond the festive period. That's because my colleague has made me realise, I've given a whole presentation on how linking unlocks extra optimisations a compiler can't make on a per-unit basis - and completely failed to explain what those extra optimisations actually are.
+**Wrong!** December, 2025: hot off my last dev talk of the year, I get asked this question by one of the leads at Feral. I've been talking about link-time optimisation (LTO), a nice, easy, one-and-done topic that (little do I know it yet) will end up rattling around the back of my head for the rest of the festive period. That's because my colleague has made me realise, I've given a whole presentation on how linking unlocks extra optimisations a compiler can't make on a per-unit basis - and completely failed to explain what those extra optimisations actually are.
 
 Please consider this my *mea culpa*, a spiritual sequel to my post on <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a>. PGO, LTO, plus a third, much larger project of mine I'm not quite ready to share just yet, are conceptually very similar. I like to think of them as cheat codes for CPU optimisation; less the ABCs than the ↑↑↓↓←→←→BAs of performance engineering. They're cheating because, well, they're glorified compiler flags, and I strongly suspect what stops most devs from using them is simply not knowing they exist.
 
-But plenty of digital ink - pixels? - have already been spilled on LTO (<a href="https://convolv.es/guides/lto/"><strong>J. Ryan Stinnett's</strong></a> being my personal favourite of the many very accessible introductions available). Much like I did with PGO, what I want to do here is walk through my own personal experience integrating the process, and sort of show my working on the subtler points I've had to read between the lines elsewhere. It'll be a bit circuitous, but by the end of this article I should have convinced you of what the Os in LTO and PGO are really doing, just the same as my colleague and I have convinced ourselves. Oh, and while some code snippets and console commands will be specific to LLVM, my compiler of choice, there's enough in here that should be relevant whatever your toolchain.
+But plenty of digital ink - pixels? - have already been spilled on LTO (<a href="https://convolv.es/guides/lto/"><strong>J. Ryan Stinnett's</strong></a> being my personal favourite of the many very accessible introductions available). Much like I did with PGO, what I want to do here is walk through my own personal experience integrating the process into my a build pipeline, and show my working on the subtler points I've had to read between the lines elsewhere. It'll be a bit circuitous, but by the end of this article I should have convinced you of what the Os in LTO and PGO are really doing, the way my colleague and I convinced ourselves. Oh, and while some code snippets and console commands will be specific to LLVM, my compiler of choice, there's enough in here that should be relevant whatever your toolchain.
 
 ## But what is a Linker?
 
-When we talk about a C++ developer's toolchain, it's easy to get hung up on the compiler. It is, for a start, where the optimisation happens. But compilation alone does not a toolchain make; there are other, admittedly lesser programs nonetheless deserving of attention:
+Looking at a C++ developer's toolchain, it's easy to get hung up on the compiler. It is, after all, where the optimisation happens. But compilation alone does not a toolchain make; there are other, admittedly lesser, programs deserving of attention:
 
 ![Desktop View](/assets/img/posts/2026-02-20-compiler-and-linker.png)
-*<strong>The Toolchain</strong> that transforms source code to (executable) machine code. The preprocessor, compiler, and assembler are, technically, their own programs, but I'm lumping them all together and calling them the compiler for convenience; they aren't the part of the toolchain we're interested in today.*
+*<strong>The toolchain</strong> transforms source code to (executable) machine code. The preprocessor, compiler, and assembler are, technically, their own programs, but I'll lump them together and call them the compiler for convenience; they aren't the part of the toolchain we're interested in today.*
 
-Toolchains think about a project in terms of **compilation units**, which in C++ are just its `.cpp` source files. At compile time, these sources get lowered, unit by unit, into independent **machine code** binaries native to your desired instruction set (x86, ARM, *etc.*). The linker is what then takes the native object files (`.o`) and merges them together. Whether as an executable (`.exe`) or maybe a library (`.dll`), this last tool in the chain is machine code in, machine code out.
+Toolchains think about a project in terms of **compilation units**, which in C++ are just its `.cpp` source files. At compile time, sources get lowered, unit by unit, into independent **machine code** binaries native to your desired instruction set (x86, ARM, *etc.*). The linker is what then takes their native object files (`.o`) and merges them together. Whether returning an executable (`.exe`) or maybe a library (`.dll`), this last step is machine code in, machine code out.
 
 Now, when we talk about linking object files, we're linking them by their **symbols**. These are the named entities in a program that get attached to a fixed memory location - *e.g.* functions and class methods, global and static variables - many of which will be **externally visible** beyond the scope of their own compilation unit. When externals are referenced elsewhere it's the linker that matches them to their definitions, a process known as <a href="https://chessman7.substack.com/i/164431639/symbol-resolution-in-action"><strong>symbol resolution</strong></a>.
 
-While they will attempt some amount of dead code stripping, compilers are limited to optimising one unit at a time. Only the linker, with its global view of an executable, can spot unused externals and remove them. Linkers are also responsible for resolving *relocations* using newly-finalised runtime memory addresses, but I'll refer you to <a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> for the further reading there. Once you've checked his site out, it'll be time to narrow down our own discussion from toolchains in general to one toolchain in particular...
+While they will attempt some amount of *dead code stripping*, compilers are limited to optimising one unit at a time. Only the linker, with its global view of an executable, can spot unused externals and remove them. Linkers are also responsible for resolving *relocations* using newly-finalised runtime memory addresses, but I'll refer you to <a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> for the further reading there. Once you've checked his site out, it'll be time to narrow down our own discussion from toolchains in general to one toolchain in particular...
 
 ## LLVM, Revisited
 
 I was, I'll admit, a bit tricksy with how I wrote *PGO, But Better*. It's not got any outright lies or outstanding corrections - I like to think I'm pretty rigorous in how I put these posts together - but like any programming blog I had to elide some finer points for the sake of clarity. You might remember I introduced Clang as my compiler of choice, the one I'll be writing these blogs about. You might also remember that it's the C/C++ frontend of the LLVM compiler infrastructure. What you won't remember is where the linker fits into this infrastructure - I didn't even mention it.
 
 ![Desktop View](/assets/img/posts/2025-11-25-compiler-architecture.png)
-*<strong>The story so far...</strong> The front-end [...]*
+*<strong>The story so far...</strong> The LLVM front-end translates source code into an intermediate representation (IR), on which the middle-end performs a series of language-agnostic passes. After optimisation, the back-end translates the IR again, to run on your instruction set of choice.*
 
-How exactly does our source code pass through...
+Classically, 
 
 Linking actually happens *within* `llc`, the LLVM static compiler!
 
 ### LLVM IR
 
-I've talked about the **intermediate representation** (IR) LLVM uses before, but it's another topic that could use some elaboration. 
-
-To get even more granular, LLVM translates to 
-
-forms: a human-readable **textual form** (`.ll`), and a **binary form** (`.bc`) often referred to as **LLVM bitcode**.
+*PGO, But Better* also touched on the **intermediate representation** (IR) used by LLVM, but only in the abstract. Here, I want to [...]. While LLVM processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can also be disassembled into an equivalent human-readable *textual form* (`.ll`). Like I said, the LLVM middle-end is modular by design, and if you want to understand what any of its optimisation passes are doing to you code you absolutely can. Running `...` will [...], or `...` to [...].
 
 This is an aside, but - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? LLVM bitcode is just machine code for a virtual machine. `.bc` files are , and `.ll`s likewise the virtual versions of assembly.
 
