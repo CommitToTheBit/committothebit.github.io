@@ -92,6 +92,8 @@ int qux()
 ```
 {: file='foobar.cpp'}
 
+You can plug ` ` into your terminal, but it's 
+
 Using LLVM X.Y.Z, I can feed these in to...
 
 ```llvm
@@ -137,7 +139,15 @@ $ clang foobar.cpp -S -emit-llvm
 
 Bit much, isn't it?
 
+Look a little closer at these registers, and you might notice something: 
+
+However
+
 Note also that LLVM IR is a **static single assignment form** (SSA), where each variable `%n` gets set exactly once. If you're curious as to why that's a useful property for an intermediate representation, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man.
+
+Cannier readers might be wondering, how is it legal to `store i32 0, ptr %1` in an SSA? And here's the neat thing - it's not! Many, if not most, of the resources I used to help me with this part gloss over the fact that LLVM is only a **partial SSA**, ... struggled with `store`, `load`, and `alloca`. 
+
+At any rate, LLVM IR is only SSA. If it was, we wouldn't . This 
 
 Speaking of optimisations, rebuilding with an extra `-O2` flag greatly simplifies the IR:
 ```llvm
