@@ -42,16 +42,17 @@ Linking actually happens *within* `llc`, the LLVM static compiler!
 
 ### LLVM IR
 
+To optimise...
+
+
 *PGO, But Better* also touched on the **intermediate representation** (IR) used by LLVM, but only in the abstract. Here, I want to [...]. While LLVM processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can also be disassembled into an equivalent human-readable *textual form* (`.ll`). Like I said, the LLVM middle-end is modular by design, and if you want to understand what any of its optimisation passes are doing to you code you absolutely can. Running `...` will [...], or `...` to [...].
 
-This is an aside, but - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? LLVM bitcode is just machine code for a virtual machine. `.bc` files are , and `.ll`s likewise the virtual versions of assembly.
-
-any file that contains machine code, virtual or native.
+This is an aside, but - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise it's optimisations. With this understanding, we can broaden our definition of an **object file** as any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`, much like `.ll`s read as 'virtual' assembly.
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
-*<strong>The LLVM Toolchain, Revisited</strong> We now understand Llvm in terms of [...]. Crucially, compilation units can be compiled in parallel, but linking must take place on a single thread.*
+*<strong>The LLVM Toolchain, Revisited</strong> We now understand LLVM in terms of [...]. Crucially, compilation units can be compiled in parallel, but linking must take place on a single thread.*
 
-As an example of what this IR looks like, let's take a minimal example. Here's some source code I wrote earlier:
+So, LLVM let's you get under the hood and see the optimisations it's making, provided you can understand the IR. Well, in this blog I want to really understand what changes get made to code at link-time - so we're going to need to learn. Here's some source code from the LLVM docs themselves, with the serial numbers filed off:
 
 ```c++
 extern int  foo();
@@ -133,6 +134,8 @@ define internal i32 @qux() {
 ```
 $ clang foobar.cpp -S -emit-llvm
 ```
+
+Bit much, isn't it?
 
 Note also that LLVM IR is a **static single assignment form** (SSA), where each variable `%n` gets set exactly once. If you're curious as to why that's a useful property for an intermediate representation, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man.
 
