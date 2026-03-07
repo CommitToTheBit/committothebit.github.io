@@ -7,7 +7,7 @@ tags: ["c++", "godot", "devlog"]
 math: true
 image:
   path: /assets/img/posts/2026-02-04-dr-manhattan.png
-published: true
+published: false
 ---
 It's December, 2022. Once this is done, I'm never making a detective game again. It's January, 2025. Once this is done, I'm never making a detective game again. It's February 2026... what gives?
 

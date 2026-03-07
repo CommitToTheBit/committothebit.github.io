@@ -14,7 +14,7 @@ published: true
 
 Please consider this my *mea culpa*, a spiritual sequel to my post on <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a>. PGO, LTO, plus a third, much larger project of mine I'm not quite ready to share just yet, are conceptually very similar. I like to think of them as cheat codes for CPU optimisation; less the ABCs than the ↑↑↓↓←→←→BAs of performance engineering. They're cheating because, well, they're glorified compiler flags, and I strongly suspect what stops most devs from using them is simply not knowing they exist.
 
-But plenty of digital ink - pixels? - have already been spilled on LTO (<a href="https://convolv.es/guides/lto/"><strong>J. Ryan Stinnett's</strong></a> being my personal favourite of the many very accessible introductions available). Much like I did with PGO, what I want to do here is walk through my own personal experience integrating the process into my a build pipeline, and show my working on the subtler points I've had to read between the lines elsewhere. It'll be a bit circuitous, but by the end of this article I should have convinced you of what the Os in LTO and PGO are really doing, the way my colleague and I convinced ourselves. Oh, and while some code snippets and console commands will be specific to LLVM, my compiler of choice, there's enough in here that should be relevant whatever your toolchain.
+But plenty of digital ink - pixels? - have already been spilled on LTO (<a href="https://convolv.es/guides/lto/"><strong>J. Ryan Stinnett's</strong></a> being my personal favourite of the many very accessible introductions available). Much like I did with PGO, what I want to do here is walk through my own personal experience integrating the process into my a build pipeline, and show my working on the subtler points I've had to read between the lines elsewhere. It'll be a bit circuitous, but by the end of this article I should have convinced you of what the Os in LTO and PGO are really doing, the way my colleague and I convinced ourselves. Oh, and while some code snippets and console commands will be specific to my compiler of choice, there's enough in here that should be relevant whatever your toolchain.
 
 ## But what is a Linker?
 
@@ -31,7 +31,7 @@ While they will attempt some amount of *dead code stripping*, compilers are limi
 
 ## LLVM, Revisited
 
-I was, I'll admit, a bit tricksy with how I wrote *PGO, But Better*. It's not got any outright lies or outstanding corrections - I like to think I'm pretty rigorous in how I put these posts together - but like any programming blog I had to elide some finer points for the sake of clarity. You might remember I introduced Clang as my compiler of choice, the one I'll be writing these blogs about. You might also remember that it's the C/C++ frontend of the LLVM compiler infrastructure. What you won't remember is where the linker fits into this infrastructure - I didn't even mention it.
+I was, I'll admit, a bit tricksy with how I wrote *PGO, But Better*. It's not got any outright lies or outstanding corrections - I like to think I'm pretty rigorous in how I put these posts together - but like any programming blog I had to elide some finer points for the sake of clarity. You might remember I introduced Clang as my go-to compiler, the one I'll be writing these blogs about. You might also remember that it's the C/C++ frontend of the LLVM compiler infrastructure. What you won't remember is where the linker fits into this infrastructure - I didn't even mention it.
 
 ![Desktop View](/assets/img/posts/2025-11-25-compiler-architecture.png)
 *<strong>The story so far...</strong> The LLVM front-end translates source code into an intermediate representation (IR), on which the middle-end performs a series of language-agnostic passes. After optimisation, the back-end translates the IR again, to run on your instruction set of choice.*
@@ -43,7 +43,6 @@ Linking actually happens *within* `llc`, the LLVM static compiler!
 ### LLVM IR
 
 To optimise...
-
 
 *PGO, But Better* also touched on the **intermediate representation** (IR) used by LLVM, but only in the abstract. Here, I want to [...]. While LLVM processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can also be disassembled into an equivalent human-readable *textual form* (`.ll`). Like I said, the LLVM middle-end is modular by design, and if you want to understand what any of its optimisation passes are doing to you code you absolutely can. Running `...` will [...], or `...` to [...].
 
@@ -92,9 +91,20 @@ int qux()
 ```
 {: file='foobar.cpp'}
 
-You can plug ` ` into your terminal, but it's 
+Plugging  `clang foobar.cpp -S -emit-llvm` into your terminal, but it's . This isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction, but it'll [...].
 
-Using LLVM X.Y.Z, I can feed these in to...
+`qux` is relatively minimal:
+```llvm
+define internal i32 @qux() {
+    call void @baz()
+    ret i32 10
+}
+```
+{: file='foobar.ll'}
+
+First, we `define` `@qux`, a function `internal` to `foobar.cpp` (rather than an external symbol). `@qux` in turn `call`s `@baz`, a `void` function, before `ret`urning a value of `10` itself. Really, the only difference with C++ is how we denote types. Integer types are denoted `iN`, and floating-point types `fN`, such that `int` becomes `i32`, `double` becomes `f64`, and so on. In fact, because IR is only an abstract representation of an instruction set, it doesn't need to worry about physically storing variables in a fixed number of bytes. That means `N` can be any natural number, not just a multiple of 8 - notably, Booleans are written `i1` in IR!
+
+When we look at the IR in its totality, 
 
 ```llvm
 @i = internal global i32 24
@@ -133,29 +143,9 @@ define internal i32 @qux() {
 ```
 {: file='foobar.ll'}
 
-```
-$ clang foobar.cpp -S -emit-llvm
-```
+there are plenty of `@`s, and plenty more `%`s. These are the **sigils** LLVM prepends to user-defined symbols to indicate their scope. We've seen `@` is the prefix used for functions, but it also marks out global variables like `@i`. `%`s, on the other hand, are used for local **registers** that get set exactly once. If that's true of all variables in an intermediate representation, we say it's in **static single assignment form** (SSA), an incredibly valuable property for compiler design (to find out why, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man).
 
-Bit much, isn't it?
-
-`qux` is relatively minimal:
-```llvm
-define internal i32 @qux() {
-    call void @baz()
-    ret i32 10
-}
-```{: file='foobar.ll'}
-
-Look a little closer at these registers, and you might notice something: 
-
-However
-
-Note also that LLVM IR is a **static single assignment form** (SSA), where each variable `%n` gets set exactly once. If you're curious as to why that's a useful property for an intermediate representation, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man.
-
-Cannier readers might be wondering, how is it legal to `store i32 0, ptr %1` in an SSA? And here's the neat thing - it's not! Many, if not most, of the resources I used to help me with this part gloss over the fact that LLVM is only a **partial SSA**, ... struggled with `store`, `load`, and `alloca`. 
-
-At any rate, LLVM IR is only SSA. If it was, we wouldn't . This 
+Canny readers will already be wondering, how is it legal to `store i32 0, ptr %1` in an SSA? And here's the neat thing - it's not! Many, if not most, of the resources I used to help me with this part gloss over the fact that LLVM is only a **partial SSA**, ... struggled with `store`, `load`, and `alloca`. 
 
 Speaking of optimisations, rebuilding with an extra `-O2` flag greatly simplifies the IR:
 ```llvm
@@ -182,7 +172,7 @@ define void @bar() {
 declare void @baz()
 ```
 {: file='foobar.optimised.ll'}
-Here, `qux` has been inlined, our internal variable `i` safely simplified to a boolean (`i1` in the LLVM parlance), and several registers removed. We also see a **phi node** in `line 12`, which [...].
+Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. I'd also be remiss not to touch on the **phi node** added in `line 12`. Derived from the 
 
 ## Link-Time Optimisations (LTO)
 
@@ -280,11 +270,11 @@ Notes on linker caching here, actually get technical with it?
 
 **Clang flags** `-flto=thin`
 
-## LTO, But Better (Better Link Times, Anyway)
+## LTO, But Better (Better Build Times, Anyway)
 
-In terms of raw performance, thin LTO is negligibly worse: [...] finds a speed-up of 2.63% versus full LTO's 2.86%.
+In terms of raw performance, thin LTO is negligibly worse: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer! [quality-of-life].
 
-This section is really , and, while they're not going to meaningfully worsen your LTO, they're not going to make it more perfromant either.
+Mark the difference with my last set of cheat codes. CS and IR PGO [...]; there's nothing nearly so declarative here. Depending on your project, parallising LTO might not be the only way of improving your quality-of-life as a developer - but fair warning, while none of the following tricks will meaningfully worsen run-time performance versus full LTO, they're won't make it more faster either.
 
 ### Unified LTO
 
@@ -296,7 +286,7 @@ This section is really , and, while they're not going to meaningfully worsen you
 
 ### Distributed Thin LTO (DTLTO)
 
-Now, in Stinett's guide to LTO, he flags up three more advanced LTO concepts for the curious reader: symbol visibility, linker caching, and distributed build support. The first two are already covered about, but what about the third? A **distributed build**...
+Now, in Stinett's guide to LTO, he flags up three more advanced LTO concepts for the curious reader: symbol visibility, linker caching, and distributed build support. The first two we've already touched on, but what about the third? A **distributed build**...
 
 If you're working on an extremely large project, chances are you're running **distributed builds** across a whole network of machines, with each taking responsibility for its own units of work. Full LTO, being single-threaded, also needs run on one single linker, but Thin LTO slots into a distributed system nicely. Here, machines receive their own [index files?], and can be [...]. But I digress.  
 
@@ -304,28 +294,20 @@ If you're working on an extremely large project, chances are you're running **di
 
 ## LTO && PGO
 
-All told, the most intuitive definition of LTO I can think of is *optimisation with knowledge of all sources*. If you'd asked me the same thing on my last post, I'd probably have described PGO as something like *optimisation with knowledge of how a source is used*. **These are orthogonal properties,** you can absolutely have either one without the other. And that, I think, gets us back to where we started.
+All told, the most intuitive definition of LTO I can think of is *optimisation with knowledge of all sources*. If you'd asked me the same question on my last post, I'd probably have described PGO as something like *optimisation with knowledge of how a source is used*. **These are orthogonal properties,** you can absolutely have either one without the other. And that, I think, gets us back to where we started.
 
 ![Desktop View](/assets/img/posts/2026-02-21-pgo-and-lto.png)
 *<strong>Just LTO with extra profiling data, right?</strong> PGO and LTO*
 
-My colleague sums up the point quite nicely:
-> I think my mistake was imagining the optimisation steps in LTO is distinct from normal compiler optimisation
+The fuzzy, intuitive - *but wrong!* - read LTO unlocks "the last" optimisations we might want to run, and PGO builds on those.
 
-I've spent a lot of this post running off the various ,
-
-CS and IR PGO 
-
-Now, these two tricks *are* superficially very similar.
+Now, these two tricks *are* superficially very similar. Both [...], both [...]. Whether [LTO (via libLTO), ...], all of them use the same LLVM passes: as my colleague put it,
+> I think my mistake was imagining the optimisation steps in LTO is distinct from normal compiler optimisation.
 
 Where I think the confusion arises that "PGO is just LTO with extra steps" is, there's very rarely a reason to use PGO if you don't already have LTO enabled.
 
 (and as should be pretty clear from the above, LTO offers more or less the exact same optimisation opportunities; all the flags laid out above exist )
 
 The only other argument against turning LTO on immediately is undefined behaviour. Now, that's an easy thing to handwave away - I would simply write code that's well-defined, and all that - but what if you're working on a pre-existing codebase? Suppose you're, well, *me*, porting games from 10, 15, 20 years ago. As a third party chipping away at an already-existing ; some of them were written before LTO was even A Thing. Now, personally I'd still advocate for sucking it up, enabling LTO first, and slogging through the regressions one by one, but I'm not going to tell you how to live your life. 
-
-All of which brings us back to where we started: what is the relationship between LTO and another key tool, profile-guided optimisation (PGO)? And
-
-The fuzzy, intuitive - *but wrong!* - read LTO unlocks "the last" optimisations we might want to run, and PGO builds on those.
 
 In theory, that is. In practice, MSVC won't let you enable PGO without LTO because of how the compiler has been written; Clang and GCC, however, support either/or.
