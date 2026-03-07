@@ -139,6 +139,14 @@ $ clang foobar.cpp -S -emit-llvm
 
 Bit much, isn't it?
 
+`qux` is relatively minimal:
+```llvm
+define internal i32 @qux() {
+    call void @baz()
+    ret i32 10
+}
+```{: file='foobar.ll'}
+
 Look a little closer at these registers, and you might notice something: 
 
 However
