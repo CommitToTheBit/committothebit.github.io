@@ -61,6 +61,27 @@ This is an aside, but - until writing this blog, I never really *got* the concep
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
 *<strong>The LLVM Toolchain, Revisited</strong> We now understand LLVM in terms of [...]. Crucially, compilation units can be compiled in parallel, but linking must take place on a single thread.*
 
+Plugging  `clang foobar.cpp -S -emit-llvm` into your terminal, but it's . This isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction, but it'll [...].
+
+`qux` is relatively minimal:
+```c++
+static int qux()
+{
+    baz();
+    return 10;
+}
+```
+{: file='*.cpp'}
+```llvm
+define internal i32 @qux() {
+    call void @baz()
+    ret i32 10
+}
+```
+{: file='*.ll'}
+
+First, we `define` `@qux`, a function `internal` to `foobar.cpp` (rather than an external symbol). `@qux` in turn `call`s `@baz`, a `void` function, before `ret`urning a value of `10` itself. Really, the only difference with C++ is how we denote types. Integer types are denoted `iN`, and floating-point types `fN`, such that `int` becomes `i32`, `double` becomes `f64`, and so on. In fact, because IR is only an abstract representation of an instruction set, it doesn't need to worry about physically storing variables in a fixed number of bytes. That means `N` can be any natural number, not just a multiple of 8 - notably, Booleans are written `i1` in IR!
+
 So, LLVM let's you get under the hood and see the optimisations it's making, provided you can understand the IR. Well, in this blog I want to really understand what changes get made to code at link-time - so we're going to need to learn. Here's some source code from the LLVM docs themselves, with the serial numbers filed off:
 
 ```c++
@@ -100,19 +121,6 @@ int qux()
 }
 ```
 {: file='foobar.cpp'}
-
-Plugging  `clang foobar.cpp -S -emit-llvm` into your terminal, but it's . This isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction, but it'll [...].
-
-`qux` is relatively minimal:
-```llvm
-define internal i32 @qux() {
-    call void @baz()
-    ret i32 10
-}
-```
-{: file='foobar.ll'}
-
-First, we `define` `@qux`, a function `internal` to `foobar.cpp` (rather than an external symbol). `@qux` in turn `call`s `@baz`, a `void` function, before `ret`urning a value of `10` itself. Really, the only difference with C++ is how we denote types. Integer types are denoted `iN`, and floating-point types `fN`, such that `int` becomes `i32`, `double` becomes `f64`, and so on. In fact, because IR is only an abstract representation of an instruction set, it doesn't need to worry about physically storing variables in a fixed number of bytes. That means `N` can be any natural number, not just a multiple of 8 - notably, Booleans are written `i1` in IR!
 
 When we look at the IR in its totality, 
 
@@ -157,15 +165,11 @@ there are plenty of `@`s, and plenty more `%`s. These are the **sigils** LLVM pr
 
 Canny readers will already be wondering, how is it legal to `store i32 0, ptr %1` in an SSA? And here's the neat thing - it's not! The LLVM IR allows address-taken variables to be `alloca`ted, `store`d and `load`ed at will. It allows these, even though they unapologetically break SSA form; the compiler can no longer know <a href="https://llvm.org/pubs/2009-01-POPL-PointerAnalysis.pdf"><strong>"which variables are defined and/or used at each statement."</strong></a>
 
-As a compromise, address-taken variables can only be accessed indirectly through top-level variables, using, *e.g.*, the `ptr` dialect. `ptr @i` and `ptr %1` may well be mutable integers, but the pointers stored at `@i` and `%1` will not change. I'll be honest, I struggled with . The LLVM IR is only a **partial SSA**, 
+As a compromise, address-taken variables can only be accessed indirectly through top-level variables, using, *e.g.*, the `ptr` dialect. `ptr @i` and `ptr %1` may well be mutable integers, but the pointers stored at `@i` and `%1` will not change. That makes LLVM IR a **partial SSA**. It would be very reasonable, I think, for a blog to gently gloss over this distinction, but it's what I needed to make the IR format click. I couldn't have satisfied yourself `store` could exist in an actual SSA any more that I could shunt a square peg in a round hole, 
 
-Many, if not most, of the resources I used to help me with this part gloss over the fact that LLVM is only a **partial SSA**, ... struggled with `store`, `load`, and `alloca`. 
+[...]
 
-Congratulations, you've now ready your first piece of IR! Is it a skill that'll Your mileage may vary. What I will say is, 
-
-This post is still about link-time optimisations, I promise. 
-
-There's one more feature in the LLVM LangRef I'd like to talk about, but there wasn't an organic way to fit it into . Luckily, rebuilding with an extra `-O2` flag shakes the IR up:
+There's one more feature in the LLVM LangRef I'd like to talk about, but there wasn't a way of fit it into the example above. Luckily, rebuilding with an extra `-O2` flag shakes the IR up:
 ```llvm
 @i = internal global i1 false
 
@@ -194,7 +198,9 @@ Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and sever
 
 ## Link-Time Optimisations (LTO)
 
-Congratulations, you've now read your first IR! 
+Congratulations, you've now read your first IR! Granted, if you're not a compiler engineer,
+
+This post is still about link-time optimisations, I promise. 
 
 Of course, this is a blog about linking, so continuing this example we need a second source to link `foobar.cpp` to.
 ```c++
