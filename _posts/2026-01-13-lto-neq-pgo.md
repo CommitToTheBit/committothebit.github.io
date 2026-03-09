@@ -161,7 +161,11 @@ As a compromise, address-taken variables can only be accessed indirectly through
 
 Many, if not most, of the resources I used to help me with this part gloss over the fact that LLVM is only a **partial SSA**, ... struggled with `store`, `load`, and `alloca`. 
 
-Speaking of optimisations, rebuilding with an extra `-O2` flag greatly simplifies the IR:
+Congratulations, you've now ready your first piece of IR! Is it a skill that'll Your mileage may vary. What I will say is, 
+
+This post is still about link-time optimisations, I promise. 
+
+There's one more feature in the LLVM LangRef I'd like to talk about, but there wasn't an organic way to fit it into . Luckily, rebuilding with an extra `-O2` flag shakes the IR up:
 ```llvm
 @i = internal global i1 false
 
@@ -189,6 +193,8 @@ declare void @baz()
 Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. I'd also be remiss not to touch on the **phi node** added in `line 12`. Derived from the 
 
 ## Link-Time Optimisations (LTO)
+
+Congratulations, you've now read your first IR! 
 
 Of course, this is a blog about linking, so continuing this example we need a second source to link `foobar.cpp` to.
 ```c++
