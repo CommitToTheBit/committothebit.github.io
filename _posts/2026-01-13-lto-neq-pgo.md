@@ -41,7 +41,7 @@ Classically,
 Linking actually happens *within* `llc`, the LLVM static compiler!
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
-*<strong>The LLVM Toolchain, Revisited</strong> We now understand LLVM in terms of [...]. Crucially, compilation units can be compiled in parallel, but linking must take place on a single thread. But hey - what are those *.bc files?*
+*<strong>The LLVM Toolchain, Revisited</strong> We now understand LLVM in terms of [...]. Crucially, compilation units can be compiled in parallel, but linking must take place on a single thread. But hey - what are those `*.bc` files?*
 
 ### LLVM IR
 
