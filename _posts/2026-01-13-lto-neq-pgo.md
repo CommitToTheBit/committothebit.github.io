@@ -153,9 +153,13 @@ define internal i32 @qux() {
 ```
 {: file='foobar.ll'}
 
-there are plenty of `@`s, and plenty more `%`s. These are the **sigils** LLVM prepends to user-defined symbols to indicate their scope. We've seen `@` is the prefix used for functions, but it also marks out global variables like `@i`. `%`s, on the other hand, are used for local **registers** that get set exactly once. If that's true of all variables in an intermediate representation, we say it's in **static single assignment form** (SSA), an incredibly valuable property for compiler design (to find out why, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man).
+there are plenty of `@`s, and plenty more `%`s. These are the **sigils** LLVM prepends to user-defined symbols to indicate their scope. We've seen `@` is the prefix used for functions, but it also marks out global variables like `@i`. `%`s, on the other hand, are used for local **registers** holding top-level variables that get set exactly once. If that's true of all variables in an intermediate representation, we say it's in **static single assignment form** (SSA), an incredibly valuable property for compiler design (to find out why, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man).
 
-Canny readers will already be wondering, how is it legal to `store i32 0, ptr %1` in an SSA? And here's the neat thing - it's not! Many, if not most, of the resources I used to help me with this part gloss over the fact that LLVM is only a **partial SSA**, ... struggled with `store`, `load`, and `alloca`. 
+Canny readers will already be wondering, how is it legal to `store i32 0, ptr %1` in an SSA? And here's the neat thing - it's not! The LLVM IR allows address-taken variables to be `alloca`ted, `store`d and `load`ed at will. It allows these, even though they unapologetically break SSA form; the compiler can no longer know <a href="https://llvm.org/pubs/2009-01-POPL-PointerAnalysis.pdf"><strong>"which variables are defined and/or used at each statement."</strong></a>
+
+As a compromise, address-taken variables can only be accessed indirectly through top-level variables, using, *e.g.*, the `ptr` dialect. `ptr @i` and `ptr %1` may well be mutable integers, but the pointers stored at `@i` and `%1` will not change. I'll be honest, I struggled with . The LLVM IR is only a **partial SSA**, 
+
+Many, if not most, of the resources I used to help me with this part gloss over the fact that LLVM is only a **partial SSA**, ... struggled with `store`, `load`, and `alloca`. 
 
 Speaking of optimisations, rebuilding with an extra `-O2` flag greatly simplifies the IR:
 ```llvm
