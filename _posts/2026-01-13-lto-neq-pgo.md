@@ -44,7 +44,17 @@ Linking actually happens *within* `llc`, the LLVM static compiler!
 
 To optimise...
 
-*PGO, But Better* also touched on the **intermediate representation** (IR) used by LLVM, but only in the abstract. Here, I want to [...]. While LLVM processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can also be disassembled into an equivalent human-readable *textual form* (`.ll`). Like I said, the LLVM middle-end is modular by design, and if you want to understand what any of its optimisation passes are doing to you code you absolutely can. Running `...` will [...], or `...` to [...].
+*PGO, But Better* also touched on the **intermediate representation** (IR) used by LLVM, but only in the abstract. Here, I want to take advantage of it to better understand the compiler. The LLVM middle-end is designed for modularity, 
+
+That's why, if you want to see
+
+If you want to see the before and after of a pass you've hacked in, this is the only language 
+
+Here, I want to use it as a tool to understand. It is, first and foremost, flexible. LLVM is designed to only 
+
+Compared to assembly, it's also more legible.
+
+The other benefit of LLVM IR is its legibility. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be disassembled into an equivalent human-readable *textual form* (`.ll`). That means, if you want to drill down into LLVM's modular design, [and if you want to understand what any of its optimisation passes are doing to you code you absolutely can]. Running `...` will [...], or `...` to [...].
 
 This is an aside, but - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise it's optimisations. With this understanding, we can broaden our definition of an **object file** as any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`, much like `.ll`s read as 'virtual' assembly.
 
