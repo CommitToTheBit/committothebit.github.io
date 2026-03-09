@@ -167,6 +167,8 @@ Canny readers will already be wondering, how is it legal to `store i32 0, ptr %1
 
 As a compromise, address-taken variables can only be accessed indirectly through top-level variables, using, *e.g.*, the `ptr` dialect. `ptr @i` and `ptr %1` may well be mutable integers, but the pointers stored at `@i` and `%1` will not change. That makes LLVM IR a **partial SSA**. It would be very reasonable, I think, for a blog to gently gloss over this distinction, but it's what I needed to make the IR format click. I couldn't have satisfied yourself `store` could exist in an actual SSA any more that I could shunt a square peg in a round hole, 
 
+As we shift attention over to the `if` statement, it'll be useful to keep in mind one important fact: the CPU really *really* loves execute code sequentially. The control flow of a program (the order it executes instructions, that is) would ideally run top to bottom like it does on the page, but branches, function calls, *etc.* will break it up. That's why it's useful to define the *basic block* as the maximal chunk of code that [...], [...] a singular **terminator** instruction.
+
 [...]
 
 There's one more feature in the LLVM LangRef I'd like to talk about, but there wasn't a way of fit it into the example above. Luckily, rebuilding with an extra `-O2` flag shakes the IR up:
