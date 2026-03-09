@@ -40,6 +40,9 @@ Classically,
 
 Linking actually happens *within* `llc`, the LLVM static compiler!
 
+![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
+*<strong>The LLVM Toolchain, Revisited</strong> We now understand LLVM in terms of [...]. Crucially, compilation units can be compiled in parallel, but linking must take place on a single thread. But hey - what are those *.bc files?*
+
 ### LLVM IR
 
 To optimise...
@@ -57,9 +60,6 @@ Compared to assembly, it's also more legible.
 The other benefit of LLVM IR is its legibility. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be disassembled into an equivalent human-readable *textual form* (`.ll`). That means, if you want to drill down into LLVM's modular design, [and if you want to understand what any of its optimisation passes are doing to you code you absolutely can]. Running `...` will [...], or `...` to [...].
 
 This is an aside, but - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise it's optimisations. With this understanding, we can broaden our definition of an **object file** as any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`, much like `.ll`s read as 'virtual' assembly.
-
-![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
-*<strong>The LLVM Toolchain, Revisited</strong> We now understand LLVM in terms of [...]. Crucially, compilation units can be compiled in parallel, but linking must take place on a single thread.*
 
 Plugging  `clang foobar.cpp -S -emit-llvm` into your terminal, but it's . This isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction, but it'll [...].
 
