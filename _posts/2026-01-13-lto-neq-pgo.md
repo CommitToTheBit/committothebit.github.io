@@ -61,7 +61,7 @@ The other benefit of LLVM IR is its legibility. While the compiler processes IR 
 
 This is an aside, but - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise it's optimisations. With this understanding, we can broaden our definition of an **object file** as any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`, much like `.ll`s read as 'virtual' assembly.
 
-Now this isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction out there, but we will start out nice and slow. How does a simple C++ function translate to IR?
+Now this isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction out there, but we can start out nice and slow. Let's translate a trivial C++ function to IR:
 ```c++
 static int qux()
 {
@@ -80,7 +80,7 @@ define internal i32 @qux() {
 
 In both languages, we `define` `@qux`, a function `internal` to the source file (rather than an external symbol). `@qux` in turn `call`s `@baz`, some other `void` function, before `ret`urning a value of `10` itself. Really, the only difference with C++ is how we denote types. Integer types are denoted `iN`, and floating-point types `fN`, such that `int` becomes `i32`, `double` becomes `f64`, and so on. In fact, because IR is only an abstract representation of an instruction set, it doesn't need to worry about physically storing variables in a fixed number of bytes. That means `N` can be any natural number, not just a multiple of 8 - notably, Booleans are written `i1` in IR!
 
-So far, so good, yeah? Let's continue by filling in the rest of the compilation unit:
+So far, so good, yeah? Filling in the rest of the compilation unit...
 ```c++
 extern int  foo();
 extern void bar();
@@ -157,17 +157,17 @@ define internal i32 @qux() {
 }
 ```
 {: file='foobar.ll'}
-There are plenty of `@`s, and plenty more `%`s. These are the **sigils** LLVM prepends to user-defined symbols to indicate their scope. We've seen `@` is the prefix used for functions, but it also marks out global variables like `@i`. `%`s, on the other hand, are used for local **registers** holding top-level variables that get set exactly once. If that's true of all variables in an intermediate representation, we say it's in **static single assignment form** (SSA), an incredibly valuable property for compiler design (to find out why, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man).
+There are plenty of `@`s here, and plenty more `%`s. These are the **sigils** LLVM prepends to user-defined symbols to indicate their scope. We've seen `@` is the prefix used for functions, but it also marks out global variables like `@i`. `%`s, on the other hand, are used for local **registers** holding top-level variables that get set exactly once. If that's true of all variables in an intermediate representation, we say it's in **static single assignment form** (SSA), an incredibly valuable property for compiler design (to find out why, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man).
 
 Canny readers will already be wondering, how is it legal to `store i32 0, ptr %1` in an SSA? And here's the neat thing - it's not! The LLVM IR allows address-taken variables to be `alloca`ted, `store`d and `load`ed at will. It allows these, even though they unapologetically break SSA form; the compiler can no longer know <a href="https://llvm.org/pubs/2009-01-POPL-PointerAnalysis.pdf"><strong>"which variables are defined and/or used at each statement."</strong></a>
 
-As a compromise, address-taken variables can only be accessed indirectly through top-level variables, using, *e.g.*, the `ptr` dialect. `ptr @i` and `ptr %1` may well be mutable integers, but the pointers stored at `@i` and `%1` will not change. That makes LLVM IR a **partial SSA**. It is reasonable, I think, that most blogs gently gloss over this distinction, but I needed it to make the IR's syntax click. Trying to satisfy myself `store` could exist in a 'real' SSA was shunting a square peg into a round hole, 
+As a compromise, address-taken variables can only be accessed indirectly through top-level variables, using, *e.g.*, the `ptr` dialect. `ptr @i` and `ptr %1` may well be mutable integers, but the pointers stored at `@i` and `%1` will not change. That makes LLVM IR a **partial SSA**. It is reasonable, I think, that most blogs gently gloss over this distinction, but it's *the* detail I needed to make the syntax click. Trying to satisfy myself `store` could exist in a 'real' SSA was shunting a square peg into a round hole.
 
-As we shift attention over to the `if` statement, it'll be useful to keep in mind one important fact: the CPU really *really* loves execute code sequentially. The control flow of a program (the order it executes instructions, that is) would ideally run top to bottom like it does on the page, but branches, function calls, *etc.* will break it up. That's why it's useful to define the *basic block* as the maximal chunk of code that can be executed 'in order'. It is a sequence of instructions, the last one being a singular **terminator** instruction redirecting the control flow to another block.
+Another important feature of the IR is the **control flow** by which a program executes instructions - but before we get to that, I'll let you in on a dirty secret. *Your CPU has a fetish.* Your CPU has a fetish, specifically, for running code in order; *basic blocks* are the maximal units of code for which this is possible. Each one consists of some sequence of instructions executed top to bottom as written on the page, its last a singular **terminator** redirecting the control flow to another block. 
 
-[...]
+With branches, function calls, *etc.*, the edges that separate a program's basic blocks, LLVM IR encodes them in its terminator instructions. `br` is the most common, . I'll leave it as an exercise you to convince 
 
-There's one more feature in the LLVM LangRef I'd like to talk about, but there wasn't a way of fit it into the example above. Luckily, rebuilding with an extra `-O2` flag shakes the IR up:
+There's one last bit of syntax in the LLVM LangRef I'd like to talk about, but you won't find it in the example above. Luckily, rebuilding with an extra `-O2` flag can tease it out:
 ```llvm
 @i = internal global i1 false
 
@@ -192,7 +192,9 @@ define void @bar() {
 declare void @baz()
 ```
 {: file='foobar.optimised.ll'}
-Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. I'd also be remiss not to touch on the **phi node** added in `line 12`. Derived from the 
+Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. I'd also be remiss not to touch on the **phi node** added in `line 12`. Derived from the
+
+Ironic.
 
 ## Link-Time Optimisations (LTO)
 
