@@ -200,11 +200,9 @@ Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and sever
 
 ## Link-Time Optimisations (LTO)
 
-Congratulations, you've now read your first IR! Granted, if you're not a compiler engineer,
+Congratulations, you've now read your first IR! Granted, if you're not a compiler engineer, it's probably not a language you'll ever need to be fluent in. It'll be one of the more niche tools in a programmer's toolbox, nevertheless worth dusting off when you need to understand how an extra flag is changing your code.
 
-This post is still about link-time optimisations, I promise. 
-
-Of course, this is a blog about linking, so continuing this example we need a second source to link `foobar.cpp` to.
+Because this is still a blog about link-time optimisation, I promise. But to talk about linking, we still need a second source to link `foobar.cpp` to.
 ```c++
 #include "foobar.h"
 #include <stdio.h>
@@ -220,7 +218,7 @@ void baz()
 }
 ```
 {: file='main.cpp'}
-We can expect the linker to recognise `bar` as an unused external and strip it accordingly. What we can't expect is it to make any of the inferences that would follow: that `i` is never changed, that `%qux` and therefore `baz` becomes inaccessible, that `main` will not never return a value of `42`. Further simplification 
+Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. What we can't expect is it to make any of the inferences that would follow: that `i` is never changed, that `%qux` and therefore `baz` becomes inaccessible, that `main` will not never return a value of `42`. Further simplification 
 
 This is where **link-time optimisation** (LTO) comes in.
 
