@@ -61,9 +61,7 @@ The other benefit of LLVM IR is its legibility. While the compiler processes IR 
 
 This is an aside, but - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise it's optimisations. With this understanding, we can broaden our definition of an **object file** as any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`, much like `.ll`s read as 'virtual' assembly.
 
-Plugging  `clang foobar.cpp -S -emit-llvm` into your terminal, but it's . This isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction, but it'll [...].
-
-`qux` is relatively minimal:
+Now this isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction out there, but we will start out nice and slow. How does a simple C++ function translate to IR?
 ```c++
 static int qux()
 {
@@ -80,10 +78,9 @@ define internal i32 @qux() {
 ```
 {: file='*.ll'}
 
-First, we `define` `@qux`, a function `internal` to `foobar.cpp` (rather than an external symbol). `@qux` in turn `call`s `@baz`, a `void` function, before `ret`urning a value of `10` itself. Really, the only difference with C++ is how we denote types. Integer types are denoted `iN`, and floating-point types `fN`, such that `int` becomes `i32`, `double` becomes `f64`, and so on. In fact, because IR is only an abstract representation of an instruction set, it doesn't need to worry about physically storing variables in a fixed number of bytes. That means `N` can be any natural number, not just a multiple of 8 - notably, Booleans are written `i1` in IR!
+In both languages, we `define` `@qux`, a function `internal` to the source file (rather than an external symbol). `@qux` in turn `call`s `@baz`, some other `void` function, before `ret`urning a value of `10` itself. Really, the only difference with C++ is how we denote types. Integer types are denoted `iN`, and floating-point types `fN`, such that `int` becomes `i32`, `double` becomes `f64`, and so on. In fact, because IR is only an abstract representation of an instruction set, it doesn't need to worry about physically storing variables in a fixed number of bytes. That means `N` can be any natural number, not just a multiple of 8 - notably, Booleans are written `i1` in IR!
 
-So, LLVM let's you get under the hood and see the optimisations it's making, provided you can understand the IR. Well, in this blog I want to really understand what changes get made to code at link-time - so we're going to need to learn. Here's some source code from the LLVM docs themselves, with the serial numbers filed off:
-
+So far, so good, yeah? Let's continue by filling in the rest of the compilation unit:
 ```c++
 extern int  foo();
 extern void bar();
@@ -122,7 +119,7 @@ int qux()
 ```
 {: file='foobar.cpp'}
 
-When we look at the IR in its totality, 
+This is not a terribly novel snippet of code; I found it in the <a href="https://llvm.org/docs/LinkTimeOptimization.html#example-of-link-time-optimization"><strong>LLVM docs</strong></a> and filed the serial numbers off. Adding an extra `-emit-llvm` flag to clang's command for generating assembly, `clang foobar.cpp -emit-llvm -S` returns `foobar.ll` as the 'assembled' textual form of IR (minus some metadata removed for clarity):
 
 ```llvm
 @i = internal global i32 24
@@ -160,8 +157,7 @@ define internal i32 @qux() {
 }
 ```
 {: file='foobar.ll'}
-
-there are plenty of `@`s, and plenty more `%`s. These are the **sigils** LLVM prepends to user-defined symbols to indicate their scope. We've seen `@` is the prefix used for functions, but it also marks out global variables like `@i`. `%`s, on the other hand, are used for local **registers** holding top-level variables that get set exactly once. If that's true of all variables in an intermediate representation, we say it's in **static single assignment form** (SSA), an incredibly valuable property for compiler design (to find out why, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man).
+There are plenty of `@`s, and plenty more `%`s. These are the **sigils** LLVM prepends to user-defined symbols to indicate their scope. We've seen `@` is the prefix used for functions, but it also marks out global variables like `@i`. `%`s, on the other hand, are used for local **registers** holding top-level variables that get set exactly once. If that's true of all variables in an intermediate representation, we say it's in **static single assignment form** (SSA), an incredibly valuable property for compiler design (to find out why, <a href="https://mcyoung.xyz/2025/10/21/ssa-1/"><strong>Miguel Young</strong></a> is once again yer man).
 
 Canny readers will already be wondering, how is it legal to `store i32 0, ptr %1` in an SSA? And here's the neat thing - it's not! The LLVM IR allows address-taken variables to be `alloca`ted, `store`d and `load`ed at will. It allows these, even though they unapologetically break SSA form; the compiler can no longer know <a href="https://llvm.org/pubs/2009-01-POPL-PointerAnalysis.pdf"><strong>"which variables are defined and/or used at each statement."</strong></a>
 
