@@ -163,11 +163,13 @@ Canny readers will already be wondering, how is it legal to `store i32 0, ptr %1
 
 As a compromise, address-taken variables can only be accessed indirectly through top-level variables, using, *e.g.*, the `ptr` dialect. `ptr @i` and `ptr %1` may well be mutable integers, but the pointers stored at `@i` and `%1` will not change. That makes LLVM IR a **partial SSA**. It is reasonable, I think, that most blogs gently gloss over this distinction, but it's *the* detail I needed to make the syntax click. Trying to satisfy myself `store` could exist in a 'real' SSA was shunting a square peg into a round hole.
 
-Another important feature of the IR is the **control flow** by which a program executes instructions - but before we get to that, I'll let you in on a dirty secret. *Your CPU has a fetish.* Your CPU has a fetish, specifically, for running code in order; *basic blocks* are the maximal units of code for which this is possible. Each one consists of some sequence of instructions executed top to bottom as written on the page, its last a singular **terminator** redirecting the control flow to another block. 
+Another important feature of the IR is the **control flow** by which a program executes instructions - but before we get to that, I'll let you in on a dirty secret. *Your CPU has a fetish.* Your CPU has a fetish, specifically, for running code in order; **basic blocks** are the maximal units of code for which this is actually possible. Each one consists of some sequence of instructions executed top to bottom as written on the page, its last a singular **terminator** redirecting the control flow to another block. 
 
-With branches, function calls, *etc.*, the edges that separate a program's basic blocks, LLVM IR encodes them in its terminator instructions. `br` is the most common, . I'll leave it as an exercise you to convince 
+`@foo` has three basic blocks: the start of the function (denoted `%0`), `%qux`, and `%add10`. With branches, function calls, *etc.*, being the edges that separate the blocks of any program, LLVM encodes these in its terminator instructions. `ret` we've already discussed, that counts as a terminator because it returns us to wherever we came from on the stack. `br`, meanwhile, signifies branching. `br i1 %3, label %qux, label %add10` is a bogstandard if/else statement. It might be more surprising to know `br` also has an unconditional form: `br label %add10` always takes us to block `%add10`,
 
-There's one last bit of syntax in the LLVM LangRef I'd like to talk about, but you won't find it in the example above. Luckily, rebuilding with an extra `-O2` flag can tease it out:
+Incidentally, these branches are responsible for one of the weirder features of the compilation. In `@foo`, it might seem strange
+
+There's one last bit of syntax in the LLVM LangRef I'd like to talk about, but you won't find it in the example above. Luckily, we can recompile `foobar.cpp` with an extra `-O2` flag to tease it out...
 ```llvm
 @i = internal global i1 false
 
