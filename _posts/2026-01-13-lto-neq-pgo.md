@@ -132,7 +132,7 @@ define i32 @foo() {
     br i1 %3, label %qux, label %add10
 
 qux:
-    %4 = call i32 @_ZL3quxv()
+    %4 = call i32 @qux()
     store i32 %4, ptr %1
     br label %add10
 
@@ -167,7 +167,7 @@ Another important feature of the IR is the **control flow** by which a program e
 
 `@foo` has three basic blocks: the start of the function (denoted `%0`), `%qux`, and `%add10`. With branches, function calls, *etc.*, being the edges that separate the blocks of any program, LLVM encodes these in its terminator instructions. `ret` we've already discussed, that counts as a terminator because it returns us to wherever we came from on the stack. `br`, meanwhile, signifies branching. `br i1 %3, label %qux, label %add10` is a bogstandard if/else statement. It might be more surprising to know `br` also has an unconditional form: `br label %add10` always takes us to block `%add10`,
 
-Incidentally, these branches are responsible for one of the weirder features of the compilation. In `@foo`, it might seem strange
+It might have seemed odd that `data`, a local variable that we never take the address of, is nonetheless stored as an address-taken variable in `@foo`. Now, we can explain this strangeness with basic blocks. If `%0` instead initialised `%1 = 0` and `%qux` still set `%4 = call i32 @qux()`, `%add10` would have no way of knowing which register to `add nsw i32` with `42`!
 
 There's one last bit of syntax in the LLVM LangRef I'd like to talk about, but you won't find it in the example above. Luckily, we can recompile `foobar.cpp` with an extra `-O2` flag to tease it out...
 ```llvm
