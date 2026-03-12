@@ -194,7 +194,14 @@ define void @bar() {
 declare void @baz()
 ```
 {: file='foobar.optimised.ll'}
-Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, what I really want to draw to your attention is the **phi node** added in `line 12`. Phi nodes are 
+Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, what I really want to draw to your attention is the **phi node (Φ)** added in `line 12`. Phi nodes 
+
+
+Phi nodes are a unique affordance affordance of (more modern representations like MLIR prefer *block parameters*)
+
+
+
+They are, in a sense, "fake" operations. In the original proposal, the name phi was chosen for it's alliteration with phoney, though not because they have the same etymology. It will never not be ironic to me that other sources get this wrong.
 
 They are, in a technical sense, "fake" operations, since...
 
