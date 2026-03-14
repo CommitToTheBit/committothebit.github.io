@@ -129,14 +129,14 @@ define i32 @foo() {
     store i32 0, ptr %1
     %2 = load i32, ptr @i
     %3 = icmp slt i32 %2, 0
-    br i1 %3, label %qux, label %add10
+    br i1 %3, label %qux, label %add42
 
 qux:
     %4 = call i32 @qux()
     store i32 %4, ptr %1
-    br label %add10
+    br label %add42
 
-add10:
+add42:
     %5 = load i32, ptr %1
     %6 = add nsw i32 %5, 42
     store i32 %6, ptr %1
@@ -165,9 +165,9 @@ As a compromise, address-taken variables can only be accessed indirectly through
 
 Another important feature of the IR is the **control flow** by which a program executes instructions - but before we get to that, I'll let you in on a dirty secret. *Your CPU has a fetish.* Your CPU has a fetish, specifically, for running code in order; **basic blocks** are the maximal units of code for which this is actually possible. Each one consists of some sequence of instructions executed top to bottom as written on the page, its last a singular **terminator** redirecting the control flow to another block. 
 
-`@foo` has three basic blocks: the start of the function (denoted `%0`), `%qux`, and `%add10`. With branches, function calls, *etc.*, being the edges that separate the blocks of any program, LLVM encodes these in its terminator instructions. `ret` we've already discussed, that counts as a terminator because it returns us to wherever we came from on the stack. `br`, meanwhile, signifies branching. `br i1 %3, label %qux, label %add10` is a bogstandard if/else statement. It might be more surprising to know `br` also has an unconditional form: `br label %add10` always takes us to block `%add10`,
+`@foo` has three basic blocks: the start of the function (denoted `%0`), `%qux`, and `%add42`. With branches, function calls, *etc.*, being the edges that separate the blocks of any program, LLVM encodes these in its terminator instructions. `ret` we've already discussed, that counts as a terminator because it returns us to wherever we came from on the stack. `br`, meanwhile, signifies branching. `br i1 %3, label %qux, label %add42` is a bogstandard if/else statement. It might be more surprising to know `br` also has an unconditional form: `br label %add42` always takes us to block `%add42`,
 
-Incidentally, basic blocks help make sense of what's going on with `int data`. It is, I'm sure, quite strange that a local variable we never take the address of nevertheless needs stored as an address-taken variable in `@foo`. What we now see is, if `%0` instead initialised `%1 = 0` and `%qux` still set `%4 = call i32 @qux()`, `%add10` would have no way of knowing which register to `add nsw i32` with `42`!
+Incidentally, basic blocks help make sense of what's going on with `int data`. It is, I'm sure, quite strange that a local variable we never take the address of nevertheless needs stored as an address-taken variable in `@foo`. What we now see is, if `%0` instead initialised `%1 = 0` and `%qux` still set `%4 = call i32 @qux()`, `%add42` would have no way of knowing which register to `add nsw i32` with `42`!
 
 There's one last bit of syntax in the LLVM LangRef I'd like to talk about, but you won't find it in the example above. Luckily, we can recompile `foobar.cpp` with an extra `-O2` flag to tease it out...
 ```llvm
@@ -175,13 +175,13 @@ There's one last bit of syntax in the LLVM LangRef I'd like to talk about, but y
 
 define i32 @foo() {
     %1 = load i1, ptr @i
-    br i1 %1, label %qux, label %add10
+    br i1 %1, label %qux, label %add42
 
 qux:
     tail call void @baz()
     br label %3
 
-add10:
+add42:
     %2 = phi i32 [ 42, %0 ], [ 52, %qux ]
     ret i32 %2
 }
@@ -268,13 +268,13 @@ define i32 @main() {
 
 define i32 @foo() {
     %1 = load i1, ptr @i
-    br i1 %1, label %qux, label %add10
+    br i1 %1, label %qux, label %add42
 
 qux:
     tail call void @_Z3bazv()
-    br label %add10
+    br label %add42
 
-add10:
+add42:
     %2 = phi i32 [ 42, %0 ], [ 52, %qux ]
     ret i32 %2
 }
