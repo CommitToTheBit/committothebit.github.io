@@ -31,17 +31,13 @@ While they will attempt some amount of *dead code stripping*, compilers evaluate
 
 ## LLVM, Revisited
 
-If you read *PGO, But Better*, you might remember I introduced Clang as my go-to compiler, the one I'll be writing these blogs about. You might also remember that it's the C/C++ frontend of the LLVM compiler infrastructure, translating source code into an **intermediate representation (IR)** on which the middle-end performs a series of language-agnostic passes. And if you remember that after optimisation, the backend translates the IR again, it'll come as no surprise that this is where we get a bunch of instruction set-specific object files, ready for linking.
+If you read *PGO, But Better*, you might remember I introduced Clang as my go-to compiler, the one I'll be writing these blogs about. You might also remember that it's the C/C++ frontend of the LLVM compiler infrastructure, translating source code into an **intermediate representation (IR)** on which the middle-end performs a series of language-agnostic passes. And if you remember that after optimisation, the backend translates the IR again, it'll come as no great shock that this is where we get a bunch of instruction set-specific object files, ready for linking.
 
-![Desktop View](/assets/img/posts/2025-11-25-compiler-architecture.png)
-*<strong>The story so far...</strong> The LLVM front-end translates source code into an intermediate representation (IR), on which the middle-end performs a series of language-agnostic passes. After optimisation, the back-end translates the IR again, to run on your instruction set of choice.*
+However, for a blog about link-time optimisations (we're getting there, I promise), our actual choice of linker is weirdly an afterthought. I mean, I am partial to <a href="https://lld.llvm.org/"><strong>LLD</strong></a> because it's already part of the LLVM project, but - spoiler alert! - it's not actually where the magic happens. We can expect any linker to slot into the toolchain as seen below:
 
-Classically, 
-
-Linking actually happens *within* `llc`, the LLVM static compiler!
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
-*<strong>The LLVM Toolchain, Revisited</strong> We now understand LLVM in terms of [...]. Compilation units can be compiled in parallel, but linking must take place on a single thread. But wait a minute - what are those `*.bc` files?*
+*<strong>No LTO</strong>  But wait a minute - what are those `*.bc` files?*
 
 ### LLVM IR
 
