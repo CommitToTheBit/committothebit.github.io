@@ -33,16 +33,48 @@ While they will attempt some amount of *dead code stripping*, compilers evaluate
 
 If you read *PGO, But Better*, you might remember I introduced Clang as my go-to compiler, the one I'll be writing these blogs about. You might also remember that it's the C/C++ frontend of the LLVM compiler infrastructure, translating source code into an **intermediate representation (IR)** on which the middle-end performs a series of language-agnostic passes. And if you remember that after optimisation, the backend translates the IR again, it'll come as no great shock that this is where we get a bunch of instruction set-specific object files, ready for linking.
 
-However, for a blog about link-time optimisations (we're getting there, I promise), our actual choice of linker is weirdly an afterthought. I mean, I am partial to <a href="https://lld.llvm.org/"><strong>LLD</strong></a> because it's already part of the LLVM project, but - spoiler alert! - it's not actually where the magic happens. We can expect any linker to slot into the toolchain as seen below:
+However, for a blog about link-time optimisations (we're getting there, I promise), our actual choice of linker is weirdly an afterthought. I mean, I am partial to <a href="https://lld.llvm.org/"><strong>LLD</strong></a> because it's already part of the LLVM project, but (spoiler alert!) it's not actually where the magic happens. We can expect any linker to slot into the toolchain as seen below:
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
 *<strong>No LTO</strong> LLVM's default build pipeline. Sources are compiled in parallel, then linked into a final executable - but what are those `*.bc` files?*
 
 ### LLVM IR
 
-To optimise...
+About that intermediate representation. I touched on it in the abstract back in *PGO, But Better*, but let's here interrogate its key properties. 
 
-*PGO, But Better* also touched on the **intermediate representation** (IR) used by LLVM, but only in the abstract. Here, I want to take advantage of it to better understand the compiler. The LLVM middle-end is designed for modularity, 
+The other benefit of LLVM IR is its legibility. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be translated into an equivalent human-readable *textual form* (`.ll`) preferable to assembly for its lack of platform-specific instructions. If you learn to read this one language, you'll be able to understand your entire middle-end. Running `...` will return , one for each , -
+
+And surely enough, by learning to the basics of LLVM IR, we'll be a 
+
+Perhaps unsurprisingly, it's only  we can even use it to glean some practical insights into LTO.
+
+
+
+
+
+ That means, if you want to drill down into LLVM's modular design, [and if you want to understand what any of its optimisation passes are doing to you code you absolutely can]. Running `...` will [...], or `...` to [...].
+
+[Accurate -> language- and platform-independent -> Furthermore, the LLVM middle-end is... the LLVM IR accomodates that modularity -> unified]
+
+LLVM IR is therefore much more legible than raw assembly,
+
+
+
+Intermediate representations do need to 
+
+The LLVM IR is both language- and platform-independent.
+When Clang, say, lowers C++ source down to IR, it shouldn't lose out any information from the programmer - the IR does need to be accurate - but by design it strips out 
+
+it is an intermediary - 
+
+is designed around  for modularity, 
+
+
+
+
+About that intermediate representation. In *PGO, But Better* I touched on it in the abstract, but now's the time to actually use it. 
+
+*PGO, But Better* also touched on the **intermediate representation** (IR) used by LLVM, but only in the abstract. 
 
 That's why, if you want to see
 
@@ -52,11 +84,11 @@ Here, I want to use it as a tool to understand. It is, first and foremost, flexi
 
 Compared to assembly, it's also more legible.
 
-The other benefit of LLVM IR is its legibility. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be disassembled into an equivalent human-readable *textual form* (`.ll`). That means, if you want to drill down into LLVM's modular design, [and if you want to understand what any of its optimisation passes are doing to you code you absolutely can]. Running `...` will [...], or `...` to [...].
+That means, if you want to drill down into LLVM's modular design, [and if you want to understand what any of its optimisation passes are doing to you code you absolutely can]. Running `...` will [...], or `...` to [...].
 
-This is an aside, but - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise it's optimisations. With this understanding, we can broaden our definition of an **object file** as any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`, much like `.ll`s read as 'virtual' assembly.
+A quick aside - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise it's optimisations. With this understanding, we can broaden our definition of an **object file** as any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`, much like `.ll`s read as 'virtual' assembly.
 
-Now this isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction out there, but we can start out nice and slow. Let's translate a trivial C++ function to IR:
+Now, this isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction out there, but we can start out nice and slow. Let's translate a trivial C++ function to IR:
 ```c++
 static int qux()
 {
@@ -189,7 +221,14 @@ define void @bar() {
 declare void @baz()
 ```
 {: file='foobar.optimised.ll'}
-Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`.
+Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`. Phi nodes function like switch statements, their switch condition being 
+
+Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, chose the name Φ because it'd be <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than calling it a "phony function" outright. Other sources transliterate Φ as the Greek letter *for* phony, but I think that's a misreading of Zadeck's 2007 retrospective? The original paper doesn't indicate the terms are any more that soundalikes, everything beyond that is false etymology... ironic.
+
+
+Phi nodes are uncharacteristically . 
+
+
 
 Phi nodes are, 
 
@@ -200,8 +239,10 @@ Phi nodes are instructions
 Phi nodes are a unique affordance affordance of (more modern representations like MLIR prefer *block parameters*)
 
 
+They are
 
-They are, in a sense, "fake" operations. In the original proposal, the name phi was chosen for it's alliteration with phoney, though not because they have the same etymology. It will never not be ironic to me that other sources get this wrong.
+
+They are, in a sense, "phony" operations. In the original proposal, the name phi was chosen for its alliteration with phoney, though not because they have the same etymology. It will never not be ironic to me that other sources get this wrong.
 
 They are, in a technical sense, "fake" operations, since...
 
