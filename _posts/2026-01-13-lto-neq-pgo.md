@@ -35,9 +35,8 @@ If you read *PGO, But Better*, you might remember I introduced Clang as my go-to
 
 However, for a blog about link-time optimisations (we're getting there, I promise), our actual choice of linker is weirdly an afterthought. I mean, I am partial to <a href="https://lld.llvm.org/"><strong>LLD</strong></a> because it's already part of the LLVM project, but - spoiler alert! - it's not actually where the magic happens. We can expect any linker to slot into the toolchain as seen below:
 
-
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-no-lto.png)
-*<strong>No LTO</strong>  But wait a minute - what are those `*.bc` files?*
+*<strong>No LTO</strong> LLVM's default build pipeline. Sources are compiled in parallel, then linked into a final executable - but what are those `*.bc` files?*
 
 ### LLVM IR
 
