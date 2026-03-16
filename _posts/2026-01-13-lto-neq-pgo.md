@@ -5,7 +5,7 @@ date: 2026-01-13 10:30:00 +0000
 categories: [Procedural Whodunnits]
 tags: ["c++", "llvm", "pgo", "lto", "optimisation"]
 math: true
-published: true
+published: false
 ---
 
 > PGO is just LTO with extra profiling data, right?
@@ -342,9 +342,16 @@ Notes on linker caching here, actually get technical with it?
 
 ## LTO, But Better (Better Build Times, Anyway)
 
-In terms of raw performance, thin LTO is negligibly worse: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer! [quality-of-life].
+In terms of raw performance, thin LTO is negligibly worse: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer! As benchmarks go, I'd call that pretty conclusive.
 
-Mark the difference with my last set of cheat codes. CS and IR PGO [...]; there's nothing nearly so declarative here. Depending on your project, parallising LTO might not be the only way of improving your quality-of-life as a developer - but fair warning, while none of the following tricks will meaningfully worsen run-time performance versus full LTO, they're won't make it more faster either.
+There are more cheat codes, in a similar vein.
+
+In my last post about cheat codes, CS and IR PGO
+
+
+This is an interesting difference with how PGO has developed. In 
+
+Mark the difference with my last set of cheat codes. CS and IR PGO are ; there's nothing nearly so declarative here. Depending on your project, parallising LTO might not be the only way of improving your quality-of-life as a developer - but fair warning, while none of the following tricks will meaningfully worsen run-time performance versus full LTO, they're won't make it more faster either.
 
 ### Unified LTO
 
