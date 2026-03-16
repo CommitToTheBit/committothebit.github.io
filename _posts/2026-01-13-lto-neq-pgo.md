@@ -5,7 +5,7 @@ date: 2026-01-13 10:30:00 +0000
 categories: [Procedural Whodunnits]
 tags: ["c++", "llvm", "pgo", "lto", "optimisation"]
 math: true
-published: false
+published: true
 ---
 
 > PGO is just LTO with extra profiling data, right?
@@ -252,7 +252,7 @@ Ironic.
 
 Congratulations, you've now read your first IR! Granted, if you're not a compiler engineer, it's probably not a language you'll ever need to be fluent in. It'll be one of the more niche tools in your programmer's toolbox, but worth dusting off every now and then when you need to understand how an extra flag is changing your code.
 
-This is still a blog about link-time optimisation, I promise. But to talk about linking, we still need a second source to link `foobar.cpp` to.
+This still being a blog about LTO, let's bring in a second source to link `foobar.cpp` to.
 ```c++
 #include "foobar.h"
 #include <stdio.h>
@@ -268,30 +268,23 @@ void baz()
 }
 ```
 {: file='main.cpp'}
-Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. What we can't expect is it to make any of the inferences that would follow: that `i` is never changed, that `%qux` and therefore `baz` becomes inaccessible, that `main` will not never return a value of `42`. Further simplification 
+Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't infer that `i` is never changed, that `%qux` and therefore `@baz` become inaccessible, that `main` will not never return a value of `42`. These **link-time optimisations (LTO)** rely on the optimisation passes already in the compiler.
 
-This is where **link-time optimisation** (LTO) comes in.
-
-LLVM in specific does this by making calls to libLTO, a [...]. 
-
-If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source.
+In LLVM specifically, the linker dispatches its extra work to libLTO. This is a wrapper for the optimisation passes of the LLVM middle-end, a shared object integrated with LLD and its alternatives. If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source.
 
 ### Full LTO
 
-. This is called **full LTO**, and I tend to think of it as the 'correct' way to go about these optimisations.
+The naive implementation of LTO is, weirdly, also the best. This is **full LTO**, and I tend to think of it as the 'correct' way to go about these optimisations.
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-full-lto.png)
-*<strong>Full LTO</strong>*
+*<strong>Full LTO</strong>* By compiling our sources as,
 
 ```
 $ clang foobar.cpp -c -O2 -flto
 $ clang main.cpp -c -O2 -flto
 $ clang foobar.o main.o -flto -Wl,-plugin-opt=save-temps -o main
 ```
-
-```
-$ llvm-dis main.preopt.bc -o main.preopt.ll
-```
+we receive a snapshot of the `main.bc` IR at every steps of the full LTO process. The first of these, `main.preopt.bc` shows us the IR for the two files when they've just been merged. Disassembling with `$ llvm-dis main.preopt.bc -o main.preopt.ll`, we confirm `bar` is stripped, but little else.
 
 ```llvm
 @i = internal global i1 false,
@@ -321,7 +314,8 @@ define void @baz() {
 }
 ```
 {: file='main.preopt.ll'}
-Here, we see the after effects of symbol resolution: the linker has already been able to strip `bar` safe in the knowledge it goes unused in `main.cpp`. However... we all know `main` always returns `42`, don't we? Like, we can all, tangibly see that - so why can't LLVM? It's because the inferences that follow from removing `bar` - that `i` is always false, that `%qux` is inaccessible, that `baz` can also be stripped - are all link-time optimisations we need to route through libLTO. And surely enough, disassembling `main.opt.ll` gives us exactly that:
+
+A fully LTO'd `main.opt.ll` also behaves as we'd expect:
 ```llvm
 define i32 @main() {
     ret i32 42
