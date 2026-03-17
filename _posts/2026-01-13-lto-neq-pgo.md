@@ -40,6 +40,8 @@ However, for a blog about link-time optimisations (we're getting there, I promis
 
 ### LLVM IR
 
+About that intermediate representation. In a compiler infrastructure that supports $n$ high-level source languages and $m$ low-level instruction sets,  $n \times m$
+
 About that intermediate representation. I touched on it in the abstract back in *PGO, But Better*, but let's here interrogate its key properties. 
 
 The other benefit of LLVM IR is its legibility. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be translated into an equivalent human-readable *textual form* (`.ll`) preferable to assembly for its lack of platform-specific instructions. If you learn to read this one language, you'll be able to understand your entire middle-end. Running `...` will return , one for each , -
@@ -196,7 +198,7 @@ Another important feature of the IR is the **control flow** by which a program e
 
 Incidentally, basic blocks help make sense of what's going on with `int data`. It is, I'm sure, quite strange that a local variable we never take the address of nevertheless needs stored as an address-taken variable in `@foo`. What we now see is, if `%0` instead initialised `%1 = 0` and `%qux` still set `%4 = call i32 @qux()`, `%add42` would have no way of knowing which register to `add nsw i32` with `42`!
 
-There's one last bit of syntax in the LLVM LangRef I'd like to talk about, but you won't find it in the example above. Luckily, we can recompile `foobar.cpp` with an extra `-O2` flag to tease it out...
+There's one last bit of syntax in the <a href="https://llvm.org/docs/LangRef.html"><strong>LLVM LangRef</strong></a> I'd like to talk about, but you won't find it in the example above. Luckily, we can recompile `foobar.cpp` with an extra `-O2` flag to tease it out...
 ```llvm
 @i = internal global i1 false
 
