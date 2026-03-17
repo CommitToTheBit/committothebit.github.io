@@ -342,16 +342,9 @@ Notes on linker caching here, actually get technical with it?
 
 ## LTO, But Better (Better Build Times, Anyway)
 
-In terms of raw performance, thin LTO is negligibly worse: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer! As benchmarks go, I'd call that pretty conclusive.
+In terms of raw performance, thin LTO is negligibly worse: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer!
 
-There are more cheat codes, in a similar vein.
-
-In my last post about cheat codes, CS and IR PGO
-
-
-This is an interesting difference with how PGO has developed. In 
-
-Mark the difference with my last set of cheat codes. CS and IR PGO are ; there's nothing nearly so declarative here. Depending on your project, parallising LTO might not be the only way of improving your quality-of-life as a developer - but fair warning, while none of the following tricks will meaningfully worsen run-time performance versus full LTO, they're won't make it more faster either.
+As benchmarks go, I think this draws a pretty clear distinction with my last post. My goal was to introduce some more obscure PGO cheat codes (CSIR PGO chief among them), . Here, on the other hand, we're working backwards from the gold standard of full LTO to improve it for devrlopers, not the end-user. Depending on your project, parallelising with thin LTO might not be the only way of bettering your quality-of-life as a developer - but fair warning, while none of the following tricks will meaningfully worsen run-time performance versus full LTO, they're won't make it more faster either.
 
 ### Unified LTO
 
