@@ -342,17 +342,23 @@ Notes on linker caching here, actually get technical with it?
 
 ## LTO, But Better (Better Build Times, Anyway)
 
-In terms of raw performance, thin LTO is negligibly worse: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer!
+In terms of raw performance, thin LTO is negligibly worse: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer! As benchmarks go, it paints an instructive picture of what 'better' LTO looks like.
 
-As benchmarks go, I think this draws a pretty clear distinction with my last post. My goal was to introduce some more obscure PGO cheat codes (CSIR PGO chief among them), . Here, on the other hand, we're working backwards from the gold standard of full LTO to improve it for devrlopers, not the end-user. Depending on your project, parallelising with thin LTO might not be the only way of bettering your quality-of-life as a developer - but fair warning, while none of the following tricks will meaningfully worsen run-time performance versus full LTO, they're won't make it more faster either.
+The goal of my last post was to shout out several cheat codes ( )
+
+With my last post, I wanted to highlight various cheat codes for PGO, and get in to how, when, and why they complement each other.
+
+My time around, I'm working backwards. Full LTO is, kinda tautologically, the most performant LTO can get - if you want to eke out improvements across sources, you won't do better than optimising every compilation unit with knowledge of every other compilation unit. Its various variants are all designed around reducing build times without shifting (too much of) that sluggishness onto the end user. Depending on your project, parallelising with thin LTO might not be the only way of bettering your quality-of-life as a developer - but fair warning, while none of the following tricks will meaningfully worsen run-time performance versus full LTO, they're not going to make it faster either.
 
 ### Unified LTO
 
-**Clang flags** [...]
+**Clang flags** `-funified-lto`
 
 ### Fat LTO
 
-**Clang flags** [...]
+Take it one step further, even.
+
+**Clang flags** `-ffat-lto-objects`
 
 ### Distributed Thin LTO (DTLTO)
 
