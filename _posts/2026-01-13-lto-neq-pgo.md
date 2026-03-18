@@ -192,9 +192,12 @@ Canny readers will already be wondering, how is it legal to `store i32 0, ptr %1
 
 As a compromise, address-taken variables can only be accessed indirectly through top-level variables, using, *e.g.*, the `ptr` dialect. `ptr @i` and `ptr %1` may well be mutable integers, but the pointers stored at `@i` and `%1` will not change. That makes LLVM IR a **partial SSA**. It is reasonable, I think, that most blogs gently gloss over this distinction, but it's *the* detail I needed to make the syntax click. Trying to satisfy myself `store` could exist in a 'real' SSA was shunting a square peg into a round hole.
 
-Another important feature of the IR is the **control flow** by which a program executes instructions - but before we get to that, I'll let you in on a dirty secret. *Your CPU has a fetish.* Your CPU has a fetish, specifically, for running code in order; **basic blocks** are the maximal units of code for which this is actually possible. Each one consists of some sequence of instructions executed top to bottom as written on the page, its last a singular **terminator** redirecting the control flow to another block. 
+Another important feature of the IR is the **control flow** by which a program executes instructions - but before we get to that, I'll let you in on a dirty secret. *Your CPU has a fetish.* Your CPU has a fetish, specifically, for running code in order; **basic blocks** are the maximal units of code for which this is actually possible. Each one consists of some sequence of instructions executed top to bottom as written on the page, its last a singular **terminator** redirecting the control flow to another block.
 
-`@foo` has three basic blocks: the start of the function (denoted `%0`), `%qux`, and `%add42`. With branches, function calls, *etc.*, being the edges that separate the blocks of any program, LLVM encodes these in its terminator instructions. `ret` we've already discussed, that counts as a terminator because it returns us to wherever we came from on the stack. `br`, meanwhile, signifies branching. `br i1 %3, label %qux, label %add42` is a bogstandard if/else statement. It might be more surprising to know `br` also has an unconditional form: `br label %add42` always takes us to block `%add42`,
+![Desktop View](/assets/img/posts/2026-03-19-llvm-cfg.png)
+*<strong>Control Flow Graphs</strong> `@foo` has three blocks: the start of the function (denoted `%0`), `%qux`, and `%add42`. These form a CFG.*
+
+Branches, function calls, *etc.*, are the (directed) edges that connect basic blocks into a **control flow graph (CFG)**, which LLVM encodes with its terminator instructions. `ret` we've already discussed, that counts as a terminator because it returns us to wherever we came from on the stack. `br`, meanwhile, signifies branching. `br i1 %3, label %qux, label %add42` is a bogstandard if/else statement. It might be more surprising to know `br` also has an unconditional form: `br label %add42` always takes us to block `%add42`,
 
 Incidentally, basic blocks help make sense of what's going on with `int data`. It is, I'm sure, quite strange that a local variable we never take the address of nevertheless needs stored as an address-taken variable in `@foo`. What we now see is, if `%0` instead initialised `%1 = 0` and `%qux` still set `%4 = call i32 @qux()`, `%add42` would have no way of knowing which register to `add nsw i32` with `42`!
 
@@ -223,32 +226,9 @@ define void @bar() {
 declare void @baz()
 ```
 {: file='foobar.optimised.ll'}
-Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`. Phi nodes function like switch statements, their switch condition being 
+Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`. This functions like a switch statement, conditioned on the *predecessor* block in the control flow. `%2` is set to `42` if we've jumped directly from `line 5` into `%add42`, but `52` should we be routed through `%qux` first. A basic block might have any number of phi nodes, but they must always be grouped together at the very top of the code segment (*i.e.* before a single non-phi instruction is called).
 
-Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, chose the name Φ because it'd be <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than calling it a "phony function" outright. Other sources transliterate Φ as the Greek letter *for* phony, but I think that's a misreading of Zadeck's 2007 retrospective? The original paper doesn't indicate the terms are any more that soundalikes, everything beyond that is false etymology... ironic.
-
-
-Phi nodes are uncharacteristically . 
-
-
-
-Phi nodes are, 
-
-set to 
-
-Phi nodes are instructions
-
-Phi nodes are a unique affordance affordance of (more modern representations like MLIR prefer *block parameters*)
-
-
-They are
-
-
-They are, in a sense, "phony" operations. In the original proposal, the name phi was chosen for its alliteration with phoney, though not because they have the same etymology. It will never not be ironic to me that other sources get this wrong.
-
-They are, in a technical sense, "fake" operations, since...
-
-Ironic.
+Because they only link a basic block's registers to their predecessors, phi nodes better thought of as calling along the edges of a CFG than within the blocks themselves.<sup>1</sup> They are explicitly fake operations. I mean, Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than calling them "phony functions" outright! Other sources transliterate Φ as the Greek letter *for* phony, but as far as I can tell that's wrong, they're just soundalikes. The false etymology is ironic, at least. <sup>Some modern IRs  Φs with <a href="https://github.com/llvm/llvm-project/blob/main/mlir/docs/Dialects/LLVM.md#phi-nodes-and-block-arguments"><strong>block arguments></strong></a>, and the two formalisms are completely equivalent.</sup>
 
 ## Link-Time Optimisations (LTO)
 
