@@ -221,7 +221,7 @@ define void @bar() {
 declare void @baz()
 ```
 {: file='foobar.optimised.ll'}
-Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`. Phi nodes function like switch statements, their switch condition being 
+Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`. This functions like a switch statement, the switch condition being the *predecessor* block we just came from. `%2` is set to `42` if we've jumped directly from `%0` to `%add42`, but `52` should we be routed through `%qux` first. It's worth noting that a basic block can have more than one phi node, but they must all fall at the very top of the block (*i.e.* before a single non-phi instruction is called). 
 
 Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, chose the name Φ because it'd be <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than calling it a "phony function" outright. Other sources transliterate Φ as the Greek letter *for* phony, but I think that's a misreading of Zadeck's 2007 retrospective? The original paper doesn't indicate the terms are any more that soundalikes, everything beyond that is false etymology... ironic.
 
