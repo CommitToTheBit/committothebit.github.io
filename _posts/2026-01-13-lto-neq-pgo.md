@@ -226,32 +226,7 @@ declare void @baz()
 {: file='foobar.optimised.ll'}
 Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`. This functions like a switch statement, conditioned on the *predecessor* block in the control flow. `%2` is set to `42` if we've jumped directly from `line 5` into `%add42`, but `52` should we be routed through `%qux` first. A basic block might have any number of phi nodes, but they must always be grouped together at the very top of the code segment (*i.e.* before a single non-phi instruction is called).
 
-Because they only link a basic block's registers to their predecessors, phi nodes better thought of as calling along the edges of a CFG than within the blocks themselves.<sup>1</sup> They are explicitly fake operations. I mean, Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than calling them "phony functions" outright! Other sources 
-
-Other sources transliterate Φ as the Greek letter *for* phony, but as far as I can tell that's wrong, they're just soundalikes. The false etymology is ironic, at least. <sup>Some modern IRs  Φs with <a href="https://github.com/llvm/llvm-project/blob/main/mlir/docs/Dialects/LLVM.md#phi-nodes-and-block-arguments"><strong>block arguments></strong></a>, and the two formalisms are completely equivalent.</sup>
-
-
-Phi nodes are uncharacteristically . 
-
-
-
-Phi nodes are, 
-
-set to 
-
-Phi nodes are instructions
-
-Phi nodes are a unique affordance affordance of (more modern representations like MLIR prefer *block parameters*)
-
-
-They are
-
-
-They are, in a sense, "phony" operations. In the original proposal, the name phi was chosen for its alliteration with phoney, though not because they have the same etymology. It will never not be ironic to me that other sources get this wrong.
-
-They are, in a technical sense, "fake" operations, since...
-
-Ironic.
+Because they only link a basic block's registers to their predecessors, phi nodes better thought of as calling along the edges of a CFG than within the blocks themselves.<sup>1</sup> They are explicitly fake operations. I mean, Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than calling them "phony functions" outright! Other sources transliterate Φ as the Greek letter *for* phony, but as far as I can tell that's wrong, they're just soundalikes. The false etymology is ironic, at least. <sup>Some modern IRs  Φs with <a href="https://github.com/llvm/llvm-project/blob/main/mlir/docs/Dialects/LLVM.md#phi-nodes-and-block-arguments"><strong>block arguments></strong></a>, and the two formalisms are completely equivalent.</sup>
 
 ## Link-Time Optimisations (LTO)
 
