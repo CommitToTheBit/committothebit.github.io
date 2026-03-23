@@ -40,57 +40,15 @@ However, for a blog about link-time optimisations (we're getting there, I promis
 
 ### LLVM IR
 
+*[Accurate -> language- and platform-independent -> Furthermore, the LLVM middle-end is... the LLVM IR accomodates that modularity -> unified]*
+
 Intermediate representations are designed to be general purpose. Let's imagine you're a compiler engineer, and you want to compile any of $n$ source languages to any of $m$ instruction sets. Like, yeah, you *could* write $n \times m$ versions of each optimisation pass, but that's not going to scale. With an IR, you suddenly only need $n$ frontends, $1$ middle-end (which will be language- and architecture-independent), and $m$ backend, your workload increasing with $\mathcal{O}(n+m)$ as you extend the compiler further. It is very useful to have an abstract representation of source languages, but it does also need to accurate: [can't] if we lose too much information!
 
-The LLVM IR in particular 
+*[When Clang, say, lowers C++ source down to IR, it shouldn't lose out any information from the programmer - the IR does need to be accurate - but by design it strips out...]*
 
-About that intermediate representation. In a compiler infrastructure that supports $n$ high-level source languages and $m$ low-level instruction sets,  $n \times m$
+The LLVM IR in particular has several more properties that benefit its surrounding compiler infrastructure. I've alluded to it's legibility before: it's not just that the syntax is more forgiving than assembly, but that the LLVM middle-end uses the same IR at every pass. Other <a href=""><strong>sources</strong></a> have pointed out that this is not standard, but is does mean the curious programmer only needs to learn one more bit of syntax. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be translated into an equivalent human-readable *textual form* (`.ll`) preferable to assembly for its lack of platform-specific instructions. If you learn to read this one language, you'll be able to understand your entire middle-end. To drill down and exploit the modularity like this, running `...` will return , one for each , -
 
-About that intermediate representation. I touched on it in the abstract back in *PGO, But Better*, but let's here interrogate its key properties. 
-
-The other benefit of LLVM IR is its legibility. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be translated into an equivalent human-readable *textual form* (`.ll`) preferable to assembly for its lack of platform-specific instructions. If you learn to read this one language, you'll be able to understand your entire middle-end. Running `...` will return , one for each , -
-
-And surely enough, by learning to the basics of LLVM IR, we'll be a 
-
-Perhaps unsurprisingly, it's only  we can even use it to glean some practical insights into LTO.
-
-
-
-
-
- That means, if you want to drill down into LLVM's modular design, [and if you want to understand what any of its optimisation passes are doing to you code you absolutely can]. Running `...` will [...], or `...` to [...].
-
-[Accurate -> language- and platform-independent -> Furthermore, the LLVM middle-end is... the LLVM IR accomodates that modularity -> unified]
-
-LLVM IR is therefore much more legible than raw assembly,
-
-
-
-Intermediate representations do need to 
-
-The LLVM IR is both language- and platform-independent.
-When Clang, say, lowers C++ source down to IR, it shouldn't lose out any information from the programmer - the IR does need to be accurate - but by design it strips out 
-
-it is an intermediary - 
-
-is designed around  for modularity, 
-
-
-
-
-About that intermediate representation. In *PGO, But Better* I touched on it in the abstract, but now's the time to actually use it. 
-
-*PGO, But Better* also touched on the **intermediate representation** (IR) used by LLVM, but only in the abstract. 
-
-That's why, if you want to see
-
-If you want to see the before and after of a pass you've hacked in, this is the only language 
-
-Here, I want to use it as a tool to understand. It is, first and foremost, flexible. LLVM is designed to only 
-
-Compared to assembly, it's also more legible.
-
-That means, if you want to drill down into LLVM's modular design, [and if you want to understand what any of its optimisation passes are doing to you code you absolutely can]. Running `...` will [...], or `...` to [...].
+*[If you want to see the before and after of a pass you've hacked in, this is the only language...]*
 
 A quick aside - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise it's optimisations. With this understanding, we can broaden our definition of an **object file** as any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`, much like `.ll`s read as 'virtual' assembly.
 
