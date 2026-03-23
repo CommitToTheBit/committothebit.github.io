@@ -40,6 +40,10 @@ However, for a blog about link-time optimisations (we're getting there, I promis
 
 ### LLVM IR
 
+Intermediate representations are designed to be general purpose. Let's imagine you're a compiler engineer, and you want to compile any of $n$ source languages to any of $m$ instruction sets. Like, yeah, you *could* write $n \times m$ versions of each optimisation pass, but that's not going to scale. With an IR, you suddenly only need $n$ frontends, $1$ middle-end (which will be language- and architecture-independent), and $m$ backend, your workload increasing with $\mathcal{O}(n+m)$ as you extend the compiler further. It is very useful to have an abstract representation of source languages, but it does also need to accurate: [can't] if we lose too much information!
+
+The LLVM IR in particular 
+
 About that intermediate representation. In a compiler infrastructure that supports $n$ high-level source languages and $m$ low-level instruction sets,  $n \times m$
 
 About that intermediate representation. I touched on it in the abstract back in *PGO, But Better*, but let's here interrogate its key properties. 
