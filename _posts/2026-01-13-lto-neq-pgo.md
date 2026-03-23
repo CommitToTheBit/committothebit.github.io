@@ -156,7 +156,7 @@ As a compromise, address-taken variables can only be accessed indirectly through
 
 Another important feature of the IR is the **control flow** by which a program executes instructions - but before we get to that, I'll let you in on a dirty secret. *Your CPU has a fetish.* Your CPU has a fetish, specifically, for running code in order; **basic blocks** are the maximal units of code for which this is actually possible. Each one consists of some sequence of instructions executed top to bottom as written on the page, its last a singular **terminator** redirecting the control flow to another block.
 
-![Desktop View](/assets/img/posts/2026-03-19-llvm-cfg.png)
+![Desktop View](/assets/img/posts/2026-03-23-llvm-control-flow-graph.png)
 *<strong>Control Flow Graphs</strong> `@foo` has three blocks: the start of the function (denoted `%0`), `%qux`, and `%add42`. These form a CFG.*
 
 Branches, function calls, *etc.*, are the (directed) edges that connect basic blocks into a **control flow graph (CFG)**, which LLVM encodes with its terminator instructions. `ret` we've already discussed, that counts as a terminator because it returns us to wherever we came from on the stack. `br`, meanwhile, signifies branching. `br i1 %3, label %qux, label %add42` is a bogstandard if/else statement. It might be more surprising to know `br` also has an unconditional form: `br label %add42` always takes us to block `%add42`,
