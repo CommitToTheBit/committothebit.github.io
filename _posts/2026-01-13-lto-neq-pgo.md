@@ -274,20 +274,24 @@ Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've see
 
 ### Thin LTO
 
-The funny thing [...] noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time.
+The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time.
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
 *<strong>Thin LTO</strong>*
 
+What we see above is a clear 
+
 The corollary to this is, thin LTO is also incremental. Full LTO merges all of its compilation units into a single module, so whenever any of those sources are edited, the full libLTO step needs rerun. If you edit a source without changing its index files, however, thin LTO can skip this. It will still need to...
 
-Notes on linker caching here, actually get technical with it?
+Linker caching is 
 
 **Clang flags** `-flto=thin`
 
+**LLD flags** `-cache_path_dir=<path/to/cache>``
+
 ## LTO, But Better (Better Build Times, Anyway)
 
-In terms of raw performance, thin LTO is negligibly worse: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer! As benchmarks go, it paints an instructive picture of what 'better' LTO looks like.
+In terms of raw performance, thin LTO is a negligible downgrade: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer! As benchmarks go, it paints an instructive picture of what 'better' LTO looks like.
 
 The goal of my last post was to shout out several cheat codes ( )
 
@@ -301,7 +305,7 @@ My time around, I'm working backwards. Full LTO is, kinda tautologically, the mo
 
 ### Fat LTO
 
-Take it one step further, even.
+Take it one step further, even: if you can defer , . This is, again, useful
 
 **Clang flags** `-ffat-lto-objects`
 
@@ -309,7 +313,7 @@ Take it one step further, even.
 
 Now, in Stinett's guide to LTO, he flags up three more advanced LTO concepts for the curious reader: symbol visibility, linker caching, and distributed build support. The first two we've already touched on, but what about the third? A **distributed build**...
 
-If you're working on an extremely large project, chances are you're running **distributed builds** across a whole network of machines, with each taking responsibility for its own units of work. Full LTO, being single-threaded, also needs run on one single linker, but Thin LTO slots into a distributed system nicely. Here, machines receive their own [index files?], and can be [...]. But I digress.  
+If you're working on an extremely large project, chances are you're running **distributed builds** across a whole network of machines, with each taking responsibility for its own units of work. Full LTO, being single-threaded, also needs run on one single linker, but thin LTO slots into a distributed system nicely. Here, machines receive their own [index files?], and can be [...]. But I digress.  
 
 **Clang flags** [...]
 
