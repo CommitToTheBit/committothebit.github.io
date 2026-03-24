@@ -279,7 +279,7 @@ The funny thing [...] noticed about LTO is, well, there's not all that many symb
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
 *<strong>Thin LTO</strong>*
 
-The corollary to this is thin LTO is also incremental. Again, full LTO merges all of its compilation units into a single module; when any of those sources are edited, libLTO will have to rerun. Because [...]
+The corollary to this is, thin LTO is also incremental. Full LTO merges all of its compilation units into a single module, so whenever any of those sources are edited, the full libLTO step needs rerun. If you edit a source without changing its index files, however, thin LTO can skip this. It will still need to...
 
 Notes on linker caching here, actually get technical with it?
 
