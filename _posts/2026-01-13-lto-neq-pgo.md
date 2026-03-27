@@ -18,14 +18,14 @@ But plenty of digital ink - pixels? - have already been spilled on LTO (<a href=
 
 ## But what is a Linker?
 
-Looking at a C++ developer's toolchain, it's easy to get hung up on the compiler. It is where the magic (read: optimisation) happens. But compilers alone do not a toolchain make, they also rely on **linkers** and other ancillary programs:
+Looking at a C++ developer's toolchain, it's easy to get hung up on the compiler. It is where the magic (read: optimisation) happens. But compilers alone do not a toolchain make, they rely on **linkers** and other ancillary programs:
 
 ![Desktop View](/assets/img/posts/2026-02-20-compiler-and-linker.png)
 *<strong>The toolchain</strong> transforms source code to (executable) machine code. The preprocessor, compiler, and assembler are, technically, their own programs, but I'll lump them together and call them the compiler for convenience; they aren't the part of the toolchain we're interested in today.*
 
 Toolchains think about a project in terms of **compilation units**, which in C++ are just its `.cpp` source files. At compile time, sources get lowered, unit by unit, into independent **machine code** binaries native to your desired instruction set (x86, ARM, *etc.*). The linker is what then takes their native object files (`.o`) and merges them together. Whether returning an executable (`.exe`) or maybe a library (`.dll`), this last step is machine code in, machine code out.
 
-Now, when we talk about linking object files, we're linking them by their **symbols**. These are the named entities in a program that get attached to a fixed memory location - *e.g.* functions and class methods, global and static variables - many of which will be **externally visible** beyond the scope of their own compilation unit. When externals are referenced elsewhere it's the linker that matches them to their definitions, a process known as <a href="https://chessman7.substack.com/i/164431639/symbol-resolution-in-action"><strong>symbol resolution</strong></a>.
+Now, when we talk about linking object files, we're linking them by their **symbols**. These are any named entities in a program that get attached to a fixed memory location - *e.g.* functions and class methods, global and static variables - many of which will be **externally visible** beyond the scope of their own compilation unit. When externals are referenced elsewhere it's the linker that matches them to their definitions, a process known as <a href="https://chessman7.substack.com/i/164431639/symbol-resolution-in-action"><strong>symbol resolution</strong></a>.
 
 While they will attempt some amount of *dead code stripping*, compilers evaluate each unit in isolation. Only at link time, with a global view of the executable, can we spot unused externals and remove them. Linkers are also responsible for resolving *relocations* using newly-finalised runtime memory addresses, but I'll refer you to <a href="https://mcyoung.xyz/2021/06/01/linker-script/"><strong>Miguel Young</strong></a> for the further reading there. Crucially, compile-time optimisations run in parallel, whereas we only unlock these further 'whole program' capabilities by linking on a single thread.
 
