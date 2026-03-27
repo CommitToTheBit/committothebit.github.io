@@ -42,7 +42,16 @@ However, for a blog about link-time optimisations (we're getting there, I promis
 
 *[Accurate -> language- and platform-independent -> Furthermore, the LLVM middle-end is... the LLVM IR accomodates that modularity -> unified]*
 
-Intermediate representations are designed to be general purpose. Let's imagine you're a compiler engineer, and you want to compile any of $n$ source languages to any of $m$ instruction sets. Like, yeah, you *could* write $n \times m$ versions of each optimisation pass, but that's not going to scale. With an IR, you suddenly only need $n$ frontends, $1$ middle-end (which will be language- and architecture-independent), and $m$ backend, your workload increasing with $\mathcal{O}(n+m)$ as you extend the compiler further. It is very useful to have an abstract representation of source languages, provided it can accurately abstract these languages without a significant loss of information.
+Intermediate representations are abstractions of source code. Even though any good IR will accurately , surely 
+
+
+Inevitably, translating from any source language 
+
+But why? 
+
+Intermediate representations are designed to be general purpose. Let's imagine you're a compiler engineer, and you want to compile any of $n$ source languages to any of $m$ instruction sets. Like, yeah, you *could* write $n \times m$ versions of each optimisation pass, but that's not going to scale. IRs exist 
+
+With an IR, you suddenly only need $n$ frontends, $1$ middle-end (which will be language- and architecture-independent), and $m$ backend, your workload increasing with $\mathcal{O}(n+m)$ as you extend the compiler further. It is very useful to have an abstract representation of source languages, provided it can accurately abstract these languages without a significant loss of information.
 
 The LLVM IR in particular has several properties that benefit its surrounding compiler infrastructure. I've alluded to it's legibility before: it's not just that the syntax is more forgiving than assembly, but that the LLVM middle-end uses the same IR at every pass. Other <a href=""><strong>sources</strong></a> point out that if the curious programmer wishes to understand any number of their optimisation passes, they only need to learn a single language. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be translated into an equivalent human-readable *textual form* (`.ll`) preferable to assembly for its lack of platform-specific instructions. If you learn to read this one language, you'll be able to understand your entire middle-end. To drill down and exploit the modularity like this, running `...` will return , one for each , -
 
