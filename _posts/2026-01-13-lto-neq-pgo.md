@@ -213,9 +213,8 @@ declare void @baz()
 {: file='foobar.optimised.ll'}
 Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`. This functions like a switch statement, conditioned on the predecessor block in the control flow. `%2` is set to `42` if we've jumped directly from `line 5` into `%add42`, but `52` should we be routed through `%qux` first. A basic block might have any number of phi nodes, but they must always be grouped together at the top of their chunk of code (*i.e.* before a single non-phi instruction is called).
 
-Because they only link a basic block's registers to their predecessors, phi nodes are better thought of as called along the edges of a CFG than within the blocks themselves.<sup>2</sup> They are fake operations, in a very technical sense. I mean, Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits to choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than saying "phony functions" outright. I've even seen some sources transliterate Φ as the Greek letter *for* phony - but no it is just that they're soundalikes. Still, you gotta love the irony, reverse engineering a false etymology from phi's phonetics.
-<p style="line-height:1.25"><sup><sup>2</sup> The formalism is completely equivalent to the <a href="https://github.com/llvm/llvm-project/blob/main/mlir/docs/Dialects/LLVM.md#phi-nodes-and-block-arguments"><strong>block arguments</strong></a> preferred by more modern IRs.</sup></p>
-
+Because they only link a basic block's registers to their predecessors, phi nodes are better thought of as called along the edges of a CFG than within the blocks themselves.<sup>1</sup> They are fake operations, in a very technical sense. I mean, Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits to choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than saying "phony functions" outright. I've even seen some sources transliterate Φ as the Greek letter *for* phony - but no it is just that they're soundalikes. Still, you gotta love the irony, reverse engineering a false etymology from phi's phonetics.
+<p style="line-height:1.25"><sup><sup>1</sup> This formalism is completely equivalent to the <a href="https://github.com/llvm/llvm-project/blob/main/mlir/docs/Dialects/LLVM.md#phi-nodes-and-block-arguments"><strong>block arguments</strong></a> preferred by more modern IRs.</sup></p>
 ## Link-Time Optimisations (LTO)
 
 Congratulations, you've now read your first IR! Granted, if you're not a compiler engineer, it's probably not a language you'll ever need to be fluent in. It'll be one of the more niche tools in your programmer's toolbox, but worth dusting off every now and then when you need to understand how an extra flag is changing your code.
@@ -236,10 +235,11 @@ void baz()
 }
 ```
 {: file='main.cpp'}
-Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't infer that `i` is never changed, that `%qux` and therefore `@baz` become inaccessible, that `main` will not never return a value of `42`. These **link-time optimisations (LTO)** rely on the optimisation passes already in the compiler.
+Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't infer that `i` is never changed, that `%qux` and therefore `@baz` become inaccessible, that `main` will not never return a value of `42`. Those are the extra **link-time optimisations (LTO)** this section is dedicated to.
 
-In LLVM specifically, the linker dispatches its extra work to libLTO. This is a wrapper for the optimisation passes of the LLVM middle-end, a shared object integrated with LLD and its alternatives. If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source.
+The reason we don't mind which linker we're using is - plot twist! - it's not the linker that'll be making our optimisations. The LLVM project contains a separate tool, **libLTO**, that manages...
 
+In LLVM specifically, the linker dispatches its extra work to **libLTO**. This is a wrapper for the optimisation passes of the LLVM middle-end, a shared object integrated with LLD and its alternatives. If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source.
 ### Full LTO
 
 The naive implementation of LTO is, weirdly, also the best. This is **full LTO**, and I tend to think of it as the 'correct' way to go about these optimisations.
@@ -311,11 +311,7 @@ What we see above is a clear
 
 In terms of raw performance, thin LTO is a negligible downgrade: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer! As benchmarks go, it paints an instructive picture of what 'better' LTO looks like.
 
-The goal of my last post was to shout out several cheat codes ( )
-
-With my last post, I wanted to highlight various cheat codes for PGO, and get in to how, when, and why they complement each other.
-
-My time around, I'm working backwards. Full LTO is, kinda tautologically, the most performant LTO can get - if you want to eke out improvements across sources, you won't do better than optimising every compilation unit with knowledge of every other compilation unit. Its various variants are all designed around reducing build times without shifting (too much of) that sluggishness onto the end user. Depending on your project, parallelising with thin LTO might not be the only way of bettering your quality-of-life as a developer - but fair warning, while none of the following tricks will meaningfully worsen run-time performance versus full LTO, they're not going to make it faster either.
+With my last post, I wanted to highlight various cheat codes for PGO, and get in to how, when, and why they complement each other. This time around, I'm working backwards. Full LTO is, by definition, the most performant LTO can get: if you want to eke out improvements across sources, you won't do better than optimising every compilation unit with knowledge of every other compilation unit. Its variants are instead designed around reducing build times without shifting (too much of) that sluggishness onto the end user. Depending on your project, parallelising with thin LTO might not be the only way of bettering your quality-of-life as a developer - but temper your expectations, while none of the following tricks should meaningfully worsen run-time performance versus full LTO, they're not going to make it faster either.
 
 ### Linker Caching
 
