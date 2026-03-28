@@ -48,7 +48,14 @@ For a blog about link-time optimisations (we're getting there, I promise) what m
 
 *[Accurate -> language- and platform-independent -> Furthermore, the LLVM middle-end is... the LLVM IR accomodates that modularity -> unified]*
 
-Intermediate representations are abstractions of source code. Even though any good IR will accurately , surely 
+Intermediate representations are abstractions of source code. 
+
+An accurate IR, that can represent a source language without losing 
+
+
+They
+
+Even though any good IR will accurately , surely 
 
 
 Inevitably, translating from any source language 
@@ -59,7 +66,10 @@ Intermediate representations are designed to be general purpose. Let's imagine y
 
 With an IR, you suddenly only need $n$ frontends, $1$ middle-end (which will be language- and architecture-independent), and $m$ backend, your workload increasing with $\mathcal{O}(n+m)$ as you extend the compiler further. It is very useful to have an abstract representation of source languages, provided it can accurately abstract these languages without a significant loss of information.
 
-The LLVM IR in particular has several properties that benefit its surrounding compiler infrastructure. I've alluded to it's legibility before: it's not just that the syntax is more forgiving than assembly, but that the LLVM middle-end uses the same IR at every pass. Other <a href=""><strong>sources</strong></a> point out that if the curious programmer wishes to understand any number of their optimisation passes, they only need to learn a single language. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be translated into an equivalent human-readable *textual form* (`.ll`) preferable to assembly for its lack of platform-specific instructions. If you learn to read this one language, you'll be able to understand your entire middle-end. To drill down and exploit the modularity like this, running `...` will return , one for each , -
+The LLVM IR in particular has several properties that benefit its surrounding compiler infrastructure. It is not uncommon for a compiler to use [**several different IRs to get from source code to native machine code**](https://cs.lmu.edu/~ray/notes/ir/),  but the LLVM middle-end uses the same IR at every pass.
+
+
+I've alluded to it's legibility before: it's not just that the syntax is more forgiving than assembly, but that the LLVM middle-end uses the same IR at every pass. Other <a href=""><strong>sources</strong></a> point out that if the curious programmer wishes to understand any number of their optimisation passes, they only need to learn a single language. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be translated into an equivalent human-readable *textual form* (`.ll`) preferable to assembly for its lack of platform-specific instructions. If you learn to read this one language, you'll be able to understand your entire middle-end. To drill down and exploit the modularity like this, running `...` will return , one for each , -
 
 *[If you want to see the before and after of a pass you've hacked in, this is the only language...]*
 
@@ -123,7 +133,7 @@ int qux()
 ```
 {: file='foobar.cpp'}
 
-This is not a terribly novel snippet of code; I found it in the <a href="https://llvm.org/docs/LinkTimeOptimization.html#example-of-link-time-optimization"><strong>LLVM docs</strong></a> and filed the serial numbers off. Adding an extra `-emit-llvm` flag to clang's command for generating assembly, `clang foobar.cpp -emit-llvm -S` returns `foobar.ll` as the 'assembled' textual form of IR (minus some metadata removed for clarity):
+This is not a terribly novel snippet of code: I found it in the <a href="https://llvm.org/docs/LinkTimeOptimization.html#example-of-link-time-optimization"><strong>LLVM docs</strong></a> and filed the serial numbers off. Adding an extra `-emit-llvm` flag to clang's command for generating assembly, `clang foobar.cpp -emit-llvm -S` returns `foobar.ll` as the 'assembled' textual form of IR (minus some metadata removed for clarity):
 
 ```llvm
 @i = internal global i32 24
@@ -165,16 +175,16 @@ There are plenty of `@`s here, and plenty more `%`s. These are the **sigils** LL
 
 Canny readers will already be wondering, how is it legal to `store i32 0, ptr %1` in an SSA? And here's the neat thing - it's not! The LLVM IR allows address-taken variables to be `alloca`ted, `store`d and `load`ed at will. It allows these, even though they unapologetically break SSA form; the compiler can no longer know <a href="https://llvm.org/pubs/2009-01-POPL-PointerAnalysis.pdf"><strong>"which variables are defined and/or used at each statement."</strong></a>
 
-As a compromise, address-taken variables can only be accessed indirectly through top-level variables, using, *e.g.*, the `ptr` dialect. `ptr @i` and `ptr %1` may well be mutable integers, but the pointers stored at `@i` and `%1` will not change. That makes LLVM IR a **partial SSA**. It is reasonable, I think, that most blogs gently gloss over this distinction, but it's *the* detail I needed to make the syntax click. Trying to satisfy myself `store` could exist in a 'real' SSA was shunting a square peg into a round hole.
+As a compromise, address-taken variables can only be accessed indirectly through top-level variables, using, *e.g.*, the `ptr` dialect. `ptr @i` and `ptr %1` are mutable integers, but the pointers stored at `@i` and `%1` will not change. That makes LLVM IR a **partial SSA**. It is reasonable, I think, that most blogs gloss over this distinction, but it's *the* detail I needed to make the syntax click. Trying to satisfy myself `store` could exist in a true SSA was shunting a square peg into a round hole.
 
-Another important feature of the IR is the **control flow** by which a program executes instructions - but before we get to that, I'll let you in on a dirty secret. *Your CPU has a fetish.* Your CPU has a fetish, specifically, for running code in order; **basic blocks** are the maximal units of code for which this is actually possible. Each one consists of some sequence of instructions executed top to bottom as written on the page, its last a singular **terminator** redirecting the control flow to another block.
+Another important feature of the IR is the **control flow** by which a program executes instructions - but before we get to that, I'll let you in on a dirty secret. *Your CPU has a fetish.* Your CPU has a fetish, specifically, for running code in order, and **basic blocks** are the maximal units of code for which this is actually possible. Each one consists of some sequence of instructions executed top to bottom as written on the page, its last a singular **terminator** redirecting the control flow to another block.
 
 ![Desktop View](/assets/img/posts/2026-03-23-llvm-control-flow-graph.png)
-*<strong>Control Flow Graphs</strong> `@foo` has three blocks: the start of the function (denoted `%0`), `%qux`, and `%add42`. These form a CFG.*
+*<strong>Control Flow Graphs</strong> `@foo` has three blocks: the start of the function (denoted `%0` in LLVM IR), `%qux`, and `%add42`. These form a CFG.*
 
-Branches, function calls, *etc.*, are the (directed) edges that connect basic blocks into a **control flow graph (CFG)**, which LLVM encodes with its terminator instructions. `ret` we've already discussed, that counts as a terminator because it returns us to wherever we came from on the stack. `br`, meanwhile, signifies branching. `br i1 %3, label %qux, label %add42` is a bogstandard if/else statement. It might be more surprising to know `br` also has an unconditional form: `br label %add42` always takes us to block `%add42`,
+Branches, function calls, *etc.*, are the (directed) edges that connect basic blocks into a **control flow graph (CFG)**, which LLVM encodes with its terminator instructions. `ret` we've already discussed, that counts as a terminator because it returns us to wherever we came from on the stack. `br`, meanwhile, signifies branching. `br i1 %3, label %qux, label %add42` is a bog-standard if/else statement. It might be more surprising to know `br` also has an unconditional form: `br label %add42` always takes us to block `%add42`,
 
-Incidentally, basic blocks help make sense of what's going on with `int data`. It is, I'm sure, quite strange that a local variable we never take the address of nevertheless needs stored as an address-taken variable in `@foo`. What we now see is, if `%0` instead initialised `%1 = 0` and `%qux` still set `%4 = call i32 @qux()`, `%add42` would have no way of knowing which register to `add nsw i32` with `42`!
+Incidentally, basic blocks help make sense of what's going on with `int data`. It is, I'm sure, quite strange that a local variable we never take the address of nevertheless needs stored as an address-taken variable in `@foo`. Now, we see that if `%0` instead initialised `%1 = 0` and `%qux` still set `%4 = call i32 @qux()`, `%add42` would have no way of knowing which register to `add nsw i32` with `42`!
 
 There's one last bit of syntax in the <a href="https://llvm.org/docs/LangRef.html"><strong>LLVM LangRef</strong></a> I'd like to talk about, but you won't find it in the example above. Luckily, we can recompile `foobar.cpp` with an extra `-O2` flag to tease it out...
 ```llvm
@@ -203,8 +213,8 @@ declare void @baz()
 {: file='foobar.optimised.ll'}
 Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`. This functions like a switch statement, conditioned on the predecessor block in the control flow. `%2` is set to `42` if we've jumped directly from `line 5` into `%add42`, but `52` should we be routed through `%qux` first. A basic block might have any number of phi nodes, but they must always be grouped together at the top of their chunk of code (*i.e.* before a single non-phi instruction is called).
 
-Because they only link a basic block's registers to their predecessors, phi nodes are better thought of as called along the edges of a CFG than within the blocks themselves.<sup>1</sup> They are fake operations, in a very technical sense. I mean, Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits to choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than saying "phony functions" outright. I've even seen some sources transliterate Φ as the Greek letter *for* phony - but no it is just that they're soundalikes. Still, you gotta love the irony, reverse engineering a false etymology from phi's phonetics...
-<p style="line-height:1.25"><sup><sup>1</sup>This formalism is completely equivalent to the <a href="https://github.com/llvm/llvm-project/blob/main/mlir/docs/Dialects/LLVM.md#phi-nodes-and-block-arguments"><strong>block arguments</strong></a> preferred by more modern IRs.</sup></p>
+Because they only link a basic block's registers to their predecessors, phi nodes are better thought of as called along the edges of a CFG than within the blocks themselves.<sup>2</sup> They are fake operations, in a very technical sense. I mean, Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits to choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than saying "phony functions" outright. I've even seen some sources transliterate Φ as the Greek letter *for* phony - but no it is just that they're soundalikes. Still, you gotta love the irony, reverse engineering a false etymology from phi's phonetics.
+<p style="line-height:1.25"><sup><sup>2</sup> The formalism is completely equivalent to the <a href="https://github.com/llvm/llvm-project/blob/main/mlir/docs/Dialects/LLVM.md#phi-nodes-and-block-arguments"><strong>block arguments</strong></a> preferred by more modern IRs.</sup></p>
 
 ## Link-Time Optimisations (LTO)
 
@@ -294,13 +304,8 @@ The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM
 
 What we see above is a clear 
 
-The corollary to this is, thin LTO is also incremental. Full LTO merges all of its compilation units into a single module, so whenever any of those sources are edited, the full libLTO step needs rerun. If you edit a source without changing its index files, however, thin LTO can skip this. It will still need to...
-
-Linker caching is 
 
 **Clang flags** `-flto=thin`
-
-**LLD flags** `-cache_path_dir=<path/to/cache>``
 
 ## LTO, But Better (Better Build Times, Anyway)
 
@@ -312,6 +317,17 @@ With my last post, I wanted to highlight various cheat codes for PGO, and get in
 
 My time around, I'm working backwards. Full LTO is, kinda tautologically, the most performant LTO can get - if you want to eke out improvements across sources, you won't do better than optimising every compilation unit with knowledge of every other compilation unit. Its various variants are all designed around reducing build times without shifting (too much of) that sluggishness onto the end user. Depending on your project, parallelising with thin LTO might not be the only way of bettering your quality-of-life as a developer - but fair warning, while none of the following tricks will meaningfully worsen run-time performance versus full LTO, they're not going to make it faster either.
 
+### Linker Caching
+
+The corollary to this is, thin LTO is also incremental. Full LTO merges all of its compilation units into a single module, so whenever any of those sources are edited, the full libLTO step needs rerun. If you edit a source without changing its index files, however, thin LTO can skip this. It will still need to...
+
+Now, . Further flags for "pruning" the cache size [**are also available.**](https://clang.llvm.org/docs/ThinLTO.html#cache-pruning)
+
+**lld-link flags** `/lldltocache:<path/to/cache>`
+
+**ld.lld flags** `-Wl,--thinlto-cache-dir=<path/to/cache>`
+
+**ld64.lld flags** `-Wl,-cache_path_lto,<path/to/cache>`
 ### Unified LTO
 
 **Clang flags** `-funified-lto`
