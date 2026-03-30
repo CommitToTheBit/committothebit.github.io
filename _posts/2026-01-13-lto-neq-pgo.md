@@ -219,6 +219,7 @@ Because they only link a basic block's registers to their predecessors, phi node
 
 Congratulations, you've now read your first IR! Granted, if you're not a compiler engineer, it's probably not a language you'll ever need to be fluent in. It'll be one of the more niche tools in your programmer's toolbox, but worth dusting off every now and then when you need to understand how an extra flag is changing your code.
 
+
 This still being a blog about LTO, let's bring in a second source to link `foobar.cpp` to.
 ```c++
 #include "foobar.h"
@@ -240,6 +241,7 @@ Here, we can expect the linker to recognise `bar` as an unused external and stri
 The reason we don't mind which linker we're using is - plot twist! - it's not the linker that'll be making our optimisations. The LLVM project contains a separate tool, **libLTO**, that manages...
 
 In LLVM specifically, the linker dispatches its extra work to **libLTO**. This is a wrapper for the optimisation passes of the LLVM middle-end, a shared object integrated with LLD and its alternatives. If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source.
+
 ### Full LTO
 
 The naive implementation of LTO is, weirdly, also the best. This is **full LTO**, and I tend to think of it as the 'correct' way to go about these optimisations.
@@ -297,7 +299,10 @@ Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've see
 
 ### Thin LTO
 
-The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time.
+The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time. **Thin LTO** generates a compact summary of each compilation unit, which can be "thinly linked" much faster than we would . During the "thin link,"
+
+
+That means, rather than a single, monolithic `*.bc`, 
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
 *<strong>Thin LTO</strong>*
