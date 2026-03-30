@@ -46,9 +46,25 @@ For a blog about link-time optimisations (we're getting there, I promise) what m
 
 ### LLVM IR
 
-Intermediate representations are abstractions of source code, used to write easily retargetable compilers. Let's say you're a compiler engineer, and you want to lower any of $n$ source languages to any of $m$ instruction sets. Yeah, sure, you could write $n \times m$ versions of each optimisation pass - but that isn't going to scale. The motivation of IR is
+Intermediate representations are abstractions of source code, used to write easily retargetable compilers. Let's say you're a compiler engineer, and you want to lower any of $n$ source languages to any of $m$ instruction sets. Rather than building $n \times m$ compilation pipelines start to finish, with a set of optimisation passes mapping IR to IR you'll only need a single, language- and machine-agnostic middle-end. Once this transformation step is squared away, the $n$ frontends and $m$ backends it'll then take to translate to and from IR can be written independently of one another, your workload now increasing with $\mathcal{O}(n+m)$ instead of $\mathcal{O}(n \times m)$ as you extend the compiler further.
 
-Intermediate representations are abstractions of source code, used to write readily retargetable compilers. Let's imagine you're a compiler engineer, and you want to compile any of $n$ source languages to any of $m$ instruction sets. Like, yeah, you *could* write $n \times m$ versions of each optimisation pass, but clearly that isn't going to scale. By instead writing a general purpose, language- and architecture-agnostic middle-end mapping IR to IR, the rest of the work becomes modularised. Suddenly, you'll only need $n$ frontends and $m$ backends, all independent of one another, your workload increasing with $\mathcal{O}(n+m)$ as you extend the compiler further.
+With this as its *raison d'être*, LLVM IR has been designed with several further properties that complement the broader LLVM infrastructure.
+
+If this is the overarching motivation of the LLVM IR, then it has been designed 
+
+with a set of (language- and machine-independent) optimisation passes
+
+using an IR translating into an IR for the middle-end means you'll only need a single set of (language- and machine-independent) optimisation passes.
+
+
+Yeah, sure, you could write $n \times m$ versions of each optimisation pass - but that isn't going to scale. 
+
+
+The motivation of IR is
+
+Intermediate representations are abstractions of source code, used to write readily retargetable compilers. Let's imagine you're a compiler engineer, and you want to compile any of $n$ source languages to any of $m$ instruction sets. 
+
+Like, yeah, you *could* write $n \times m$ versions of each optimisation pass, but clearly that isn't going to scale. By instead writing a general purpose, language- and architecture-agnostic middle-end mapping IR to IR, the rest of the work becomes modularised. Suddenly, you'll only need $n$ frontends and $m$ backends, all independent of one another, 
 
 The LLVM IR in particular has several properties that benefit its surrounding compiler infrastructure. It is not uncommon for a compiler to use [**several different IRs to get from source code to native machine code**](https://cs.lmu.edu/~ray/notes/ir/),  but the LLVM middle-end uses the same IR at every pass. I've alluded to it's legibility before: it's not just that the syntax is more forgiving than assembly, but that the LLVM middle-end uses the same IR at every pass. Other <a href=""><strong>sources</strong></a> point out that if the curious programmer wishes to understand any number of their optimisation passes, they only need to learn a single language. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be translated into an equivalent human-readable *textual form* (`.ll`) preferable to assembly for its lack of platform-specific instructions. If you learn to read this one language, you'll be able to understand your entire middle-end. To drill down and exploit the modularity like this, running `...` will return , one for each , -
 
