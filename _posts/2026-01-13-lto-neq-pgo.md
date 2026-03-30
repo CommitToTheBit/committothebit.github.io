@@ -48,50 +48,13 @@ For a blog about link-time optimisations (we're getting there, I promise) what m
 
 Intermediate representations are abstractions of source code, used to write easily retargetable compilers. Let's say you're a compiler engineer, and you want to lower any of $n$ source languages to any of $m$ instruction sets. Rather than building $n \times m$ compilation pipelines start to finish, with a set of optimisation passes mapping IR to IR you'll only need a single, language- and machine-agnostic middle-end. Once this transformation step is squared away, the $n$ frontends and $m$ backends it'll then take to translate to and from IR can be written independently of one another, your workload now increasing with $\mathcal{O}(n+m)$ instead of $\mathcal{O}(n \times m)$ as you extend the compiler further.
 
-With this as its *raison d'être*, LLVM IR has been designed with several further properties that complement the broader LLVM infrastructure.
+Beyond this *raison d'être*, the LLVM IR aims to complement its surrounding compiler infrastructure. While it is not uncommon for a compiler to use [**several different IRs to get from source code to native machine code**](https://cs.lmu.edu/~ray/notes/ir/), the LLVM middle-end is designed for modularity and therefore uses the same IR at every pass. Granted, the syntax of LLVM IR is already more legible than assembly (let alone other IRs!), but as <a href="https://www.cs.cornell.edu/~asampson/blog/llvm.html"><strong>Adrian Sampson</strong></a> observes, it certainly can't hurt that the curious programmer playing about with their compiler only needs one single extra language throughout. For our own purposes of better understanding how we're optimising at compile- and link-time, running `...` will return a series , one for each modular optimisation pass. The compiler processes these in *binary form* (`.bc`), often referred to **LLVM bitcode**, but they can be disassembled into an equivalent human-readable *textual form* (`.ll`) with `llvm-dis`.
 
-If this is the overarching motivation of the LLVM IR, then it has been designed 
+A quick aside - until writing this blog, I never really got the concept of a virtual machine. 
 
-with a set of (language- and machine-independent) optimisation passes
+[...]
 
-using an IR translating into an IR for the middle-end means you'll only need a single set of (language- and machine-independent) optimisation passes.
-
-
-Yeah, sure, you could write $n \times m$ versions of each optimisation pass - but that isn't going to scale. 
-
-
-The motivation of IR is
-
-Intermediate representations are abstractions of source code, used to write readily retargetable compilers. Let's imagine you're a compiler engineer, and you want to compile any of $n$ source languages to any of $m$ instruction sets. 
-
-Like, yeah, you *could* write $n \times m$ versions of each optimisation pass, but clearly that isn't going to scale. By instead writing a general purpose, language- and architecture-agnostic middle-end mapping IR to IR, the rest of the work becomes modularised. Suddenly, you'll only need $n$ frontends and $m$ backends, all independent of one another, 
-
-The LLVM IR in particular has several properties that benefit its surrounding compiler infrastructure. It is not uncommon for a compiler to use [**several different IRs to get from source code to native machine code**](https://cs.lmu.edu/~ray/notes/ir/),  but the LLVM middle-end uses the same IR at every pass. I've alluded to it's legibility before: it's not just that the syntax is more forgiving than assembly, but that the LLVM middle-end uses the same IR at every pass. Other <a href=""><strong>sources</strong></a> point out that if the curious programmer wishes to understand any number of their optimisation passes, they only need to learn a single language. While the compiler processes IR in *binary form* (`.bc`), often referred to **LLVM bitcode**, it can be translated into an equivalent human-readable *textual form* (`.ll`) preferable to assembly for its lack of platform-specific instructions. If you learn to read this one language, you'll be able to understand your entire middle-end. To drill down and exploit the modularity like this, running `...` will return , one for each , -
-
-*[Accurate -> language- and platform-independent -> Furthermore, the LLVM middle-end is... the LLVM IR accomodates that modularity -> unified]*
-
-Intermediate representations are abstractions of source code. 
-
-An accurate IR, that can represent a source language without losing 
-
-
-They
-
-Even though any good IR will accurately , surely 
-
-
-Inevitably, translating from any source language 
-
-But why? 
-
-Intermediate representations are designed to be general purpose. Let's 
-
-With an IR,  It is very useful to have an abstract representation of source languages, provided it can accurately abstract these languages without a significant loss of information.
-
-
-*[If you want to see the before and after of a pass you've hacked in, this is the only language...]*
-
-A quick aside - until writing this blog, I never really *got* the concept of a virtual machine. Like, I knew , I knew that LLVM was an acronym-cum-orphan initialism for Low Level Virtual Machine... but I never knew what that actually means, yknow? Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise it's optimisations. With this understanding, we can broaden our definition of an **object file** as any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`, much like `.ll`s read as 'virtual' assembly.
+Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise its optimisations. With this understanding, we can broaden our earlier definition of an **object file** to include any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`s, much like `.ll`s read as quote-unquote *virtual* assembly.
 
 Now, this isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction out there, but we can start out nice and slow. Let's translate a trivial C++ function to IR:
 ```c++
@@ -231,7 +194,7 @@ declare void @baz()
 {: file='foobar.optimised.ll'}
 Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`. This functions like a switch statement, conditioned on the predecessor block in the control flow. `%2` is set to `42` if we've jumped directly from `line 5` into `%add42`, but `52` should we be routed through `%qux` first. A basic block might have any number of phi nodes, but they must always be grouped together at the top of their chunk of code (*i.e.* before a single non-phi instruction is called).
 
-Because they only link a basic block's registers to their predecessors, phi nodes are better thought of as called along the edges of a CFG than within the blocks themselves.<sup>1</sup> They are fake operations, in a very technical sense. I mean, Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits to choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than saying "phony functions" outright. I've even seen some sources transliterate Φ as the Greek letter *for* phony - but that part's a false etymology, it is just that they're soundalikes. Ironic, right?
+Because they only link a basic block's registers to their predecessors, phi nodes are better thought of as called along the edges of a CFG than within the blocks themselves.<sup>1</sup> They are fake operations, in a very technical sense. I mean, Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits to choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than saying "phony functions" outright. I've even seen some sources transliterate Φ as the Greek letter *for* phony - but that part's a false etymology, they're just soundalikes. Ironic.
 <p style="line-height:1.25"><sup><sup>1</sup> This formalism is completely equivalent to the <a href="https://github.com/llvm/llvm-project/blob/main/mlir/docs/Dialects/LLVM.md#phi-nodes-and-block-arguments"><strong>block arguments</strong></a> preferred by more modern IRs.</sup></p>
 
 ## Link-Time Optimisations (LTO)
