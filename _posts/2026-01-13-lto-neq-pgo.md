@@ -48,11 +48,16 @@ For a blog about link-time optimisations (we're getting there, I promise) what m
 
 Intermediate representations are abstractions of source code, used to write easily retargetable compilers. Let's say you're a compiler engineer, and you want to lower any of $n$ source languages to any of $m$ instruction sets. Rather than building $n \times m$ compilation pipelines start to finish, with a set of optimisation passes mapping IR to IR you'll only need a single, language- and machine-agnostic middle-end. Once this transformation step is squared away, the $n$ frontends and $m$ backends it'll then take to translate to and from IR can be written independently of one another, your workload increasing with $\mathcal{O}(n+m)$ instead of $\mathcal{O}(n \times m)$ as you extend the compiler further.
 
-Beyond this *raison d'être*, the LLVM IR tries to complement its surrounding compiler infrastructure. While it is not uncommon for a compiler to use [**several different IRs to get from source code to native machine code**](https://cs.lmu.edu/~ray/notes/ir/), the LLVM middle-end is designed for modularity and therefore uses the same IR at every pass. Granted, the syntax of LLVM IR is already more legible than assembly (let alone other IRs!), but as <a href="https://www.cs.cornell.edu/~asampson/blog/llvm.html"><strong>Adrian Sampson</strong></a> points out, it certainly can't hurt that the curious programmer playing about with optimisation passes only needs one language throughout. The compiler processes this in its *binary form* (`.bc`), often referred to **LLVM bitcode**, but it can also be disassembled into an equivalent human-readable *textual form* (`.ll`) with `llvm-dis`.
+Beyond this *raison d'être*, the LLVM IR tries to complement its surrounding compiler infrastructure. While it is not uncommon for a compiler to use [**several different IRs to get from source code to native machine code**](https://cs.lmu.edu/~ray/notes/ir/), the LLVM middle-end is designed for modularity and therefore uses the same IR at every pass. Granted, the syntax of LLVM IR is already more legible than assembly (let alone other IRs!), but as <a href="https://www.cs.cornell.edu/~asampson/blog/llvm.html"><strong>Adrian Sampson</strong></a> points out, it certainly can't hurt that the curious programmer playing about with optimisation passes only needs one language throughout. The compiler processes this in its *binary form* (`.bc`), often referred to **LLVM bitcode**, but it can also be disassembled to and reassembled from an equivalent human-readable *textual form* (`.ll`) by `llvm-dis` and `llvm-as`, respectively.
 
 A quick aside - until writing this blog, I never really got the concept of a virtual machine. 
 
-With this understanding, we can broaden our earlier definition of an **object file** to include any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`s, much like `.ll`s read as quote-unquote *virtual* assembly. As such, it makes sense that when compiling with an `-emit-llvm` flag, `-c` and `-S` return us LLVM IR in binary and textual forms, respectively.
+With this understanding, we can broaden our earlier definition of an **object file** to include any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`s, much like `.ll`s read as quote-unquote *virtual* assembly. When running Clang with its (clang command line reference) `-S` or `-c` flags, adding an extra `-emit-llvm` to the command line will
+
+
+Indeed, whereas `clang foobar.cpp -` 
+
+ As such, it makes sense that when compiling with an `-emit-llvm` flag, `-c` and `-S` return us LLVM IR in binary and textual forms, respectively.
 
 [...]
 
