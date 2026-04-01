@@ -208,10 +208,10 @@ Because they only link a basic block's registers to their predecessors, phi node
 
 ## Link-Time Optimisations (LTO)
 
-Congratulations, you've now read your first IR! Granted, if you're not a compiler engineer, it's probably not a language you'll ever need to be fluent in. It'll be one of the more niche tools in your programmer's toolbox, but worth dusting off every now and then when you need to understand how an extra flag is changing your code.
+Congratulations, you've now read your first IR! Granted, if you're not a compiler engineer, it's probably not a language you'll ever need to be fluent in.
+Nevertheless, it has its niche in your programmer's toolbox, worth picking out and dusting off every now and then to see how an extra flag is changing your code.
 
-
-This still being a blog about LTO, let's bring in a second source to link `foobar.cpp` to.
+But this is still a blog about LTO; we need a second source with which to link.
 ```c++
 #include "foobar.h"
 #include <stdio.h>
@@ -290,7 +290,11 @@ Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've see
 
 ### Thin LTO
 
-The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time. **Thin LTO** generates a compact summary of each compilation unit, which can be "thinly linked" much faster than we would . During the "thin link,"
+The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time. **Thin LTO** generates a compact summary of each compilation unit, which can be "thinly linked" much faster than full object files. During the think link, the summaries are joined together as a single index upon which we can quickly perform further global analyses, and determine which external functions will be imported into each `*.bc` file before passing it to libLTO.
+
+**Function importing** is designed to import only those functions that would (likely) be inlined by full LTO, and ignore those that would (likely) be ignored. This means 
+
+During the thin link, the summaries are joined together as a monolithic *index* used for global analyses,
 
 
 That means, rather than a single, monolithic `*.bc`, 
