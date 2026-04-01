@@ -52,18 +52,9 @@ Beyond this *raison d'être*, the LLVM IR tries to complement its surrounding co
 
 A quick aside - until writing this blog, I never really got the concept of a virtual machine. 
 
-With this understanding, we can broaden our earlier definition of an **object file** to include any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`s, much like `.ll`s read as quote-unquote *virtual* assembly. When compiling with `clang -S` or `clang -c", adding an extra `-emit-llvm` <a href="https://clang.llvm.org/docs/ClangCommandLineReference.html#id3"><strong>flag</strong></a> will indeed return the IR analogue of an assembler or object file, respectively.
+[Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise its optimisations.]
 
-When running Clang with its (clang command line reference) `-S` or `-c` flags, adding an extra `-emit-llvm` to the command line will return the 
-
-
-Indeed, whereas `clang foobar.cpp -` 
-
- As such, it makes sense that when compiling with an `-emit-llvm` flag, `-c` and `-S` return us LLVM IR in binary and textual forms, respectively.
-
-[...]
-
-Well, it turns out LLVM bitcode is just machine code for a virtual machine. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise its optimisations. 
+With this understanding, we can broaden our earlier definition of an **object file** to include any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`s, much like `.ll`s read as quote-unquote *virtual* assembly. When compiling with `clang -S` or `clang -c", adding an extra `-emit-llvm` <a href="https://clang.llvm.org/docs/ClangCommandLineReference.html#id3"><strong>flag</strong></a> will indeed return the IR analogue of the desired assembler or object file, respectively.
 
 Now, this isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction out there, but we can start out nice and slow. Let's translate a trivial C++ function to IR:
 ```c++
@@ -290,9 +281,14 @@ Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've see
 
 ### Thin LTO
 
-The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time. **Thin LTO** generates a compact summary of each compilation unit, which can be "thinly linked" much faster than full object files. During the think link, the summaries are joined together as a single index upon which we can quickly perform further global analyses, and determine which external functions will be imported into each `*.bc` file before passing it to libLTO.
+The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time. **Thin LTO** generates a compact summary of each compilation unit, which can be "thinly linked" much faster than full object files. During the think link, the summaries are joined together as a global index with which we can quickly perform further, global, analyses.
 
-**Function importing** is designed to import only those functions that would (likely) be inlined by full LTO, and ignore those that would (likely) be ignored. This means 
+
+ Rather than a single hunk of bitcode, we'll use this index 
+
+ thin LTO  and determine which external functions will be imported into each `*.bc` file before passing it to libLTO.
+
+**Function importing** is designed to import only those functions that would (likely) be inlined by full LTO, and exclude those that would (likely) be ignored. Because of this, thin LTO is really an approximation of full LTO, but as we'll see - it's a good one.
 
 During the thin link, the summaries are joined together as a monolithic *index* used for global analyses,
 
