@@ -279,10 +279,10 @@ Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've see
 
 The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time. **Thin LTO** generates a compact summary of each compilation unit, which can be "thinly linked" much faster than the full object files. During the thin link, the summaries are joined together as a global index with which we can quickly perform further, global, analyses - chief amongst these, *function importing.*
 
-Using the thinly-linked index, each unit imports only those functions that will (likely) be inlined, and excludes those that would (likely) be ignored. It is this approximation of full LTO that allows us to parallelise the link-time optimisation step. Rather than passing a single, monolithic `*.bc` to libLTO, thin LTO can optimise the extended compilation units concurrently. 
+Using the thinly-linked index, each unit imports only those functions that will (likely) be inlined, and excludes those that would (likely) be ignored. It is this approximation of full LTO that allows us to parallelise the link-time optimisation step. Rather than passing a single, monolithic `*.bc` to libLTO, thin LTO can optimise the extended compilation units concurrently and then continue through the backend as usual.
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
-*<strong>Thin LTO</strong> As in a traditional pipeline, everything other than the linking step(s) run in parallel.*
+*<strong>Thin LTO</strong> removes the bottleneck introduced by libLTO. Much like a traditional build pipeline - and unlike full LTO - only the link step(s) are single-threaded.*
 
 **Clang flags** `-flto=thin`
 
@@ -290,9 +290,13 @@ Using the thinly-linked index, each unit imports only those functions that will 
 
 In terms of raw performance, thin LTO is a negligible downgrade: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer! As benchmarks go, it paints an instructive picture of what 'better' LTO looks like.
 
-With my last post, I wanted to highlight various cheat codes for PGO, and get in to how, when, and why they complement each other. This time around, I'm working backwards. Full LTO is, by definition, the most performant LTO can get: if you want to eke out improvements across sources, you won't do better than optimising every compilation unit with knowledge of every other compilation unit. Its variants are instead designed around reducing build times without shifting (too much of) that sluggishness onto the end user. Depending on your project, parallelising with thin LTO might not be the only way of bettering your quality-of-life as a developer - but temper your expectations, while none of the following tricks should meaningfully worsen run-time performance versus full LTO, they're not going to make it faster either.
+With my last post, I wanted to highlight various cheat codes for PGO, and get in to how, when, and why they complement each other. This time around, I'm working backwards. Full LTO is, by definition, the most performant LTO can get: if you want to eke out improvements across sources, you won't do better than optimising every compilation unit with complete knowledge of every other compilation unit. Its variants are instead designed around reducing build times without shifting (too much of) that sluggishness onto the end user. Depending on your project, parallelising with thin LTO might not be the only way of bettering your quality-of-life as a developer - but to temper your expectations, while none of the following tricks should meaningfully worsen run-time performance versus full LTO, they're not going to make it faster either.
 
 ### Linker Caching
+
+Full LTO merges all of its compilation units into a single module, so whenever any of those sources are edited, the full libLTO step needs rerun. With modern compilers affording incremental 
+
+Reconsider 
 
 The corollary to this is, thin LTO is also incremental. Full LTO merges all of its compilation units into a single module, so whenever any of those sources are edited, the full libLTO step needs rerun. If you edit a source without changing its index files, however, thin LTO can skip this. It will still need to...
 
