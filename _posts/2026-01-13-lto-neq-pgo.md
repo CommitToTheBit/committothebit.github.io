@@ -279,13 +279,10 @@ Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've see
 
 The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time. **Thin LTO** generates a compact summary of each compilation unit, which can be "thinly linked" much faster than the full object files. During the thin link, the summaries are joined together as a global index with which we can quickly perform further, global, analyses - chief amongst these, *function importing.*
 
-Using the thinly-linked index, each compilation unit imports only those functions that will (likely) be inlined, and excludes those that would (likely) be ignored. It is an approximation of full LTO that allows us to parallelise the link-time optimisation step. Rather than passing a single, monolithic `*.bc` to libLTO, thin LTO is designed to apply link-time optimisations unit-by-unit.
+Using the thinly-linked index, each unit imports only those functions that will (likely) be inlined, and excludes those that would (likely) be ignored. It is this approximation of full LTO that allows us to parallelise the link-time optimisation step. Rather than passing a single, monolithic `*.bc` to libLTO, thin LTO can optimise the extended compilation units concurrently. 
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
-*<strong>Thin LTO</strong>*
-
-What we see above is a clear 
-
+*<strong>Thin LTO</strong> As in a traditional pipeline, everything other than the linking step(s) run in parallel.*
 
 **Clang flags** `-flto=thin`
 
