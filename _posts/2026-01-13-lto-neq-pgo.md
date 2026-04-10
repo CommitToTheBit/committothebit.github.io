@@ -277,30 +277,9 @@ Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've see
 
 ### Thin LTO
 
-The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time. **Thin LTO** generates a compact summary of each compilation unit, which can be "thinly linked" much faster than full object files. During the thin link, the summaries are joined together as a global index with which we can quickly perform further, global, analyses - chief amongst these, *function importing.*
+The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time. **Thin LTO** generates a compact summary of each compilation unit, which can be "thinly linked" much faster than the full object files. During the thin link, the summaries are joined together as a global index with which we can quickly perform further, global, analyses - chief amongst these, *function importing.*
 
-Using the thinly-linked index, each compilation unit imports only those functions that would (likely) be inlined by full LTO and excludes those that would (likely) be ignored, in something of an approximation of full LTO.
-
-By import only Because of this, thin LTO is really an approximation of full LTO, but as we'll see
-
-Rather than passing a single, monolithic `*.bc` to libLTO, thin LTO is designed to apply link-time optimisations compilation unit-by-compilation unit. 
-
-By import only those functions that would (likely) be inlined by full LTO, and exclude those that would (likely) be ignored. Because of this, thin LTO is really an approximation of full LTO, but as we'll see
-
-With function importing, 
-
-
-
-**Function importing** is designed to import only those functions that would (likely) be inlined by full LTO, and exclude those that would (likely) be ignored. Because of this, thin LTO is really an approximation of full LTO, but as we'll see - it's a good one.
-
- Rather than a single hunk of bitcode, we'll use this index 
-
- thin LTO  and determine which external functions will be imported into each `*.bc` file before passing it to libLTO.
-
-During the thin link, the summaries are joined together as a monolithic *index* used for global analyses,
-
-
-That means, rather than a single, monolithic `*.bc`, 
+Using the thinly-linked index, each compilation unit imports only those functions that will (likely) be inlined, and excludes those that would (likely) be ignored. It is an approximation of full LTO that allows us to parallelise the link-time optimisation step. Rather than passing a single, monolithic `*.bc` to libLTO, thin LTO is designed to apply link-time optimisations unit-by-unit.
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
 *<strong>Thin LTO</strong>*
