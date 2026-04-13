@@ -18,9 +18,9 @@ published: false
 
 **Wrong!** December, 2025: hot off my last dev talk of the year, I get asked this question by one of the leads at Feral. I've been talking about link-time optimisation (LTO), a nice, easy, one-and-done topic that (little do I know it yet) will end up rattling around the back of my head for the rest of the festive period. That's because my colleague has made me realise, I've given a whole presentation on how linking unlocks extra optimisations a compiler can't make on a per-unit basis - and completely failed to explain what those extra optimisations actually are.
 
-Please consider this my *mea culpa*, a spiritual sequel to my post on <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a>. PGO, LTO, plus a third, much larger project of mine I'm not quite ready to share just yet, are conceptually very similar. I like to think of them as cheat codes for CPU optimisation; less the ABCs than the ↑↑↓↓←→←→BAs of performance engineering. They're cheating because, well, they're glorified compiler flags, and I strongly suspect what stops most devs from using them is simply not knowing they exist.
+Please consider this my *mea culpa*, a spiritual sequel to my post on <a href="https://sammakesgames.com/posts/pgo-but-better/"><strong>profile-guided optimisation</strong></a>. PGO, LTO, plus a third, much larger project of mine I'm not quite ready to share just yet, are conceptually very similar. I like to think of them as cheat codes for CPU optimisation; less the ABCs than the ↑↑↓↓←→←→BAs of performance engineering. They're cheating because, well, they're glorified compiler flags, and I strongly suspect what stops devs from using them is simply not knowing they exist.
 
-But plenty of digital ink - pixels? - have already been spilled on LTO (<a href="https://convolv.es/guides/lto/"><strong>J. Ryan Stinnett's</strong></a> being my personal favourite of the many very accessible introductions available). Much like I did with PGO, what I want to do here is walk through my own personal experience integrating the process into a build pipeline, and make explicit some subtler points I've had to read between the lines elsewhere. It'll be a bit circuitous, but by the end of this article I should have convinced you of what the Os in LTO and PGO are really doing, the way my colleague and I convinced ourselves. Oh, and while some code snippets and console commands will be specific to my compiler of choice, there's enough in here that should be relevant whatever your setup.
+But plenty of digital ink - pixels? - have already been spilled on LTO (<a href="https://convolv.es/guides/lto/"><strong>J. Ryan Stinnett's</strong></a> being my personal favourite of the many very accessible introductions available). Much like I did with PGO, what I want to do here is just walk through my own personal experience integrating the process into a build pipeline, and make explicit some subtler points I've had to read between the lines elsewhere. It'll be a bit circuitous, but by the end of this article I should have convinced you of what the Os in LTO (and PGO) are really doing, the way my colleague and I convinced ourselves. Some code snippets and console commands will be specific to my compiler of choice, but there should be enough here to be relevant whatever your setup.
 
 ## But what is a Linker?
 
@@ -29,7 +29,7 @@ Looking at a C++ developer's toolchain, it's easy to get hung up on the compiler
 ![Desktop View](/assets/img/posts/2026-02-20-compiler-and-linker.png)
 *<strong>The toolchain</strong> transforms source code to (executable) machine code. The preprocessor, compiler, and assembler are, technically, their own programs, but I'll lump them together and call them the compiler for convenience; they aren't the part of the toolchain we're interested in today.*
 
-Toolchains think about a project in terms of **compilation units**, which in C++ are just its `.cpp` source files. At compile time, sources get lowered, unit by unit, into independent **machine code** binaries native to your desired instruction set (x86, ARM, *etc.*). The linker is what then takes their native object files (`.o`) and merges them together. Whether returning an executable (`.exe`) or maybe a library (`.dll`), this last step is machine code in, machine code out.
+Toolchains think about a project in terms of **compilation units**, which in C++ will be `.cpp` source files. At compile time, sources get lowered, unit by unit, into independent **machine code** binaries native to your desired instruction set (x86, ARM, *etc.*). The linker is what then takes these native object files (`.o`) and merges them together. Whether returning an executable (`.exe`) or maybe a library (`.dll`), this last step is machine code in, machine code out.
 
 Now, when we talk about linking object files, we're linking them by their **symbols**. These are any named entities in a program that get attached to a fixed memory location - *e.g.* functions and class methods, global and static variables - many of which will be **externally visible** beyond the scope of their own compilation unit. When externals are referenced elsewhere it's the linker that matches them to their definitions, a process known as <a href="https://chessman7.substack.com/i/164431639/symbol-resolution-in-action"><strong>symbol resolution</strong></a>.
 
@@ -37,7 +37,7 @@ While they will attempt some amount of *dead code stripping*, compilers evaluate
 
 ## LLVM, Revisited
 
-If you read *PGO, But Better*, you might remember I introduced Clang as my go-to compiler, the one I'll be writing these blogs about. You might also remember that it's the C/C++ frontend of the LLVM compiler infrastructure, translating source code into an **intermediate representation (IR)** on which the middle-end performs a series of language-agnostic passes. And if you remember that after optimisation, the backend translates the IR again, it's no great shock that this is where we return a bunch of instruction set-specific object files, ready for linking.
+If you read *PGO, But Better*, you might remember I introduced Clang as my go-to compiler, the one I'll be writing these blogs about. You might also remember that it's the C/C++ frontend of the LLVM compiler infrastructure, needed to translate source code into an **intermediate representation (IR)** on which the middle-end performs a series of language-agnostic passes. And if you remember that after optimisation, the backend translates the IR again, it's no great shock that this is where we return a bunch of instruction set-specific object files, ready for linking.
 
 For a blog about link-time optimisations (we're getting there, I promise) what may come as a surprise is our choice of linker barely matters. LLVM's [**lld-link**](https://lld.llvm.org/windows_support.html) writes executables in the Common Object File Format **COFF**, a binary file format that runs on Windows, [**ld.ldd**](https://man.archlinux.org/man/extra/lld/ld.lld.1.en) the Executable and Linkable **ELF** Format targeting Linux/Android, and [**ld64.ldd**](https://llvm.org/devmtg/2022-05/slides/2022EuroLLVM-LLD-for-Mach-O.pdf) the **Mach-O** Mach Objects for macOS/iOS. Any such flavour of the LLD subproject - and for that matter, any of the respective system linkers they [**were designed to replace**](https://lld.llvm.org/) - will slot into the LLVM toolchain as below:
 
@@ -50,9 +50,9 @@ Intermediate representations are abstractions of source code, used to write easi
 
 Beyond this *raison d'être*, the LLVM IR tries to complement its surrounding compiler infrastructure. While it is not uncommon for a compiler to use [**several different IRs to get from source code to native machine code**](https://cs.lmu.edu/~ray/notes/ir/), the LLVM middle-end is designed for modularity and therefore uses the same IR at every pass. Granted, the syntax of LLVM IR is already more legible than assembly (let alone other IRs!), but as <a href="https://www.cs.cornell.edu/~asampson/blog/llvm.html"><strong>Adrian Sampson</strong></a> points out, it certainly can't hurt that the curious programmer playing about with optimisation passes only needs one language throughout. The compiler processes this in its *binary form* (`.bc`), often referred to **LLVM bitcode**, but it can also be disassembled to an equivalent human-readable *textual form* (`.ll`) by `llvm-dis` (and reassembled with `llvm-as`).
 
-A quick aside - LLVM bitcode is machine code for a *virtual machine*. There isn't an Actually Existing computer architecture that'll run that bitcode instruction set, but LLVM pretends there is in order to standardise its optimisations. With this understanding, we can broaden our earlier definition of an **object file** to include any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`s, much like `.ll`s read as quote-unquote virtual assembly. When compiling with `clang -S` or `clang -c", adding an extra `-emit-llvm` <a href="https://clang.llvm.org/docs/ClangCommandLineReference.html#id3"><strong>flag</strong></a> will indeed return the IR analogue of the desired assembler or object file, respectively.
+LLVM bitcode can be conceptualised as machine code for a *virtual machine*: there isn't a physical computer architecture that'll run these binaries, but LLVM pretends there is in order to standardise its optimisations. With this understanding, we can broaden our earlier definition of an **object file** to include any file that contains machine code, virtual or native. `.bc` files are the virtual versions of `.o`s, much like `.ll`s read as quote-unquote virtual assembly. When compiling with `clang -S` or `clang -c`, adding an extra `-emit-llvm` <a href="https://clang.llvm.org/docs/ClangCommandLineReference.html#id3"><strong>flag</strong></a> will indeed return the IR analogue of the desired assembler or object file, respectively.
 
-Now, this isn't going to be the <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>gentlest</strong></a> introduction out there, but we can start out nice and slow. Let's translate a trivial C++ function to IR:
+Consider how a trivial C++ function translates to IR:
 ```c++
 static int qux()
 {
@@ -69,9 +69,9 @@ define internal i32 @qux() {
 ```
 {: file='*.ll'}
 
-In both languages, we `define` `@qux`, a function `internal` to the source file (rather than an external symbol). `@qux` in turn `call`s `@baz`, some other `void` function, before `ret`urning a value of `10` itself. Really, the only difference with C++ is how we denote types. Integer types are denoted `iN`, and floating-point types `fN`, such that `int` becomes `i32`, `double` becomes `f64`, and so on. In fact, because IR is only an abstract representation of an instruction set, it doesn't need to worry about physically storing variables in a fixed number of bytes. That means `N` can be any natural number, not just a multiple of 8 - notably, Booleans are written `i1` in IR!
+In both languages, we `define` `@qux`, a function `internal` to the source file (rather than an external symbol). `@qux` in turn `call`s `@baz`, some other `void` function, before `ret`urning a value of `10` itself. Really, the only difference with C++ is how we denote types. Integer types are denoted `iN`, and floating-point types `fN`, such that `int` becomes `i32`, `double` becomes `f64`, and so on. In fact, because IR is only an abstract representation of an instruction set, it doesn't need to worry about physically storing variables in a fixed number of bytes. That means `N` can be any natural number, not strictly a multiple of eight - notably, Booleans are written `i1` in IR!
 
-So far, so good, yeah? Filling in the rest of the compilation unit...
+So far, so good, yeah? Let's go ahead and borrow a bigger chunk of code from the <a href="https://llvm.org/docs/LinkTimeOptimization.html#example-of-link-time-optimization"><strong>LLVM docs</strong></a>...
 ```c++
 extern int  foo();
 extern void bar();
@@ -109,8 +109,8 @@ int qux()
 }
 ```
 {: file='foobar.cpp'}
-
-This is not a terribly novel snippet of code: I found it in the <a href="https://llvm.org/docs/LinkTimeOptimization.html#example-of-link-time-optimization"><strong>LLVM docs</strong></a> and filed the serial numbers off. Adding an extra `-emit-llvm` flag to clang's command for generating assembly, `clang foobar.cpp -emit-llvm -S` returns `foobar.ll` as the 'assembled' textual form of IR (minus some metadata removed for clarity):
+ 
+`clang foobar.cpp -emit-llvm -S` returns `foobar.ll` as the 'assembled' textual form of IR (minus some metadata, removed for clarity):
 
 ```llvm
 @i = internal global i32 24
@@ -190,13 +190,12 @@ declare void @baz()
 {: file='foobar.optimised.ll'}
 Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`. This functions like a switch statement, conditioned on the predecessor block in the control flow. `%2` is set to `42` if we've jumped directly from `line 5` into `%add42`, but `52` should we be routed through `%qux` first. A basic block might have any number of phi nodes, but they must always be grouped together at the top of their chunk of code (*i.e.* before a single non-phi instruction is called).
 
-Because they only link a basic block's registers to their predecessors, phi nodes are better thought of as called along the edges of a CFG than within the blocks themselves.<sup>1</sup> They are fake operations, in a very technical sense. I mean, Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits to choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than saying "phony functions" outright. I've even seen some sources transliterate Φ as the Greek letter *for* phony - but that part's a false etymology, they're just soundalikes. Ironic.
+Because they only link a basic block's registers to their predecessors, phi nodes are better thought of as called along the edges of a CFG than within the blocks themselves.<sup>1</sup> They are fake operations, in a very technical sense. Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits to choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than saying "phony functions" outright. I've even seen some <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>sources</strong></a> transliterate Φ as the Greek letter *for* phony - but that part's a false etymology, they're just soundalikes. Ironic.
 <p style="line-height:1.25"><sup><sup>1</sup> This formalism is completely equivalent to the <a href="https://github.com/llvm/llvm-project/blob/main/mlir/docs/Dialects/LLVM.md#phi-nodes-and-block-arguments"><strong>block arguments</strong></a> preferred by more modern IRs.</sup></p>
 
 ## Link-Time Optimisations (LTO)
 
-Congratulations, you've now read your first IR! Granted, if you're not a compiler engineer, it's probably not a language you'll ever need to be fluent in.
-Nevertheless, it has its niche in your programmer's toolbox, worth picking out and dusting off every now and then to see how an extra flag is changing your code.
+Congratulations, you've now read your first IR! If you're not a compiler engineer, I grant you it's probably not a language you'll ever need to be fluent in. Nevertheless, it has its niche in your programmer's toolbox, worth picking out and dusting off every now and then to see how an extra flag is changing your code.
 
 But this is still a blog about LTO; we need a second source with which to link.
 ```c++
@@ -277,7 +276,7 @@ Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've see
 
 ### Thin LTO
 
-The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time. **Thin LTO** generates a compact summary of each compilation unit, which can be "thinly linked" much faster than the full object files. During the thin link, the summaries are joined together as a global index with which we can quickly perform further, global, analyses - chief amongst these, *function importing.*
+The funny thing <a href="https://llvm.org/devmtg/2015-04/slides/ThinLTO_EuroLLVM2015.pdf"><strong>Teresa Johnson and Xinliang David Li</strong></a> noticed about LTO is, well, there's not all that many symbols libLTO really cares about at link time. **Thin LTO** generates a compact summary of each compilation unit, which can be "thinly linked" much faster than the full object files. During the thin link, the summaries are joined together as a global index with which we can quickly perform further, global, analyses - and *function importing.*
 
 Using the thinly-linked index, each unit imports only those functions that will (likely) be inlined, and excludes those that would (likely) be ignored. It is this approximation of full LTO that allows us to parallelise the link-time optimisation step. Rather than passing a single, monolithic `*.bc` to libLTO, thin LTO can optimise the extended compilation units concurrently and then continue through the backend as usual.
 
@@ -290,17 +289,13 @@ Using the thinly-linked index, each unit imports only those functions that will 
 
 In terms of raw performance, thin LTO is a negligible downgrade: using it to build Clang 3.9, Stinnett finds a speed-up of 2.63% versus full LTO's 2.86%. The trade-off for that extra 0.23%, however, is compiling and linking with full LTO takes him 4x longer! As benchmarks go, it paints an instructive picture of what 'better' LTO looks like.
 
-With my last post, I wanted to highlight various cheat codes for PGO, and get in to how, when, and why they complement each other. This time around, I'm working backwards. Full LTO is, by definition, the most performant LTO can get: if you want to eke out improvements across sources, you won't do better than optimising every compilation unit with complete knowledge of every other compilation unit. Its variants are instead designed around reducing build times without shifting (too much of) that sluggishness onto the end user. Depending on your project, parallelising with thin LTO might not be the only way of bettering your quality-of-life as a developer - but to temper your expectations, while none of the following tricks should meaningfully worsen run-time performance versus full LTO, they're not going to make it faster either.
+With my last post, I wanted to highlight various cheat codes for PGO, and get in to how, when, and why they complement each other. This time around, I'm working backwards. Full LTO is, by definition, the most performant LTO can get: if you want to eke out improvements across sources, you won't do better than optimising every compilation unit with complete knowledge of every other compilation unit. Its variants are instead designed to reduce build times without shifting (too much) sluggishness onto the end user. Depending on your project, parallelising with thin LTO might not be the only way of bettering your quality-of-life as a developer - but to temper your expectations, because while none of the following tricks should meaningfully worsen run-time performance versus full LTO, they're not going to make it faster either.
 
 ### Linker Caching
 
-Full LTO merges all of its compilation units into a single module, so whenever any of those sources are edited, the full libLTO step needs rerun. With modern compilers affording incremental 
+Clang is an **incremental** compiler, in that it only recompiles sources that have been changed since the last build. Unfortunately, because full LTO merges all of its compilation units into one before link-time optimisation, whenever any of those sources are edited the entire libLTO step will need rerun. Thin LTO on the other hand can cache and reuse earlier work such that, much like everything other than the link steps can run in parallel, everything other than its link steps can run incrementally.
 
-Reconsider 
-
-The corollary to this is, thin LTO is also incremental. Full LTO merges all of its compilation units into a single module, so whenever any of those sources are edited, the full libLTO step needs rerun. If you edit a source without changing its index files, however, thin LTO can skip this. It will still need to...
-
-Now, . Further flags for "pruning" the cache size [**are also available.**](https://clang.llvm.org/docs/ThinLTO.html#cache-pruning)
+Recalling the thin LTO pipeline, we can see that a source's dependencies are itself and the sources it imports from (plus a couple more auxiliaries detailed by [**Johnson**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html)). Point is, if none of these change, then that source's link-time optimisations needn't be deprecated and rebuilt before the final link step. To enable incremental thin LTO, you'll need to manually provide your linker of choice with a path relative to the build directory wherein it can cache the fully optimised bitcode. Further flags for "pruning" the cache size are also available.
 
 **lld-link flags** `/lldltocache:<path/to/cache>`
 
