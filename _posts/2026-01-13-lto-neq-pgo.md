@@ -309,6 +309,10 @@ Now, . Further flags for "pruning" the cache size [**are also available.**](http
 **ld64.lld flags** `-Wl,-cache_path_lto,<path/to/cache>`
 ### Unified LTO
 
+From here on, things get a bit fuzzy. Stinnett talks about all of these, so [...]. However, I'd be lying if I said any of these extra settings seem useful to my own work as a gamedev.
+
+With that warning out of the way, **unified LTO** is . As I understand it, [the proposal](https://convolv.es/guides/lto/) came about to deal with. Some projects might, after all, see merit in using full LTO in some places, thin LTO in others.
+
 **Clang flags** `-funified-lto`
 
 ### Fat LTO
