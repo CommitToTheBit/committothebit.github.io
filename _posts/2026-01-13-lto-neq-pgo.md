@@ -313,9 +313,18 @@ From here on, things get a bit fuzzy. Stinnett talks about all of these, so [...
 
 With that warning out of the way, **unified LTO** is . As I understand it, [the proposal](https://convolv.es/guides/lto/) came about to deal with. Some projects might, after all, see merit in using full LTO in some places, thin LTO in others.
 
+The use case here is, a programmer might want to squeeze every drop of performance out of their core project, but be fine with the coarser nature of LTO for internal tools, unit tests. *etc.*
+
 **Clang flags** `-funified-lto`
 
 ### Fat LTO
+
+Take it one step further, even. In a bid to cut down build times, you might think to disable LTO in some areas altogether. The challenge here is again one of formatting. Because LTO passes bitcode to the linker where a traditional build would pass native object files, **fat LTO** simply builds both, for every source, and
+
+
+Under LTO, LLVM bitcode is delivered 
+
+*Fat LTO* takes this principle one step further. 
 
 Take it one step further, even: if you can defer , . This is, again, useful
 
