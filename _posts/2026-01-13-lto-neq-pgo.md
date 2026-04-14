@@ -307,6 +307,7 @@ Now, . Further flags for "pruning" the cache size [**are also available.**](http
 **ld.lld flags** `-Wl,--thinlto-cache-dir=<path/to/cache>`
 
 **ld64.lld flags** `-Wl,-cache_path_lto,<path/to/cache>`
+
 ### Unified LTO
 
 From here on, things get a bit fuzzy. Stinnett talks about all of these, so [...]. However, I'd be lying if I said any of these extra settings seem useful to my own work as a gamedev.
@@ -345,15 +346,15 @@ All told, the most intuitive definition of LTO I can think of is *optimisation w
 ![Desktop View](/assets/img/posts/2026-02-21-pgo-and-lto.png)
 *<strong>Just LTO with extra profiling data, right?</strong> PGO and LTO*
 
-The fuzzy, intuitive - *but wrong!* - read LTO unlocks "the last" optimisations we might want to run, and PGO builds on those.
+We've so far been focused on what LTO is. We've discussed the LLVM interpretation at considerable depth, walking through how its myriad flags work and when you'd want to use them. We've also gone on a detour into the LLVM IR, learning the fundamentals of the syntax to confirm how these optimisations work at the libLTO level. But now we need to talk about what LTO isn't. 
+
+Where I think the confusion arises that "PGO is just LTO with extra steps" is, there's very rarely a reason to use PGO if you don't already have LTO enabled. I mean, in MSVC, you literally can't because of how the compiler has been written. Clang and GCC, however, support either/or, and the two techniques are conceptually distinct.
+
+(and as should be pretty clear from the above, LTO offers more or less the exact same optimisation opportunities; all the flags laid out above exist )
+
+The fuzzy, intuitive - but wrong! - interpretation is LTO unlocks "the last" optimisations we might want to run, and PGO builds on those. And while 
 
 Now, these two tricks *are* superficially very similar. Both [...], both [...]. Whether [LTO (via libLTO), ...], all of them use the same LLVM passes: as my colleague put it,
 > I think my mistake was imagining the optimisation steps in LTO is distinct from normal compiler optimisation.
 
-Where I think the confusion arises that "PGO is just LTO with extra steps" is, there's very rarely a reason to use PGO if you don't already have LTO enabled.
-
-(and as should be pretty clear from the above, LTO offers more or less the exact same optimisation opportunities; all the flags laid out above exist )
-
 The only other argument against turning LTO on immediately is undefined behaviour. Now, that's an easy thing to handwave away - I would simply write code that's well-defined, and all that - but what if you're working on a pre-existing codebase? Suppose you're, well, *me*, porting games from 10, 15, 20 years ago. As a third party chipping away at an already-existing ; some of them were written before LTO was even A Thing. Now, personally I'd still advocate for sucking it up, enabling LTO first, and slogging through the regressions one by one, but I'm not going to tell you how to live your life. 
-
-In theory, that is. In practice, MSVC won't let you enable PGO without LTO because of how the compiler has been written; Clang and GCC, however, support either/or.
