@@ -214,25 +214,17 @@ void baz()
 ```
 {: file='main.cpp'}
 
-[42 paragraph]
+Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't determine that `i` is never changed, that `%qux` and therefore `@baz` become inaccessible, that `main` will not never return a value of `42`.  While symbol resolution, dead code stripping, etc., are, technically speaking, optimisations performed at link-time, we’ll distinguish LTO from any inferences that can be made by the linker alone.
 
-**Link-time optimisation** is the process of applying across multiple sources the same optimisation passes the compiler applies to each source. In LLVM specifically, the linker dispatches its extra work to **libLTO**, a shared object that acts as a wrapper for the LLVM middle-end. If there's one idea I want to get across, LTO is applying
-
-**Link-time optimisation (LTO)** is applying the
-
-
-Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't infer that `i` is never changed, that `%qux` and therefore `@baz` become inaccessible, that `main` will not never return a value of `42`. Those are the extra **link-time optimisations (LTO)** this section is dedicated to.
-
-The reason we don't mind which linker we're using is - plot twist! - it's not the linker that'll be making our optimisations. The LLVM project contains a separate tool, **libLTO**, that manages...
-
-In LLVM specifically, the linker dispatches its extra work to **libLTO**. This is a wrapper for the optimisation passes of the LLVM middle-end, a shared object integrated with LLD and its alternatives. If there's one idea I want to get across with this blog, it's this: the linker makes more or less the same optimisations across *multiple* sources that compiler does within *each* source.
-
+Instead, let **link-time optimisation (LTO)** be the process of applying across multiple sources *the same optimisations* the compiler applies to each source. In LLVM specifically, this extra work will be dispatched to libLTO, a shared object that exists [in dialogue](https://llvm.org/docs/LinkTimeOptimization.html#multi-phase-communication-between-liblto-and-linker) with the linker, acting as a wrapper for the LLVM middle-end. The following flavours of LTO are all variations on a theme: running the compiler’s usual optimisation passes on a larger-than-usual domain.
 ### Full LTO
 
-The naive implementation of LTO is, weirdly, also the best. This is **full LTO**, and I tend to think of it as the 'correct' way to go about these optimisations.
+Imagine merging every compilation unit into one massive block of LLVM bitcode, then passing it through the middle-end a second time. A naive implementation, sure, but by some standards, also the best. This is called **full LTO**, and I tend to think of it as the purist approach to link-time optimisation.
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-full-lto.png)
-*<strong>Full LTO</strong>* By compiling our sources as,
+*<strong>Full LTO</strong>
+
+By compiling our sources as,
 
 ```
 $ clang foobar.cpp -c -O2 -flto
@@ -270,7 +262,14 @@ define void @baz() {
 ```
 {: file='main.preopt.ll'}
 
-A fully LTO'd `main.opt.ll` also behaves as we'd expect:
+Using `-print-after-all` to see each LLVM pass, we can verify that LTO calls:
+
+- `pass` to do [description]
+- `pass` to do [description]
+- `pass` to do [description]
+
+reducing the bitcode down to the expected result:
+
 ```llvm
 define i32 @main() {
     ret i32 42
@@ -278,7 +277,7 @@ define i32 @main() {
 ```
 {: file='main.opt.ll'}
 
-Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've seen above it, after that first pass through the linker, libLTO has to run <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15745-s13/public/lectures/L3-LLVM-Overview-1up.pdf#page=10"><strong>20-odd</strong></a> of the usual optimisation passes on the monolithic module we've merged our IRs into - all on a single thread. At best impractical, at worst unusable, these extra optimisations will slow your link times to a crawl (and that's assuming so large a `monolithic.bc` will even fit in memory). Surely, surely, there's a compromise to be found between performance and quality-of-life?
+Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've seen above it, after that first pass through the linker, libLTO has to run <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15745-s13/public/lectures/L3-LLVM-Overview-1up.pdf#page=10"><strong>20-odd</strong></a> of the usual optimisation passes on the monolithic module we've merged our IRs into - all on a single thread. At best impractical, at worst unusable, these extra optimisations will slow your link times to a crawl (and that's assuming so large a `main.bc` will even fit in memory). Surely, surely, there's a compromise to be found between performance and quality-of-life?
 
 **Clang flags** `-flto[=full]`
 
@@ -336,9 +335,9 @@ Take it one step further, even: if you can defer , . This is, again, useful
 
 ### Distributed Thin LTO (DTLTO)
 
-Now, in Stinett's guide to LTO, he flags up three more advanced LTO concepts for the curious reader: symbol visibility, linker caching, and distributed build support. The first two we've already touched on, but what about the third? A **distributed build**...
+If you're working on an extremely large project, chances are you're running **distributed builds** across a whole network of machines, with each taking responsibility for its own units of work. Full LTO, being single-threaded, also needs run on one single linker, but thin LTO slots into a distributed system nicely. [Here, machines receive their own [index files?], and can be [...].]
 
-If you're working on an extremely large project, chances are you're running **distributed builds** across a whole network of machines, with each taking responsibility for its own units of work. Full LTO, being single-threaded, also needs run on one single linker, but thin LTO slots into a distributed system nicely. Here, machines receive their own [index files?], and can be [...]. But I digress.  
+**Distributed thin LTO (DTLTO)** can further be incrementalised by [...].
 
 **Clang flags** [...]
 
