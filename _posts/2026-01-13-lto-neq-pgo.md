@@ -222,7 +222,7 @@ Instead, let **link-time optimisation (LTO)** be the process of applying across 
 Imagine merging every compilation unit into one massive block of LLVM bitcode, then passing it through the middle-end a second time. A naive implementation, sure, but by some standards, also the best. This is called **full LTO**, and I tend to think of it as the purist approach to link-time optimisation.
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-full-lto.png)
-*<strong>Full LTO</strong>
+*<strong>Full LTO</strong>*
 
 By compiling our sources as,
 
