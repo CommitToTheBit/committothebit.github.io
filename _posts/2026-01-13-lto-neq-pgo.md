@@ -213,6 +213,14 @@ void baz()
 }
 ```
 {: file='main.cpp'}
+
+[42 paragraph]
+
+**Link-time optimisation** is the process of applying across multiple sources the same optimisation passes the compiler applies to each source. In LLVM specifically, the linker dispatches its extra work to **libLTO**, a shared object that acts as a wrapper for the LLVM middle-end. If there's one idea I want to get across, LTO is applying
+
+**Link-time optimisation (LTO)** is applying the
+
+
 Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't infer that `i` is never changed, that `%qux` and therefore `@baz` become inaccessible, that `main` will not never return a value of `42`. Those are the extra **link-time optimisations (LTO)** this section is dedicated to.
 
 The reason we don't mind which linker we're using is - plot twist! - it's not the linker that'll be making our optimisations. The LLVM project contains a separate tool, **libLTO**, that manages...
@@ -302,11 +310,25 @@ Recalling the thin LTO pipeline, we can see that a source's dependencies are its
 **ld.lld flags** `-Wl,--thinlto-cache-dir=<path/to/cache>`
 
 **ld64.lld flags** `-Wl,-cache_path_lto,<path/to/cache>`
+
 ### Unified LTO
+
+From here on, things get a bit fuzzy. Stinnett talks about all of these, so [...]. However, I'd be lying if I said any of these extra settings seem useful to my own work as a gamedev.
+
+With that warning out of the way, **unified LTO** is . As I understand it, [the proposal](https://convolv.es/guides/lto/) came about to deal with. Some projects might, after all, see merit in using full LTO in some places, thin LTO in others.
+
+The use case here is, a programmer might want to squeeze every drop of performance out of their core project, but be fine with the coarser nature of LTO for internal tools, unit tests. *etc.*
 
 **Clang flags** `-funified-lto`
 
 ### Fat LTO
+
+Take it one step further, even. In a bid to cut down build times, you might think to disable LTO in some areas altogether. The challenge here is again one of formatting. Because LTO passes bitcode to the linker where a traditional build would pass native object files, **fat LTO** simply builds both, for every source, and
+
+
+Under LTO, LLVM bitcode is delivered 
+
+*Fat LTO* takes this principle one step further. 
 
 Take it one step further, even: if you can defer , . This is, again, useful
 
@@ -327,15 +349,15 @@ All told, the most intuitive definition of LTO I can think of is *optimisation w
 ![Desktop View](/assets/img/posts/2026-02-21-pgo-and-lto.png)
 *<strong>Just LTO with extra profiling data, right?</strong> PGO and LTO*
 
-The fuzzy, intuitive - *but wrong!* - read LTO unlocks "the last" optimisations we might want to run, and PGO builds on those.
+We've so far been focused on what LTO is. We've discussed the LLVM interpretation at considerable depth, walking through how its myriad flags work and when you'd want to use them. We've also gone on a detour into the LLVM IR, learning the fundamentals of the syntax to confirm how these optimisations work at the libLTO level. But now we need to talk about what LTO isn't. 
+
+Where I think the confusion arises that "PGO is just LTO with extra steps" is, there's very rarely a reason to use PGO if you don't already have LTO enabled. I mean, in MSVC, you literally can't because of how the compiler has been written. Clang and GCC, however, support either/or, and the two techniques are conceptually distinct.
+
+(and as should be pretty clear from the above, LTO offers more or less the exact same optimisation opportunities; all the flags laid out above exist )
+
+The fuzzy, intuitive - but wrong! - interpretation is LTO unlocks "the last" optimisations we might want to run, and PGO builds on those. And while 
 
 Now, these two tricks *are* superficially very similar. Both [...], both [...]. Whether [LTO (via libLTO), ...], all of them use the same LLVM passes: as my colleague put it,
 > I think my mistake was imagining the optimisation steps in LTO is distinct from normal compiler optimisation.
 
-Where I think the confusion arises that "PGO is just LTO with extra steps" is, there's very rarely a reason to use PGO if you don't already have LTO enabled.
-
-(and as should be pretty clear from the above, LTO offers more or less the exact same optimisation opportunities; all the flags laid out above exist )
-
 The only other argument against turning LTO on immediately is undefined behaviour. Now, that's an easy thing to handwave away - I would simply write code that's well-defined, and all that - but what if you're working on a pre-existing codebase? Suppose you're, well, *me*, porting games from 10, 15, 20 years ago. As a third party chipping away at an already-existing ; some of them were written before LTO was even A Thing. Now, personally I'd still advocate for sucking it up, enabling LTO first, and slogging through the regressions one by one, but I'm not going to tell you how to live your life. 
-
-In theory, that is. In practice, MSVC won't let you enable PGO without LTO because of how the compiler has been written; Clang and GCC, however, support either/or.
