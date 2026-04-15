@@ -214,6 +214,14 @@ void baz()
 }
 ```
 {: file='main.cpp'}
+
+[42 paragraph]
+
+**Link-time optimisation** is the process of applying across multiple sources the same optimisation passes the compiler applies to each source. In LLVM specifically, the linker dispatches its extra work to **libLTO**, a shared object that acts as a wrapper for the LLVM middle-end. If there's one idea I want to get across, LTO is applying
+
+**Link-time optimisation (LTO)** is applying the
+
+
 Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't infer that `i` is never changed, that `%qux` and therefore `@baz` become inaccessible, that `main` will not never return a value of `42`. Those are the extra **link-time optimisations (LTO)** this section is dedicated to.
 
 The reason we don't mind which linker we're using is - plot twist! - it's not the linker that'll be making our optimisations. The LLVM project contains a separate tool, **libLTO**, that manages...
