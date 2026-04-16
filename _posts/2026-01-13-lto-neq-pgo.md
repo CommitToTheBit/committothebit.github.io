@@ -190,7 +190,7 @@ declare void @baz()
 {: file='foobar.optimised.ll'}
 Already, `@qux` has been inlined, `@i` safely simplified to a Boolean, and several registers removed. However, where I really want to draw your attention is the **phi node (Φ)** added in `line 12`. This functions like a switch statement, conditioned on the predecessor block in the control flow. `%2` is set to `42` if we've jumped directly from `line 5` into `%add42`, but `52` should we be routed through `%qux` first. A basic block might have any number of phi nodes, but they must always be grouped together at the top of their chunk of code (*i.e.* before a single non-phi instruction is called).
 
-Because they only link a basic block's registers to their predecessors, phi nodes are better thought of as called along the edges of a CFG than within the blocks themselves.<sup>1</sup> They are fake operations, in a very technical sense. Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits to choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than saying "phony functions" outright. I've even seen some <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>sources</strong></a> transliterate Φ as the Greek letter *for* phony - but that part's a false etymology, they're just soundalikes. Ironic.
+Because they only link a basic block's registers to their predecessors, phi nodes are better thought of as called along the edges of a CFG than within the blocks themselves.<sup>1</sup> They are fake operations, in a very technical sense. Kenneth Zadeck, who along with Barry Rosen and Mark Wegman <a href="https://www.cs.wustl.edu/~cytron/cs531/Resources/Papers/valnum.pdf"><strong>proposed SSA in 1988</strong></a>, all but admits to choosing the name Φ because it was <a href="https://compilers.cs.uni-saarland.de/ssasem/talks/Kenneth.Zadeck.pdf#page=40"><strong>more publishable</strong></a> than saying "phony functions" outright. I've even seen some <a href="https://mcyoung.xyz/2023/08/01/llvm-ir/"><strong>sources</strong></a> transliterate Φ as the Greek letter *for* phony - but that part's a false etymology, they're just soundalikes. **Ironic.**
 <p style="line-height:1.25"><sup><sup>1</sup> This formalism is completely equivalent to the <a href="https://github.com/llvm/llvm-project/blob/main/mlir/docs/Dialects/LLVM.md#phi-nodes-and-block-arguments"><strong>block arguments</strong></a> preferred by more modern IRs.</sup></p>
 
 ## Link-Time Optimisations (LTO)
@@ -312,20 +312,21 @@ Recalling the thin LTO pipeline, we can see that a source's dependencies are its
 
 ### Unified LTO
 
+If full and thin LTO generate the same bitcode at compile time, with whatever extra summary information squared away [**"on the side"**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html), it should be possible to toggle between the two without need for a clean build. The linker would have to be rerun, of course, but the sources themselves shouldn’t need recompiled. However, even though they share a file format, the bitcode produced by each approach will be subtly different: as one RFC points out, they are deliberately [**made incompatible**](https://discourse.llvm.org/t/rfc-a-unified-lto-bitcode-frontend/61774) to avoid confusion. Said RFC proposes **unified LTO** as a solution, which [...]
+
 The use case for deferring this decision on LTO is it makes it faster to switch between builds. A dev build that needs put together quickly would be better suited by thin LTO, so this allows you to enable full LTO for the occasional production build without upsetting your own build directory (it's also very useful if you want to profile the runtime performance of the two modes of LTO side-by-side). Unified LTO allows projects to build with a mixture of LTOs: a programmer might want to squeeze every drop of performance out of their core project, but be fine with the coarser nature of thin LTO for internal tools, unit tests. *etc.*
 
 **Clang flags** `-funified-lto`
 
 ### Fat LTO
 
-Take the concept one step further -
-
+Take the concept one step further - what about deferring the question of whether or not to use LTO altogether? Recalling that a traditional build process passes native object files, not bitcode, on to the linker, this might seem impossible. Fat LTO brute-forces the problem by building both versions, just in case.
 
  even. In a bid to cut down build times, you might think to disable LTO in some areas altogether. The challenge here is again one of formatting. Because LTO passes bitcode to the linker where a traditional build would pass native object files, **fat LTO** simply builds both, for every source, and
 
-errata:
--
--
+[**The motivations for and benefits of**](https://discourse.llvm.org/t/rfc-ffat-lto-objects-support/63977) this new method are, as far as I can tell, the same as unified LTO, so I won’t belabour those. However, it’s worth flagging up a couple of errata:
+- **Unified and fat LTO are orthogonal**
+- **Fat LTO object files are, well, fat** Because Fat LTO runs the [...] meaning for object files that are bigger and slower to build. If you’re enabling and disabling LTO frequently, , but it’s a markedly more significant buy-in than unified LTO.**
 
 **Clang flags** `-ffat-lto-objects`
 
