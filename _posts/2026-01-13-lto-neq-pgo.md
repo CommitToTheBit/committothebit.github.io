@@ -217,12 +217,13 @@ void baz()
 Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't determine that `i` is never changed, that `%qux` and therefore `@baz` become inaccessible, that `main` will not never return a value of `42`.  While symbol resolution, dead code stripping, etc., are, technically speaking, optimisations performed at link-time, we’ll distinguish LTO from any inferences that can be made by the linker alone.
 
 Instead, let **link-time optimisation (LTO)** be the process of applying across multiple sources *the same optimisations* the compiler applies to each source. In LLVM specifically, this extra work will be dispatched to libLTO, a shared object that exists [in dialogue](https://llvm.org/docs/LinkTimeOptimization.html#multi-phase-communication-between-liblto-and-linker) with the linker, acting as a wrapper for the LLVM middle-end. The following flavours of LTO are all variations on a theme: running the compiler’s usual optimisation passes on a larger-than-usual domain.
+
 ### Full LTO
 
 Imagine merging every compilation unit into one massive block of LLVM bitcode, then passing it through the middle-end a second time. A naive implementation, sure, but by some standards, also the best. This is called **full LTO**, and I tend to think of it as the purist approach to link-time optimisation.
 
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-full-lto.png)
-*<strong>Full LTO</strong>*
+*<strong>Full LTO</strong> resolves symbols twice, once as it links sources into a monolithic unit of LLVM bitcode, then again after libLTO has optimised and lowered it to machine code.*
 
 By compiling our sources as,
 
@@ -277,7 +278,7 @@ define i32 @main() {
 ```
 {: file='main.opt.ll'}
 
-Full LTO is the 'true' form of LTO, but it isn't always feasible. What we've seen above it, after that first pass through the linker, libLTO has to run <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15745-s13/public/lectures/L3-LLVM-Overview-1up.pdf#page=10"><strong>20-odd</strong></a> of the usual optimisation passes on the monolithic module we've merged our IRs into - all on a single thread. At best impractical, at worst unusable, these extra optimisations will slow your link times to a crawl (and that's assuming so large a `main.bc` will even fit in memory). Surely, surely, there's a compromise to be found between performance and quality-of-life?
+Full LTO is the pure form of LTO, but it isn't always feasible. What we've seen above is, after that first pass through the linker, libLTO has to run <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15745-s13/public/lectures/L3-LLVM-Overview-1up.pdf#page=10"><strong>20-odd</strong></a> of the usual optimisation passes on the monolithic module we've merged our IRs into - all on a single thread. At best impractical, at worst unusable, these extra optimisations will slow your link times to a crawl (and that's assuming so large a `main.bc` will even fit in memory). Surely, surely, there's a compromise to be found between performance and quality-of-life?
 
 **Clang flags** `-flto[=full]`
 
