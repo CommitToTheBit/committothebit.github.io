@@ -312,24 +312,20 @@ Recalling the thin LTO pipeline, we can see that a source's dependencies are its
 
 ### Unified LTO
 
-From here on, things get a bit fuzzy. Stinnett talks about all of these, so [...]. However, I'd be lying if I said any of these extra settings seem useful to my own work as a gamedev.
-
-With that warning out of the way, **unified LTO** is . As I understand it, [the proposal](https://convolv.es/guides/lto/) came about to deal with. Some projects might, after all, see merit in using full LTO in some places, thin LTO in others.
-
-The use case here is, a programmer might want to squeeze every drop of performance out of their core project, but be fine with the coarser nature of LTO for internal tools, unit tests. *etc.*
+The use case for deferring this decision on LTO is it makes it faster to switch between builds. A dev build that needs put together quickly would be better suited by thin LTO, so this allows you to enable full LTO for the occasional production build without upsetting your own build directory (it's also very useful if you want to profile the runtime performance of the two modes of LTO side-by-side). Unified LTO allows projects to build with a mixture of LTOs: a programmer might want to squeeze every drop of performance out of their core project, but be fine with the coarser nature of thin LTO for internal tools, unit tests. *etc.*
 
 **Clang flags** `-funified-lto`
 
 ### Fat LTO
 
-Take it one step further, even. In a bid to cut down build times, you might think to disable LTO in some areas altogether. The challenge here is again one of formatting. Because LTO passes bitcode to the linker where a traditional build would pass native object files, **fat LTO** simply builds both, for every source, and
+Take the concept one step further -
 
 
-Under LTO, LLVM bitcode is delivered 
+ even. In a bid to cut down build times, you might think to disable LTO in some areas altogether. The challenge here is again one of formatting. Because LTO passes bitcode to the linker where a traditional build would pass native object files, **fat LTO** simply builds both, for every source, and
 
-*Fat LTO* takes this principle one step further. 
-
-Take it one step further, even: if you can defer , . This is, again, useful
+errata:
+-
+-
 
 **Clang flags** `-ffat-lto-objects`
 
