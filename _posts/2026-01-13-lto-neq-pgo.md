@@ -303,19 +303,37 @@ With my last post, I wanted to highlight various cheat codes for PGO, and get in
 
 Clang is an **incremental** compiler, in that it only recompiles sources that have been changed since the last build. Unfortunately, because full LTO merges all of its compilation units into one before link-time optimisation, whenever any of those sources are edited the entire libLTO step will need rerun. Thin LTO on the other hand can cache and reuse earlier work such that, much like everything other than the link steps can run in parallel, everything other than its link steps can run incrementally.
 
-Recalling the thin LTO pipeline, we can see that a source's dependencies are itself and the sources it imports from (plus a couple more auxiliaries detailed by [**Johnson**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html)). Point is, if none of these change, then that source's link-time optimisations needn't be deprecated and rebuilt before the final link step. To enable incremental thin LTO, you'll need to manually provide your linker of choice with a path relative to the build directory wherein it can cache the fully optimised bitcode. Further flags for "pruning" the cache size are also available.
+Recalling the thin LTO pipeline, we can see that a source's dependencies are itself and the sources it imports from (plus a couple more auxiliaries detailed by [**Johnson**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html)). If none of these change, then that source's link-time optimisations needn't be deprecated and rebuilt before the final link step. To enable incremental thin LTO, you'll need to manually provide your linker of choice with a path relative to the build directory wherein it can cache the fully optimised bitcode. Further flags for "pruning" the cache size are also available.
 
-**lld-link flags** `/lldltocache:<path/to/cache>`
+**lld-link flags** `/lldltocache:<path/to/.cache>`
 
-**ld.lld flags** `-Wl,--thinlto-cache-dir=<path/to/cache>`
+**ld.lld flags** `-Wl,--thinlto-cache-dir=<path/to/.cache>`
 
-**ld64.lld flags** `-Wl,-cache_path_lto,<path/to/cache>`
+**ld64.lld flags** `-Wl,-cache_path_lto,<path/to/.cache>`
 
 ### Unified LTO
 
-If full and thin LTO generate the same bitcode at compile time, with whatever extra summary information squared away [**"on the side"**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html), it should be possible to toggle between the two without need for a clean build. The linker would have to be rerun, of course, but the sources themselves shouldn’t need recompiled. However, even though they share a file format, the bitcode produced by each approach will be subtly different: as one RFC points out, they are deliberately [**made incompatible**](https://discourse.llvm.org/t/rfc-a-unified-lto-bitcode-frontend/61774) to avoid confusion. Said RFC introduces a **unified LTO** bitcode structure that makes the two modes compatible. The compiler will generate the same bitcode either way, so the decision on which model of LTO to use can be left until we actually need to link.
+If full and thin LTO generate the same bitcode at compile time, with whatever extra summary information squared away [**"on the side"**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html), it should be possible to toggle between the two without need for a clean build. The linker would have to be rerun, of course, but the sources themselves shouldn’t need recompiled. However, even though they share a file format, the bitcode produced by each approach will be subtly different: as one RFC points out, they are deliberately [**made incompatible**](https://discourse.llvm.org/t/rfc-a-unified-lto-bitcode-frontend/61774) to avoid confusion. That is why said RFC introduces a **unified LTO** bitcode structure to [...]. 
 
-The use case for deferring this decision is it makes it faster to switch between builds. A dev build that needs put together quickly would be better suited by thin LTO, so this allows you to enable full LTO for the occasional production build without upsetting your own build directory (it's also very useful if you want to profile the runtime performance of the two modes of LTO side-by-side). Unified LTO allows projects to build with a mixture of LTOs: a programmer might want to squeeze every drop of performance out of their core project, but be fine with the coarser nature of thin LTO for internal tools, unit tests. *etc.*
+However - there's a caveat.
+
+Now, the compiler will generate the same bitcode either way, so the decision on which mode of LTO to use can be left until link-time.
+
+To the best of my understanding, unified LTO is not yet supported for Windows targets, but I have been able to get some mileage out of it in my mobile development work.
+
+Something I only found out through trial and error is, actually
+
+```
+$ clang foobar.cpp -c -O2 -funified-lto
+$ clang main.cpp -c -O2 -funified-lto
+$ clang foobar.o main.o -funified-lto -flto -Wl,-plugin-opt=save-temps -o main
+```
+
+The use case for deferring this decision is it makes it faster to switch between builds. A dev build that needs put together quickly would be better suited by thin LTO, so this allows you to enable full LTO for the occasional production build without upsetting your own build directory (it's also very useful if you want to profile the runtime performance of the two modes of LTO side-by-side).
+
+Note that for this to work, you'll need to pass `-funified-lto -flto[=full/thin]` to the linker, but only `-funified-lto` at the compile stage. 
+
+Unified LTO allows projects to build with a mixture of LTOs: a programmer might want to squeeze every drop of performance out of their core project, but be fine with the coarser nature of thin LTO for internal tools, unit tests. *etc.*
 
 **Clang flags** `-funified-lto`
 
@@ -323,7 +341,7 @@ The use case for deferring this decision is it makes it faster to switch between
 
 Take the concept one step further - what about deferring the question of whether or not to use LTO altogether? Recalling that a traditional build process passes native object files, not bitcode, on to the linker, this might seem impossible. Fat LTO brute-forces the problem by building both versions, just in case.
 
-[In a bid to cut down build times, you might think to disable LTO in some areas altogether. The challenge here is again one of formatting. Because LTO passes bitcode to the linker where a traditional build would pass native object files, **fat LTO** simply builds both, for every source, and]
+/ In a bid to cut down build times, you might think to disable LTO in some areas altogether. The challenge here is again one of formatting. Because LTO passes bitcode to the linker where a traditional build would pass native object files, **fat LTO** simply builds both, for every source, and /
 
 [**The motivations for and benefits of**](https://discourse.llvm.org/t/rfc-ffat-lto-objects-support/63977) this new method are, as far as I can tell, the same as unified LTO, so I won’t belabour those. However, it’s worth flagging up a couple of errata:
 - **Unified and fat LTO are orthogonal**
