@@ -315,7 +315,24 @@ Recalling the thin LTO pipeline, we can see that a source's dependencies are its
 
 If full and thin LTO generate the same bitcode at compile time, with whatever extra summary information squared away [**"on the side"**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html), it should be possible to toggle between the two without need for a clean build. The linker would have to be rerun, of course, but the sources themselves shouldn’t need recompiled. However, even though they share a file format, the bitcode produced by each approach will be subtly different: as one RFC points out, they are deliberately [**made incompatible**](https://discourse.llvm.org/t/rfc-a-unified-lto-bitcode-frontend/61774) to avoid confusion. That is why said RFC introduces a **unified LTO** bitcode structure to [...]. 
 
-Because the compiler will generate the same bitcode either way, the decision on which mode of LTO to use can be left until link-time. However, to switch between full and thin LTO without triggering a clean build, **do not include `-flto` in your compiler flags.** The compiler reads this as a guarantee that, even though we'reusing a unified structure, this should be written with full/thin LTO in mind. Instead, tell both the compiler and linker they're using a `-funified-lto` structure, but only specify the LTO mode as a linker flag:
+Now we can guarantee the compiler will generate the same bitcode either way, the decision on which mode of LTO to use can be left until link-time. Deferring this decision is actually very useful, as it allows us to switch between different builds without recompiling our entire project. As discussed, thin LTO builds faster, but full LTO will be needed to unlock peak run-time performance. By unifying their two formats, we can run production builds with full LTO without nuking our existing build directory.
+
+
+
+However, switching between full and thin LTO like this does
+
+
+ In theory, this allows you to switch . Switching between `-flto=fill
+
+
+However, you need .
+
+
+
+Instead, include `-funified-lto -
+
+
+However, to switch between full and thin LTO without triggering a clean build, **do not include `-flto` in your compiler flags.** The compiler reads this as a guarantee that, even though we'reusing a unified structure, this should be written with full/thin LTO in mind. Instead, tell both the compiler and linker they're using a `-funified-lto` structure, but only specify the LTO mode as a linker flag:
 ```
 $ clang foobar.cpp -c -O2 -funified-lto
 $ clang main.cpp -c -O2 -funified-lto
