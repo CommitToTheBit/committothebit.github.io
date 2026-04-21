@@ -214,9 +214,9 @@ void baz()
 ```
 {: file='main.cpp'}
 
-Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't determine that `i` is never changed, that `%qux` and therefore `@baz` become inaccessible, that `main` will not never return a value of `42`.  While symbol resolution, dead code stripping, etc., are, technically speaking, optimisations performed at link-time, we’ll distinguish LTO from any inferences that can be made by the linker alone.
+Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't determine that `i` is never changed, that `%qux` and therefore `@baz` become inaccessible, that `main` will never not return a value of `42`.  While symbol resolution, dead code stripping, *etc.*, are, technically speaking, optimisations performed at link-time, we’ll distinguish LTO from any inferences that can be made by the linker alone.
 
-Instead, let **link-time optimisation (LTO)** be the process of applying across multiple sources *the same optimisations* the compiler applies to each source. In LLVM specifically, this extra work will be dispatched to libLTO, a shared object that exists [in dialogue](https://llvm.org/docs/LinkTimeOptimization.html#multi-phase-communication-between-liblto-and-linker) with the linker, acting as a wrapper for the LLVM middle-end. The following flavours of LTO are all variations on a theme: running the compiler’s usual optimisation passes on a larger-than-usual domain.
+Instead, let **link-time optimisation (LTO)** be the process of applying across multiple sources *the same optimisations* the compiler applies to each source. In LLVM specifically, this extra work will be dispatched to libLTO, a shared object that exists [**in dialogue**](https://llvm.org/docs/LinkTimeOptimization.html#multi-phase-communication-between-liblto-and-linker) with the linker, acting as a wrapper for the LLVM middle-end. The following flavours of LTO are all variations on a theme: running the compiler’s usual optimisation passes on a larger-than-usual domain.
 
 ### Full LTO
 
@@ -313,34 +313,24 @@ Recalling the thin LTO pipeline, we can see that a source's dependencies are its
 
 ### Unified LTO
 
-Despite the shared file format, full and thin LTO produce subtly different bitcode, their structures very deliberately made incompatible to avoid confusion. **Unified LTO** [**lifts that incompatibility.**](https://discourse.llvm.org/t/rfc-a-unified-lto-bitcode-frontend/61774) If we can guarantee both modes of LTO will generate the same bitcode at compile time, with whatever extra summary information squared away [**"on the side"**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html), it becomes possible to toggle between the two without need for a clean build. The linker has to be rerun, of course, but the sources themselves don't need recompiled.
+Despite the shared file format, full and thin LTO produce subtly different bitcode, their structures deliberately made incompatible to avoid confusion. **Unified LTO** [**lifts that incompatibility.**](https://discourse.llvm.org/t/rfc-a-unified-lto-bitcode-frontend/61774) If we can guarantee both modes of LTO will generate the same binaries at compile time, with whatever extra summary information squared away [**"on the side"**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html), it becomes possible to toggle between the two without need for a clean build. The linker has to be rerun, of course, but the sources themselves don't need recompiled.
 
-Unifying our file formats like this essentially means the decision on which mode of LTO to use can be left until link time. As discussed, thin LTO builds faster, but full LTO will be needed to unlock peak runtime performance. Deferring the decision of which to use is therefore very useful, as we can run production builds with full LTO without nuking our existing build directory (a trick that also comes in handy for profiling the two modes side-by-side).
+Unifying the bitcode structure means the decision of which mode of LTO to use can be left until link time. As discussed, thin LTO builds faster, but full LTO will be needed to unlock peak runtime performance. Deferring that decision between the two is therefore very useful, as it allows us to run production builds with full LTO without nuking our existing build directory (a trick that also comes in handy for profiling the two modes side-by-side).
 
-In testing this out for myself, I actually had to waste a bit of time to get my flags exactly right - they're a bit finicky, 
-
-In researching this blog post, however, I found it was actually a bit finicky never found a defi *how* to 
-
-LLVM will [**warn**]() you that `-funified-lto` by itself will go unused during compilation, but you can’t
-set `-flto=full` or `-flto=thin` at compile-time either. Instead, pass `-funified-lto -flto` (without an
-argument) to the compiler and specify `-funified-lto -flto=[full/thin]` in the linker flags, like below:
+It would take a bit of trial and error to verify this result myself. The flags involved are a little finicky, you see, and none of my reading had turned up an example of how to use them without triggering a rebuild on accident. LLVM [**warns**](https://clang.llvm.org/docs/DiagnosticsReference.html#wunused-command-line-argument) you that `-funified-lto` by itself will go unused during compilation, but you can’t set `-flto=full` or `-flto=thin` at compile-time either. Instead, pass `-funified-lto -flto` (without an argument) to the compiler and specify `-funified-lto -flto=[full/thin]` in the linker flags as below:
 ```
 $ clang foobar.cpp -c -O2 -funified-lto
 $ clang main.cpp -c -O2 -funified-lto
 $ clang foobar.o main.o -funified-lto -flto -Wl,-plugin-opt=save-temps -o main
 ```
 
-The other benefit of unified LTO is it allows projects to build with a mixture of LTOs.
-
-a programmer might want to squeeze every drop of performance out of their core project, but be fine with the coarser nature of thin LTO for internal tools, unit tests. *etc.*
+The other benefit of unified LTO is it allows building with a mixture of LTOs. Using thin LTO to cut corners on internal tools, unit tests, *etc.*, but not the project's performance-critical core, might well be viable... provided the project has enough auxiliaries that they're already slowing link times.
 
 **Clang flags** `-funified-lto`
 
 ### Fat LTO
 
-Take the concept one step further - what about deferring the question of whether or not to use LTO altogether? Recalling that a traditional build process passes native object files, not bitcode, on to the linker, this might seem impossible. Fat LTO brute-forces the problem by building both versions, just in case.
-
-/ In a bid to cut down build times, you might think to disable LTO in some areas altogether. The challenge here is again one of formatting. Because LTO passes bitcode to the linker where a traditional build would pass native object files, **fat LTO** simply builds both, for every source, and /
+Let's take that concept of deferring to link-time one step further - what about deferring the very question of whether to use LTO altogether? Recalling that a traditional build process passes native object files, not bitcode, on to the linker, this might seem impossible. **Fat LTO** boldly goes 🖕fuck you🖕 and builds both, brute-forcing its way around the problem altogether.
 
 [**The motivations for and benefits of**](https://discourse.llvm.org/t/rfc-ffat-lto-objects-support/63977) this new method are, as far as I can tell, the same as unified LTO, so I won’t belabour those. However, it’s worth flagging up a couple of errata:
 - **Unified and fat LTO are orthogonal**
@@ -350,11 +340,20 @@ Take the concept one step further - what about deferring the question of whether
 
 ### Distributed Thin LTO (DTLTO)
 
-If you're working on an extremely large project, chances are you're running **distributed builds** across a whole network of machines, with each taking responsibility for its own units of work. Full LTO, being single-threaded, also needs run on one single linker, but thin LTO slots into a distributed system nicely. [Here, machines receive their own [index files?], and can be [...].]
+Extremely large projects often demand **distributed builds** across whole networks of machines, with each agent being delegated its own independent work. Full LTO, being single-threaded, also needs run on one single instance of libLTO, but thin LTO slots into a distributed system nicely. 
 
-**Distributed thin LTO (DTLTO)** can further be incrementalised by [...].
+![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
+*<strong>Distributed Thin LTO</strong>*
 
-**Clang flags** [...]
+**Distributed thin LTO (DTLTO)** can further be incrementalised, but once again - the complexity comes from 
+
+**Clang flags** `-fthinlto-index=<path/to/*.thinlto.bc>`
+
+**lld-link flags** `/thinlto-index-only`
+
+**ld.lld flags** `-Wl,-plugin-opt,-thinlto-index-only`
+
+<p align=left><a href="https://llvm.org/docs/DTLTO.html#limitations"><strong>Unsupported</strong></a> by <strong>ld64.lld.</strong></p>
 
 ## LTO && PGO
 
@@ -363,7 +362,7 @@ All told, the most intuitive definition of LTO I can think of is *optimisation w
 ![Desktop View](/assets/img/posts/2026-02-21-pgo-and-lto.png)
 *<strong>Just LTO with extra profiling data, right?</strong> PGO and LTO*
 
-We've so far been focused on what LTO is. We've discussed the LLVM interpretation at considerable depth, walking through how its myriad flags work and when you'd want to use them. We've also gone on a detour into the LLVM IR, learning the fundamentals of the syntax to confirm how these optimisations work at the libLTO level. But now we need to talk about what LTO isn't. 
+We've so far been focused on what LTO is. We've discussed the LLVM interpretation at considerable depth, walking through how its myriad flags work and when you'd want to use them. I even took you on detour into the thickets of LLVM IR itself, learning the fundamentals of the syntax to confirm how these optimisations work at the libLTO level. But now we need to talk about what LTO isn't. 
 
 Where I think the confusion arises that "PGO is just LTO with extra steps" is, there's very rarely a reason to use PGO if you don't already have LTO enabled. I mean, in MSVC, you literally can't because of how the compiler has been written. Clang and GCC, however, support either/or, and the two techniques are conceptually distinct.
 
