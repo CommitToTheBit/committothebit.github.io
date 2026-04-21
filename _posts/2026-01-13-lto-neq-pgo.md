@@ -315,33 +315,22 @@ Recalling the thin LTO pipeline, we can see that a source's dependencies are its
 
 If full and thin LTO generate the same bitcode at compile time, with whatever extra summary information squared away [**"on the side"**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html), it should be possible to toggle between the two without need for a clean build. The linker would have to be rerun, of course, but the sources themselves shouldn’t need recompiled. However, even though they share a file format, the bitcode produced by each approach will be subtly different: as one RFC points out, they are deliberately [**made incompatible**](https://discourse.llvm.org/t/rfc-a-unified-lto-bitcode-frontend/61774) to avoid confusion. That is why said RFC introduces a **unified LTO** bitcode structure to [...]. 
 
-Now we can guarantee the compiler will generate the same bitcode either way, the decision on which mode of LTO to use can be left until link-time. Deferring this decision is actually very useful, as it allows us to switch between different builds without recompiling our entire project. As discussed, thin LTO builds faster, but full LTO will be needed to unlock peak run-time performance. By unifying their two formats, we can run production builds with full LTO without nuking our existing build directory.
+Now we can guarantee the compiler will generate the same bitcode either way, the decision on which mode of LTO to use can be left until link time. Deferring this decision is actually very useful, as it allows us to switch between different builds without recompiling our entire project. As discussed, thin LTO builds faster, but full LTO will be needed to unlock peak runtime performance. By unifying their two formats, we can run production builds with full LTO without nuking our existing build directory (a trick that also comes in handy for profiling both modes side-by-side).
 
+In researching this blog post, however, I never
 
-
-However, switching between full and thin LTO like this does
-
-
- In theory, this allows you to switch . Switching between `-flto=fill
-
-
-However, you need .
-
-
-
-Instead, include `-funified-lto -
-
-
-However, to switch between full and thin LTO without triggering a clean build, **do not include `-flto` in your compiler flags.** The compiler reads this as a guarantee that, even though we'reusing a unified structure, this should be written with full/thin LTO in mind. Instead, tell both the compiler and linker they're using a `-funified-lto` structure, but only specify the LTO mode as a linker flag:
+LLVM will [**warn**]() you that `-funified-lto` by itself will go unused during compilation, but you can’t
+set `-flto=full` or `-flto=thin` at compile-time either. Instead, pass `-funified-lto -flto` (without an
+argument) to the compiler and specify `-funified-lto -flto=[full/thin]` in the linker flags, like below:
 ```
 $ clang foobar.cpp -c -O2 -funified-lto
 $ clang main.cpp -c -O2 -funified-lto
 $ clang foobar.o main.o -funified-lto -flto -Wl,-plugin-opt=save-temps -o main
 ```
 
-The use case for deferring this decision is it makes it faster to switch between builds. A dev build that needs put together quickly would be better suited by thin LTO, so this allows you to enable full LTO for the occasional production build without upsetting your own build directory (it's also very useful if you want to profile the runtime performance of the two modes of LTO side-by-side).
+The other benefit of unified LTO is it allows projects to build with a mixture of LTOs.
 
-Unified LTO also allows projects to build with a mixture of LTOs: a programmer might want to squeeze every drop of performance out of their core project, but be fine with the coarser nature of thin LTO for internal tools, unit tests. *etc.*
+a programmer might want to squeeze every drop of performance out of their core project, but be fine with the coarser nature of thin LTO for internal tools, unit tests. *etc.*
 
 **Clang flags** `-funified-lto`
 
