@@ -313,11 +313,13 @@ Recalling the thin LTO pipeline, we can see that a source's dependencies are its
 
 ### Unified LTO
 
-If full and thin LTO generate the same bitcode at compile time, with whatever extra summary information squared away [**"on the side"**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html), it should be possible to toggle between the two without need for a clean build. The linker would have to be rerun, of course, but the sources themselves shouldn’t need recompiled. However, even though they share a file format, the bitcode produced by each approach will be subtly different: as one RFC points out, they are deliberately [**made incompatible**](https://discourse.llvm.org/t/rfc-a-unified-lto-bitcode-frontend/61774) to avoid confusion. That is why said RFC introduces a **unified LTO** bitcode structure to [...]. 
+Despite the shared file format, full and thin LTO produce subtly different bitcode, their structures very deliberately made incompatible to avoid confusion. **Unified LTO** [**lifts that incompatibility.**](https://discourse.llvm.org/t/rfc-a-unified-lto-bitcode-frontend/61774) If we can guarantee both modes of LTO will generate the same bitcode at compile time, with whatever extra summary information squared away [**"on the side"**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html), it becomes possible to toggle between the two without need for a clean build. The linker has to be rerun, of course, but the sources themselves don't need recompiled.
 
-Now we can guarantee the compiler will generate the same bitcode either way, the decision on which mode of LTO to use can be left until link time. Deferring this decision is actually very useful, as it allows us to switch between different builds without recompiling our entire project. As discussed, thin LTO builds faster, but full LTO will be needed to unlock peak runtime performance. By unifying their two formats, we can run production builds with full LTO without nuking our existing build directory (a trick that also comes in handy for profiling both modes side-by-side).
+Unifying our file formats like this essentially means the decision on which mode of LTO to use can be left until link time. As discussed, thin LTO builds faster, but full LTO will be needed to unlock peak runtime performance. Deferring the decision of which to use is therefore very useful, as we can run production builds with full LTO without nuking our existing build directory (a trick that also comes in handy for profiling the two modes side-by-side).
 
-In researching this blog post, however, I never
+In testing this out for myself, I actually had to waste a bit of time to get my flags exactly right - they're a bit finicky, 
+
+In researching this blog post, however, I found it was actually a bit finicky never found a defi *how* to 
 
 LLVM will [**warn**]() you that `-funified-lto` by itself will go unused during compilation, but you can’t
 set `-flto=full` or `-flto=thin` at compile-time either. Instead, pass `-funified-lto -flto` (without an
