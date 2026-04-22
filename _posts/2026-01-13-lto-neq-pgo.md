@@ -330,11 +330,9 @@ The other benefit of unified LTO is it allows building with a mixture of LTOs. U
 
 ### Fat LTO
 
-Let's take that concept of deferring to link-time one step further - what about deferring the very question of whether to use LTO altogether? Recalling that a traditional build process passes native object files, not bitcode, on to the linker, this might seem impossible. **Fat LTO** boldly goes 🖕fuck you🖕 and builds both, brute-forcing its way around the problem altogether.
+Let's take that concept of deferring to link-time one step further - what about deferring the very question of whether to use LTO altogether? Recalling that a traditional build process passes native object files, not bitcode, on to the linker, this might seem impossible. **Fat LTO** boldly goes 🖕fuck you🖕 and just builds both, a brute-force solution to the problem.
 
-[**The motivations for and benefits of**](https://discourse.llvm.org/t/rfc-ffat-lto-objects-support/63977) this new method are, as far as I can tell, the same as unified LTO, so I won’t belabour those. However, it’s worth flagging up a couple of errata:
-- **Unified and fat LTO are orthogonal**
-- **Fat LTO object files are, well, fat** Because Fat LTO runs the [...] meaning for object files that are bigger and slower to build. If you’re enabling and disabling LTO frequently, , but it’s a markedly more significant buy-in than unified LTO.**
+[**The motivations for and benefits of**](https://discourse.llvm.org/t/rfc-ffat-lto-objects-support/63977) this new method are, as far as I can tell, the same as unified LTO, so I won’t belabour those here. They complement each other - fat LTO affords flexibility on when and where we optimise at link-time, unified LTO the orthogonal choice of how we'll optimise it - but it's also important to mark the differences. Fat LTO objects are, well, fat. Unifying LTO is a matter of lifting artificial constraints on the structure of LLVM bitcode, but fat LTO objects store two equivalent forms of the same underlying binaries. This comes at a cost to storage, and to build times (optimisations done to `*.o`s get thrown away), so where I'd recommend enabling unified LTO by default, it isn't worth using the following flag if you have the choice:
 
 **Clang flags** `-ffat-lto-objects`
 
