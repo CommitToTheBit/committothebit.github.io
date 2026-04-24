@@ -270,7 +270,7 @@ Reading the IR dumps printed to `main.passes.ll` after each LLVM pass, we can ve
 - [**Dead Argument Elimination**](https://llvm.org/docs/Passes.html#deadargelim-dead-argument-elimination) to simplify `foo`, by making it return a `void` type, and
 - [**Inlining**](https://llvm.org/doxygen/classllvm_1_1InlinerPass.html) to further simplify `foo` - by removing it altogether!
 
-This produces an wholly predictable result...
+This produces a wholly predictable result...
 
 ```llvm
 define i32 @main() {
