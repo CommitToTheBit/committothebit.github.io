@@ -1,7 +1,7 @@
 ---
 title: LTO != PGO
 description: Ballooning your build times for fun and profit.
-date: 2026-01-13 10:30:00 +0000
+date: 2026-04-28 10:30:00 +0000
 categories:
   - Procedural Whodunnits
 tags:

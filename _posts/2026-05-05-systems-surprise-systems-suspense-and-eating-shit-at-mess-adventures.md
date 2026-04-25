@@ -1,6 +1,6 @@
 ---
 title: "Systems Surprise, Systems Suspense, and Eating Shit at Mess Adventures"
-date: 2026-02-03 10:30:00 +0000
+date: 2026-05-05 10:30:00 +0000
 tags: ["design", "systems design"]
 math: true
 image:
