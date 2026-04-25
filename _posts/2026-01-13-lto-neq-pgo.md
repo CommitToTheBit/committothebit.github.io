@@ -1,6 +1,6 @@
 ---
 title: LTO != PGO
-description: Ballooning link times for fun and profit.
+description: Ballooning your build times for fun and profit.
 date: 2026-01-13 10:30:00 +0000
 categories:
   - Procedural Whodunnits
@@ -227,12 +227,12 @@ Imagine merging every compilation unit into one massive block of LLVM bitcode, t
 
 By compiling our sources as,
 
+```bash
+clang foobar.cpp -c -O2 -flto
+clang main.cpp -c -O2 -flto
+clang foobar.o main.o -flto -Wl,-plugin-opt=save-temps -Wl,-plugin-opt=-print-changed -o main 2> main.passes.ll
 ```
-$ clang foobar.cpp -c -O2 -flto
-$ clang main.cpp -c -O2 -flto
-$ clang foobar.o main.o -flto -Wl,-plugin-opt=save-temps -o main
-```
-we receive a snapshot of the `main.bc` IR at every steps of the full LTO process. The first of these, `main.preopt.bc` shows us the IR for the two files when they've just been merged. Disassembling with `$ llvm-dis main.preopt.bc -o main.preopt.ll`, we confirm `bar` is stripped, but little else.
+we receive a snapshot of the `main.bc` IR at every steps of the full LTO process. The first of these, `main.preopt.bc` shows us the IR for the two files when they've just been merged. Disassembling with `llvm-dis main.preopt.bc -o main.preopt.ll` confirms `bar` is stripped, but little else.
 
 ```llvm
 @i = internal global i1 false,
@@ -263,9 +263,9 @@ define void @baz() {
 ```
 {: file='main.preopt.ll'}
 
-Reading the IR dumps printed to `main.passes.ll` after each LLVM pass, we can verify that LTO uses:
+Reading the IR dumps printed to `main.passes.ll` after each LLVM pass, we can verify that LTO applies:
 
-- [**Interprocedural Sparse Conditional Constant Propagation**](https://llvm.org/docs/Passes.html#ipsccp-interprocedural-sparse-conditional-constant-propagation) to determine `main` returns `42` as described above,
+- [**Interprocedural Sparse Conditional Constant Propagation**](https://llvm.org/docs/Passes.html#ipsccp-interprocedural-sparse-conditional-constant-propagation) to determine `main` returns `42` as expected,
 - [**Global Variable Optimisation**](https://llvm.org/docs/Passes.html#globalopt-global-variable-optimizer) to strip unused globals (`@baz`, `@s`)
 - [**Dead Argument Elimination**](https://llvm.org/docs/Passes.html#deadargelim-dead-argument-elimination) to simplify `foo`, by making it return a `void` type, and
 - [**Inlining**](https://llvm.org/doxygen/classllvm_1_1InlinerPass.html) to further simplify `foo` - by removing it altogether!
@@ -279,7 +279,7 @@ define i32 @main() {
 ```
 {: file='main.opt.ll'}
 
-Full LTO is the pure form of LTO, but it isn't always feasible. What we've seen above is, after that first pass through the linker, libLTO has to run <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15745-s13/public/lectures/L3-LLVM-Overview-1up.pdf#page=10"><strong>20-odd</strong></a> of the usual optimisation passes on the monolithic module we've merged our IRs into - all on a single thread. At best impractical, at worst unusable, these extra optimisations will slow your link times to a crawl (and that's assuming so large a `main.bc` will even fit in memory). Surely, surely, there's a compromise to be found between performance and quality-of-life?
+Full LTO is the pure form of LTO, but it isn't always feasible. What we've seen above is, after that first pass through the linker, libLTO has to run <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15745-s13/public/lectures/L3-LLVM-Overview-1up.pdf#page=10"><strong>(some subset of)</strong></a> LLVM's usual optimisation passes on the monolithic module we've merged our IRs into - all on a single thread. At best impractical, at worst unusable, these extra optimisations will slow your link times to a crawl (and that's assuming so large a `main.bc` will even fit in memory). Surely, surely, there's a compromise to be found between performance and quality-of-life?
 
 **Clang flags** `-flto[=full]`
 
@@ -306,11 +306,11 @@ Clang is an **incremental** compiler, in that it only recompiles sources that ha
 
 Recalling the thin LTO pipeline, we can see that a source's dependencies are itself and the sources it imports from (plus a couple more auxiliaries detailed by [**Johnson**](https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html)). If none of these change, then that source's link-time optimisations needn't be deprecated and rebuilt before the final link step. To enable incremental thin LTO, you'll need to manually provide your linker of choice with a path relative to the build directory wherein it can cache the fully optimised bitcode. Further flags for "pruning" the cache size are also available.
 
-**lld-link flags** `/lldltocache:<path/to/.cache>`
-
 **ld.lld flags** `-Wl,--thinlto-cache-dir=<path/to/.cache>`
 
 **ld64.lld flags** `-Wl,-cache_path_lto,<path/to/.cache>`
+
+**lld-link flags** `/lldltocache:<path/to/.cache>`
 
 ### Unified LTO
 
@@ -319,10 +319,10 @@ Despite the shared file format, full and thin LTO produce subtly different bitco
 Unifying the bitcode structure means the decision of which mode of LTO to use can be left until link time. As discussed, thin LTO builds faster, but full LTO will be needed to unlock peak runtime performance. Deferring that decision between the two is therefore very useful, as it allows us to run production builds with full LTO without nuking our existing build directory (a trick that also comes in handy for profiling the two modes side-by-side).
 
 It would take a bit of trial and error to verify this result myself. The flags involved are a little finicky, you see, and none of my reading had turned up an example of how to use them without triggering a rebuild on accident. LLVM [**warns**](https://clang.llvm.org/docs/DiagnosticsReference.html#wunused-command-line-argument) you that `-funified-lto` by itself will go unused during compilation, but you can’t set `-flto=full` or `-flto=thin` at compile-time either. Instead, pass `-funified-lto -flto` (without an argument) to the compiler and specify `-funified-lto -flto=[full/thin]` in the linker flags as below:
-```
-$ clang foobar.cpp -c -O2 -funified-lto
-$ clang main.cpp -c -O2 -funified-lto
-$ clang foobar.o main.o -funified-lto -flto -Wl,-plugin-opt=save-temps -o main
+```bash
+clang foobar.cpp -c -O2 -funified-lto -flto
+clang main.cpp -c -O2 -funified-lto -flto
+clang foobar.o main.o -funified-lto -flto=full -o main
 ```
 
 The other benefit of unified LTO is it allows building with a mixture of LTOs. Using thin LTO to cut corners on internal tools, unit tests, *etc.*, but not the project's performance-critical core, might well be viable... provided the project has enough auxiliaries that they're already slowing link times.
@@ -348,9 +348,9 @@ Extremely large projects often demand **distributed builds** across whole networ
 
 **Clang flags** `-fthinlto-index=<path/to/*.thinlto.bc>`
 
-**lld-link flags** `/thinlto-index-only`
-
 **ld.lld flags** `-Wl,-plugin-opt,-thinlto-index-only`
+
+**lld-link flags** `/thinlto-index-only`
 
 <p align=left><a href="https://llvm.org/docs/DTLTO.html#limitations"><strong>Unsupported</strong></a> by <strong>ld64.lld.</strong></p>
 
@@ -369,7 +369,7 @@ Where I think the confusion arises that "PGO is just LTO with extra steps" is, t
 
 The fuzzy, intuitive - but wrong! - interpretation is LTO unlocks "the last" optimisations we might want to run, and PGO builds on those. And while 
 
-Now, these two tricks *are* superficially very similar. Both [...], both [...]. Whether [LTO (via libLTO), ...], all of them use the same LLVM passes: as my colleague put it,
+Now, these two tricks *are* superficially very similar. Both [...], both [...]. Whether [**LTO (via libLTO),** ...], all of them use the same LLVM passes: as my colleague put it,
 > I think my mistake was imagining the optimisation steps in LTO is distinct from normal compiler optimisation.
 
 The only other argument against turning LTO on immediately is undefined behaviour. Now, that's an easy thing to handwave away - I would simply write code that's well-defined, and all that - but what if you're working on a pre-existing codebase? Suppose you're, well, *me*, porting games from 10, 15, 20 years ago. As a third party chipping away at an already-existing ; some of them were written before LTO was even A Thing. Now, personally I'd still advocate for sucking it up, enabling LTO first, and slogging through the regressions one by one, but I'm not going to tell you how to live your life. 
