@@ -118,7 +118,7 @@ Speedrunning categories in a similar vein include <a href="https://www.speedrun.
 
 <div style="text-align:center;display:block;margin-left:auto;margin-right:auto">
 <iframe width="100%" style="aspect-ratio:16/9" src="https://www.youtube.com/embed/jnZ2NNYySuE"></iframe>
-<p style="font-size:80%;padding:0;color:#6d6c6c;"><strong>Jokes Done Quick</strong>At AGDQ 2014, tool-assisted speedrunners showed off an altogether different <i>Super Mario World</i> exploit. Due to a memory leak(?) in the original game, runners were able to inject new code during play, turning the platformer into maybe the world's worst IDE. See for yourself: it absolutely crushes.</p>
+<p style="font-size:80%;padding:0;color:#6d6c6c;"><strong>Gags Done Quick</strong> At AGDQ 2014, tool-assisted speedrunners showed off an altogether different <i>Super Mario World</i> exploit. Due to a memory leak(?) in the original game, runners were able to inject new code during play, turning the platformer into maybe the world's worst IDE. See for yourself: it absolutely crushes.</p>
 </div>
 
 Take it one step further than that, even - forget subversive play, let's talk straight up glitches. Games are held together with sticky tape, JIRA tickets, and dreams. Liam Mitchell
