@@ -214,7 +214,7 @@ void baz()
 ```
 {: file='main.cpp'}
 
-Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't perform **constant propgation** to determine that `i` is never changed, that `%qux` and therefore `@baz` become unreachable, that `main` will never not return a value of `42`. While symbol resolution, dead code stripping, *etc.*, are, technically speaking, optimisations performed at link-time, we’ll distinguish LTO from any inferences that can be made by the linker alone.
+Here, we can expect the linker to recognise `bar` as an unused external and strip it accordingly. However, it won't perform **constant propagation** to determine that `i` is never changed, that `%qux` and therefore `@baz` become unreachable, that `main` will never not return a value of `42`. While symbol resolution, dead code stripping, *etc.*, are, technically speaking, optimisations performed at link-time, we’ll distinguish LTO from any inferences that can be made by the linker alone.
 
 Instead, let **link-time optimisation (LTO)** be the process of applying across multiple sources *the same optimisations* the compiler applies to each source. In LLVM specifically, this extra work will be dispatched to libLTO, a shared object that exists [**in dialogue**](https://llvm.org/docs/LinkTimeOptimization.html#multi-phase-communication-between-liblto-and-linker) with the linker, acting as a wrapper for the LLVM middle-end. The following flavours of LTO are all variations on a theme: running the compiler’s usual optimisation passes on a larger-than-usual domain.
 
@@ -225,14 +225,14 @@ Imagine merging every compilation unit into one massive block of LLVM bitcode, t
 ![Desktop View](/assets/img/posts/2026-02-21-llvm-full-lto.png)
 *<strong>Full LTO</strong> resolves symbols twice, once as it links sources into a monolithic unit of LLVM bitcode, then again after libLTO has optimised and lowered it to machine code.*
 
-By compiling our sources as,
+Targeting Linux with `lld-link`, we'll build our sources as
 
 ```bash
 clang foobar.cpp -c -O2 -flto
 clang main.cpp -c -O2 -flto
 clang foobar.o main.o -flto -Wl,-plugin-opt=save-temps -Wl,-plugin-opt=-print-changed -o main 2> main.passes.ll
 ```
-we receive a snapshot of the `main.bc` IR at every steps of the full LTO process. The first of these, `main.preopt.bc` shows us the IR for the two files when they've just been merged. Disassembling with `llvm-dis main.preopt.bc -o main.preopt.ll` confirms `bar` is stripped, but little else.
+This returns a snapshot of the `main.bc` IR at every steps of the full LTO process. The first of these, `main.preopt.bc` shows us the IR for the two files when they've just been merged. Disassembling with `llvm-dis main.preopt.bc -o main.preopt.ll` confirms `bar` is stripped, but little else.
 
 ```llvm
 @i = internal global i1 false,
@@ -355,6 +355,13 @@ Extremely large projects often demand **distributed builds** across whole networ
 <p align=left><a href="https://llvm.org/docs/DTLTO.html#limitations"><strong>Unsupported</strong></a> by <strong>ld64.lld.</strong></p>
 
 ## LTO && PGO
+
+Structure of conclusion
+- Similarities... in approach to cheat codes, specifically 
+- Recommendation (contrasted against PGO): turn on immediately
+- Counterargument: legacy code
+- **Core idea** These are not inherently dangerous or unknowable optimisations! As my colleague noted, ... -> Emphasise rigour of this blog in second para.!!
+- Last point: `-ffast-math` as a comparison 
 
 All told, the most intuitive definition of LTO I can think of is *optimisation with knowledge of all sources*. If you'd asked me the same question on my last post, I'd probably have described PGO as something like *optimisation with knowledge of how a source is used*. **These are orthogonal properties,** you can absolutely have either one without the other. And that, I think, gets us back to where we started.
 
