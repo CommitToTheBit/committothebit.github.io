@@ -11,7 +11,7 @@ tags:
   - lto
   - optimisation
 math: true
-published: false
+published: true
 ---
 
 > PGO is just LTO with extra profiling data, right?
@@ -341,7 +341,7 @@ Let's take that concept of deferring to link-time one step further - what about 
 
 Extremely large projects often demand **distributed builds** across whole networks of machines, with each agent being delegated its own independent work. Full LTO, being single-threaded, also needs run on one single instance of libLTO, but thin LTO slots into a distributed system nicely. 
 
-![Desktop View](/assets/img/posts/2026-02-21-llvm-thin-lto.png)
+![Desktop View](/assets/img/posts/2026-04-26-llvm-dtlto.png)
 *<strong>Distributed Thin LTO</strong>*
 
 **Distributed thin LTO (DTLTO)** can further be incrementalised, but once again - the complexity comes from 
