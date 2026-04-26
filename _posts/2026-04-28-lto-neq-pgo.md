@@ -331,7 +331,7 @@ The other benefit of unified LTO is it allows building with a mixture of LTOs. U
 
 ### Fat LTO
 
-Let's take that concept of deferring to link-time one step further - what about deferring the very question of whether to use LTO altogether? Recalling that a traditional build process passes native object files, not bitcode, on to the linker, this might seem impossible. **Fat LTO** boldly poses 🖕no🖕 by just... going ahead and building both, a brute-force solution to the problem.
+Let's take that concept of deferring to link-time one step further - what about deferring the very question of whether to use LTO altogether? Recall that a traditional build process passes native object files, not bitcode, on to the linker. If it sounds inconvenient to resolve the two formats, that'll be because *it is*. **Fat LTO** can only cut this Gordian knot by building both, a brute-force solution to the problem at hand.
 
 [**The motivations for and benefits of**](https://discourse.llvm.org/t/rfc-ffat-lto-objects-support/63977) this new method are, as far as I can tell, the same as unified LTO, so I won’t belabour those here. They complement each other - fat LTO affords flexibility on when and where we optimise at link-time, unified LTO the orthogonal choice of how we'll optimise it - but it's also important to mark the differences. Fat LTO objects are, well, fat. Unifying LTO is a matter of lifting artificial constraints on the structure of LLVM bitcode, but fat LTO objects store two equivalent forms of the same underlying binaries. This comes at a cost to storage, and to build times (optimisations done to `*.o`s get thrown away), so where I'd recommend enabling unified LTO by default, it isn't worth using the following flag if you have the choice:
 
