@@ -14,16 +14,16 @@ timezone: Europe/London
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Sam Drysdale # the main title
+title: Veronica Drysdale # the main title
 
 tagline: Game Programmer # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
-  Portfolio for Sam Drysdale, Game Programmer at Feral Interactive.
+  Portfolio for Veronica Drysdale, Game Programmer at Feral Interactive.
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
-url: "https://sammakesgames.com"
+url: "https://veronicamakesgames.com"
 
 github:
   username: CommitToTheBit # change to your GitHub username
@@ -34,7 +34,7 @@ twitter:
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
-  name: Sam Drysdale
+  name: Veronica Drysdale
   email: samueldrysdale@googlemail.com # change to your email address
   links:
     # The first element serves as the copyright owner's link
