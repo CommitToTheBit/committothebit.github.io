@@ -1,7 +1,7 @@
 ---
 title: LTO != PGO
 description: Ballooning your build times for fun and profit.
-date: 2026-04-28 10:30:00 +0000
+date: 2026-04-27 22:30:00 +0000
 categories:
   - Procedural Whodunnits
 tags:
@@ -344,15 +344,7 @@ Extremely large projects often demand **distributed builds** across whole networ
 ![Desktop View](/assets/img/posts/2026-04-26-llvm-dtlto.png)
 *<strong>Distributed Thin LTO</strong> has a master device coordinating optimisations to separate sources by separate agents. The master also handles those linking steps that can’t be delegated.*
 
-I’ll leave the particulars of actually configuring a distributed system to the build engineers. At the abstract level, all LLVM is doing is separate out its `-flto=thin` flag such that its different stages can be run on different machines. It exposes `-thinlto-index-only` to run the thin link on the master computer, and `-fthinlto-index` for agents to optimise using the outputs of that think link, before letting the user run their usual
-
-conceptual level, all the LLVM API needs... With LLVM exposing linker flags to run the thin link only, a compiler flag to optimise using the output of that thin link, then letting the user run their final link step as usual, we can successfully...
-
-Distributed thin LTO (DTLTO) can also be incrementalised, but again - there’s nothing special to see here.
-
-that's happening here is the  
-
-the idea I want to hone in on is all we’re doing is breaking our -flto=thin flag into discrete stages. 
+I’ll leave the particulars of configuring a distributed system to the build engineers. At the abstract level, all that's happened is LLVM has separated out its `-flto=thin` flag for different stages to run on different machines. LLVM exposes `-thinlto-index-only` to run its thin link on the master, then `-fthinlto-index` for agents to optimise based on that thin link (and clearly the final linking step won't need any more flags than usual). **Distributed thin LTO (DTLTO)** can further be incrementalised, but again - this is an intentional consequence of thin LTO's design, there's not really anything new to get in to here.
 
 **Clang flags** `-fthinlto-index=<path/to/*.thinlto.bc>`
 
@@ -364,24 +356,15 @@ the idea I want to hone in on is all we’re doing is breaking our -flto=thin fl
 
 ## LTO && PGO
 
-All told, the most intuitive definition of LTO I can think of is *optimisation with knowledge of all sources*. If you'd asked me the same question on my last post, I'd probably have described PGO as something like *optimisation with knowledge of how a source is used*. **These are orthogonal properties,** you can absolutely have either one without the other.<sup>2</sup> And that, I think, gets us back to where we started.
-<p style="line-height:1.25"><sup><sup>2</sup> In theory. LTO is admittedly treated as a prerequisite for PGO in MSVC, but that's a <s>fucking stupid</s> quirk of how the compiler is written. Rest assured that Clang and GCC both support either/or, and the two techniques remain conceptually distinct.</sup></p>
+All told, the most intuitive definition of LTO I can think of is *optimisation with knowledge of all sources*. If you'd asked me the same question on my last post, I'd probably have described PGO as something like *optimisation with knowledge of how a source is used*. **These are orthogonal properties,** you can absolutely have either one without the other. And that, I think, gets us back to where we started.
 
 ![Desktop View](/assets/img/posts/2026-02-21-pgo-and-lto.png)
-*<strong>Just LTO with extra profiling data, right?</strong> PGO and LTO...*
+*<strong>Just LTO with extra profiling data, right?</strong> LTO is admittedly treated as a prerequisite for PGO by MSVC, but that's a <s>fucking stupid</s> quirk of how the compiler is written. Rest assured that Clang and GCC both support either/or, and the two techniques remain conceptually distinct.*
 
-Of course, this isn't to say the two cheat codes don't share some similarities... ...The fuzzy, intuitive - but wrong! - interpretation is LTO unlocks "the last" optimisations we might want to run, and PGO builds on those. Where I think the confusion arises that "PGO is just LTO with extra steps" is, there's very rarely a reason to use PGO if you don't already have LTO enabled.
+My recommendation would be to enable LTO on your games from day one: thin, incremental, unified LTO locally, full LTO for production. Unlike PGO, which requires a steady flow of `.profraw` telemetry data to base its optimisations on, once LTO is up and running it’s a safe bet you’ll never worry about it again. Honestly, it makes sense that someone could form this fuzzy sort of misconception that PGO directly builds on LTO, since it rarely makes sense to enable them the other way around. As [**referenced**](https://github.com/zamazan4ik/awesome-pgo/blob/02a47ef95ea9400ebf774555f1024c73a3855f11/article/article.md?plain=1#L463-L474) last time around, profiles captured with different `-flto` flags will reliably have zero overlap,  
 
-My personal recommendation would be turning on LTO as soon as possible. Unlike PGO, this is a one-and-done process, it doesn't rely on `.profraw`s with potentially quite limited shelf lives. Indeed, if you recall my previous post, you'll recall that it's better to enable LTO before PGO, due to overlap! If you're starting on a new project...
+But what about pre-existing projects? Porting games from 10, 15, 20 years ago, I'm very often working with legacy code written before link-time optimisations were even conceived of. If that code takes a shortcut and exploits some undefined behaviour - it's a safe bet that LTO is gonna brick it. Me personally, I’m still an advocate for sucking it up, enabling the flags, and slogging through the ensuing regressions one by one, but I can’t rule out that that would introduce some subtle bugs into the mix. If you're coming in to a new codebase, maybe the more measured approach would be to turn on LTO only after UBSan-itising...
 
-The counterargument to this is undefined behaviour. Now, that's an easy thing to handwave away - I would simply write code that's well-defined, and all that - but what if you're working on a pre-existing codebase? Suppose you're, well, *me*, porting games from 10, 15, 20 years ago. As a third party chipping away at an already-existing ; some of them were written before LTO was even A Thing. Now, personally I'd still advocate for sucking it up, enabling LTO first, and slogging through the regressions one by one, but I'm not going to tell you how to live your life. 
-
-LTO and PGO are neither inherently dangerous nor inherently unknowable optimisations. As my colleague from the start of this article would end up putting it,
+None of this is to say that LTO, or PGO, is inherently dangerous or inherently unknowable. On the contrary, if there's one point I want this post to make, it's that **LTO, PGO, and the LLVM middle-end are homoousios; of the same stuff.** My colleague, I think, puts it best:
 
 > I think my mistake was imagining the optimisation steps in LTO is distinct from normal compiler optimisation.
-
-Being able to approach these cheat codes critically is important... We've discussed the LLVM interpretation at considerable depth, walking through how its myriad flags work and when you'd want to use them. I even took you on detour into the thickets of LLVM IR itself, learning the fundamentals of the syntax to confirm how these optimisations work at the libLTO level.
-
-Perhaps `-ffast-math` makes for an instructive comparison. When used to...
-
-
