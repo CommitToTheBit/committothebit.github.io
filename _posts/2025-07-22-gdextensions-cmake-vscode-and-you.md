@@ -7,7 +7,6 @@ tags: ["devlog", "godot", "cmake", "c++"]
 math: true
 published: false
 ---
-
 This is, I suspect, rather dry for an inaugural blog post. I've been meaning to start Actually Writing about programming, procedural generation, and games in general since God knows when... the problem is, historically, whenever I've found time to Actually Write, no Actual Writing has materialised.
 
 Don't get me wrong, I love that Godot exists as an open source - but I don't love its scripting language. It has its place, sure,
