@@ -9,7 +9,7 @@
 
 - type: bluesky
   icon: 'fa-brands fa-bluesky'
-  url: 'https://bsky.app/profile/sdrysdale.bsky.social' # Fill with your Bluesky profile link
+  url: 'https://bsky.app/profile/vdrysdale.bsky.social' # Fill with your Bluesky profile link
 
 - type: email
   icon: "fas fa-envelope"
