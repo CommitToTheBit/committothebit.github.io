@@ -366,7 +366,7 @@ My recommendation would be to enable LTO on your games from day one: thin, incre
 
 But what about pre-existing projects? Porting games from 10, 15, 20 years ago, I'm very often working with legacy code written before link-time optimisations were even conceived of. If that code takes a shortcut and exploits some undefined behaviour - it's a safe bet that LTO is gonna brick it. Me personally, I’m still an advocate for sucking it up, enabling the flags, and slogging through the ensuing regressions one by one, but I can’t rule out that that would introduce some subtle bugs into the mix. If you're coming in to a new codebase, maybe the more measured approach would be to turn on LTO only after UBSan-itising...
 
-None of this is to say that LTO, or PGO, is inherently dangerous or inherently unknowable. On the contrary, if there's one point I want to make here, it's that **LTO, PGO, and the LLVM middle-end are homoousios; of the same stuff.** My colleague, I think, puts it best:
+None of this is to say that LTO, or PGO, is inherently dangerous or inherently unknowable. On the contrary, if there's one point I want to make here, it's that **LTO, PGO, and the LLVM middle-end are homoousios; of the same stuff.** That colleague of mine puts it best:
 
 > My mistake was imagining the optimisation steps in LTO is distinct from normal compiler optimisation.
 
