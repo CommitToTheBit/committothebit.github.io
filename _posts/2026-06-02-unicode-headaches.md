@@ -16,7 +16,7 @@ Where I don't think there's quite so much discussion going on is how text encodi
 
 ## Text Encodings
 
-[Definitions of terms]
+What is a character? What is a character of text? "I know it when I see it."
 
 ### ASCII
 
@@ -36,11 +36,17 @@ but as we'll see, latin won.
 
 #### UTF-8
 
-## Strings in C++
+## std::string
 
-### Short String Optimisation (SSO)
-
-It wasn't not going to come up, was it?
+The other piece of this puzzle is the C++ of it all, the `std::string`.
 
 ## Parsing Unicode
+
+If you store a UTF-8 encoding in an std::string, std::string::operator[] returns the nth code unit, **not the nth code *point***. Then, lay out example in a code snippet.
+
+Lay out template for, e.g., getting a substring, as a second example.
+
+But would you want O(1) access to a code point? Find meaningful example *or* return genuinely never.
+
+End with a table of computational complexities?
 
