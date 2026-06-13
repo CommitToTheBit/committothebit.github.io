@@ -72,7 +72,11 @@ cd godot-cpp
 git submodule update --init
 ```
 
-Then, commit the submodule (and accompanying .gitmodules file).
+After committing the submodule (and accompanying `.gitmodules` file), it's time to build. If you're using Clang, you'll want to start out by going in to `method_bind.hpp` and `#define TYPED_METHOD_BIND` before it first gets used. This is necessary because Clang [...].
+
+...Except, there's now a warning to suggest it was declared on the command line, huh? So what changed from the *Bad Bohemians* days? **Nothing!** scons seems to process the definition fine, but CMake can't/doesn't.
+
+Build the bindings with:
 
 ```
 scons platform=[windows,macos,linux,android,ios] target=[template_debug,template_release,editor]
