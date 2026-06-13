@@ -7,6 +7,7 @@ tags: ["c++", "llvm", "pgo", "optimisation"]
 math: true
 image:
   path: /assets/img/posts/2026-03-01-its-free-real-estate.png
+comments: true
 sitemap: true
 ---
 
