@@ -7,13 +7,23 @@ order: 3
 
 ## Employment
 
-#### **Feral Interactive, London** *Graduate Developer, November 2023 - Present*
+#### **Feral Interactive, London** *Developer, November 2025 - July 2026*
 
-Shipped my first title in the industry, seeing our port of [**GRID Legends**](https://committothebit.github.io/grid-legends) through development and up to release. Experienced with Android, wrangling its API for both mobile and VR development. Supplemented forward-facing, game-specific work with larger and more lasting projects improving Feral's internal libraries.
+Progressed into an engine development role, using my low-level understanding of C++, compiler optimisations, concurrency, *etc.*, to improve CPU performance across all active projects. Scaled our UI framework to meet the needs of our most data-intensive, grand strategy titles, speeding up *Napoleon: Total War*'s UI update tick from ~5-8ms/frame to ~600µs by an order of magnitude. Adept at profiling both CPU and memory usage.
 
-Passionate about C++ optimisation, LLVM and its subprojects. Took initiative to integrate CSIR PGO into Feral's build pipeline, improving performance of CPU-bound ports like *Napoleon: Total War* by ~10-20%.
+Took initiative to integrate [**CSIR PGO**](https://veronicamakesgames.com/posts/pgo-but-better/) into Feral's build pipeline, improving performance of CPU-bound ports like *Tomb Raider* and the *Total War* franchise by a further ~10-20%.
 
-Fostered skills as a technical communicator, researching, organising, and delivering department-wide dev talks since July 2025.
+Developed mentorship skills, onboarding and providing ongoing support for placement students and junior developers joining my projects.
+
+#### *Graduate Developer, November 2023 - November 2025*
+
+Shipped my first title in the industry, seeing our mobile port of [*<strong>GRID Legends</strong>*](https://veronicamakesgames.com/grid-legends) through its full development cycle and up to release. Successfully overhauled several complex features to support touchscreen controls, including the game's Replay and Photo Modes. Skilled at debugging on Android and iOS.
+
+Stepped up to become the sole UI/UX programmer on an unnannounced VR project, building embodied interactions and an all-new, immersive 3D interface from the ground up. Contributed to Feral's backend throughout, fixing bugs in and extending functionality of our core libraries. Proactive about project management, raising UI-related roadblocks and coordinating across departments to best meet our external funding milestones.
+
+Proficient in C++17/20, knowledgable about [**the LLVM compiler infrastructure**](http://127.0.0.1:4000/posts/lto-neq-pgo/#llvm-revisited) and CMake, with a breadth of experience wrangling cross-platform codebases and proprietary game engines.
+
+Fostered skills as a technical communicator, researching, organising, and delivering department-wide dev talks from July 2025 until the end of my time at Feral.
 
 #### **Tripledot Studios, London** *Junior Level Designer, February 2022 - September 2022*
 
