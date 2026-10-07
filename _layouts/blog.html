@@ -17,6 +17,8 @@ layout: default
     <!-- <p class="page-desc fw-light mb-4">Let's be real - if you're reading over a fellow programmer's blog, chances are you're dealing with a very niche bug and its less-than-helpful documentation. <i>Been there.</i></p> -->
   {% endif %}
 
+  <p style="height:0.125rem;"><!-- Include linebreak to hide overflow without cropping border --></p>
+
   <div id="archives" class="pl-xl-3">
     {% for post in site.posts %}
       {% assign cur_year = post.date | date: '%Y' %}
